@@ -4,38 +4,31 @@
     <span class="d-flex align-center text-medium-emphasis">
       &copy;
       {{ new Date().getFullYear() }}
-      Made With
+      Сделано с
       <VIcon
-        icon="tabler-heart-filled"
-        color="error"
+        icon="emojione-v1:red-heart"
         size="1.25rem"
         class="mx-1"
       />
-      By <a
-        href="https://pixinvent.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-primary ms-1"
-      >Pixinvent</a>
     </span>
     <!-- 👉 Footer: right content -->
     <span class="d-md-flex gap-x-4 text-primary d-none">
       <a
-        href="https://themeforest.net/licenses/standard"
+        href="#"
         target="noopener noreferrer"
-      >License</a>
+      >link</a>
       <a
-        href="https://1.envato.market/pixinvent_portfolio"
+        href="#"
         target="noopener noreferrer"
-      >More Themes</a>
+      >link</a>
       <a
-        href="https://demos.pixinvent.com/vuexy-vuejs-admin-template/documentation/guide/laravel-integration/folder-structure.html"
+        href="#"
         target="noopener noreferrer"
-      >Documentation</a>
+      >link</a>
       <a
-        href="https://pixinvent.ticksy.com/"
+        href="#"
         target="noopener noreferrer"
-      >Support</a>
+      >link</a>
     </span>
   </div>
 </template>

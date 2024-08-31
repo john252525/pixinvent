@@ -7,7 +7,7 @@ import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
 import defaults from './defaults'
 import { icons } from './icons'
 import { staticPrimaryColor, staticPrimaryDarkenColor, themes } from './theme'
-import { getI18n } from '@/plugins/i18n/index'
+import { getI18n } from '@/plugins/i18n'
 import { themeConfig } from '@themeConfig'
 
 // Styles

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { VForm } from 'vuetify/components/VForm'
+import AuthProvider from '@/views/components/AuthProvider.vue'
 
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 
@@ -12,13 +12,6 @@ import authV2RegisterIllustrationLight from '@images/pages/auth-v2-register-illu
 import authV2MaskDark from '@images/pages/misc-mask-dark.png'
 import authV2MaskLight from '@images/pages/misc-mask-light.png'
 
-const imageVariant = useGenerateImageVariant(authV2RegisterIllustrationLight,
-  authV2RegisterIllustrationDark,
-  authV2RegisterIllustrationBorderedLight,
-  authV2RegisterIllustrationBorderedDark, true)
-
-const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
-
 definePage({
   meta: {
     layout: 'blank',
@@ -26,14 +19,75 @@ definePage({
   },
 })
 
+const imageVariant = useGenerateImageVariant(authV2RegisterIllustrationLight,
+  authV2RegisterIllustrationDark,
+  authV2RegisterIllustrationBorderedLight,
+  authV2RegisterIllustrationBorderedDark,
+  true)
+
+const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
+const isPasswordVisible = ref(false)
+const isCPasswordVisible = ref(false)
+
+const refVForm = ref<VForm>()
+
 const form = ref({
-  username: '',
-  email: '',
-  password: '',
-  privacyPolicies: false,
+  name: 'admin',
+  email: 'admin@example.com',
+  password: '12344321',
+  password_confirmation: '12344321',
+  privacyPolicies: true,
 })
 
-const isPasswordVisible = ref(false)
+const errors = ref<Record<string, string | undefined>>({
+  name: undefined,
+  email: undefined,
+  password: undefined,
+  password_confirmation: undefined,
+  privacyPolicies: undefined,
+})
+
+const route = useRoute()
+const router = useRouter()
+
+const ability = useAbility()
+
+const register = async () => {
+  try {
+    const res = await $api('/user/auth/register', {
+      method: 'POST',
+      body: form.value,
+      onResponseError({ response }) {
+        errors.value = response._data.errors
+      },
+    })
+
+    const { accessToken, userData, userAbilityRules } = res
+
+    ability.update(userAbilityRules)
+
+    useCookie('userAbilityRules').value = userAbilityRules
+    useCookie('userData').value = userData
+    useCookie('accessToken').value = accessToken
+
+    // Redirect to `to` query if exist or redirect to index route
+    // ❗ nextTick is required to wait for DOM updates and later redirect
+    await nextTick(() => {
+      router.replace(route.query.to ? String(route.query.to) : '/')
+    })
+  }
+  catch (err) {
+    console.error(err)
+  }
+}
+
+const onSubmit = () => {
+  refVForm.value?.validate()
+    .then(({ valid: isValid }) => {
+      if (isValid)
+        register()
+    })
+}
 </script>
 
 <template>
@@ -89,65 +143,86 @@ const isPasswordVisible = ref(false)
       >
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Adventure starts here 🚀
+            Приключение начинается здесь 🚀
           </h4>
           <p class="mb-0">
-            Make your app management easy and fun!
+            Сделайте ваше приложение простым и увлекательным!
           </p>
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm
+            ref="refVForm"
+            @submit.prevent="onSubmit"
+          >
             <VRow>
               <!-- Username -->
               <VCol cols="12">
-                <AppTextField
-                  v-model="form.username"
+                <VTextField
+                  v-model="form.name"
                   :rules="[requiredValidator]"
+                  :error-messages="errors.name"
+                  label="Имя пользователя"
                   autofocus
-                  label="Username"
-                  placeholder="Johndoe"
+                  @update:model-value="errors.name = undefined"
                 />
               </VCol>
 
               <!-- email -->
               <VCol cols="12">
-                <AppTextField
+                <VTextField
                   v-model="form.email"
                   :rules="[requiredValidator, emailValidator]"
-                  label="Email"
+                  :error-messages="errors.email"
+                  label="Электронная почта"
                   type="email"
-                  placeholder="johndoe@email.com"
+                  @update:model-value="errors.email = undefined"
                 />
               </VCol>
 
               <!-- password -->
               <VCol cols="12">
-                <AppTextField
+                <VTextField
                   v-model="form.password"
                   :rules="[requiredValidator]"
+                  :error-messages="errors.password"
                   label="Password"
-                  placeholder="············"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
+                  @update:model-value="errors.password = undefined"
+                />
+              </VCol>
+
+              <!-- password -->
+              <VCol cols="12">
+                <VTextField
+                  v-model="form.password_confirmation"
+                  :rules="[requiredValidator]"
+                  label="Повторите пароль"
+                  :type="isCPasswordVisible ? 'text' : 'password'"
+                  :append-inner-icon="isCPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                  @click:append-inner="isCPasswordVisible = !isCPasswordVisible"
                 />
 
                 <div class="d-flex align-center my-6">
                   <VCheckbox
                     id="privacy-policy"
                     v-model="form.privacyPolicies"
+                    :rules="[requiredValidator]"
+                    :error-messages="errors.privacyPolicies"
                     inline
+                    @update:model-value="errors.privacyPolicies = undefined"
                   />
                   <VLabel
                     for="privacy-policy"
                     style="opacity: 1;"
                   >
-                    <span class="me-1 text-high-emphasis">I agree to</span>
+                    <span class="me-1 text-high-emphasis">я согласен с</span>
                     <a
                       href="javascript:void(0)"
                       class="text-primary"
-                    >privacy policy & terms</a>
+                    > условиями</a>
                   </VLabel>
                 </div>
 
@@ -155,7 +230,7 @@ const isPasswordVisible = ref(false)
                   block
                   type="submit"
                 >
-                  Sign up
+                  Зарегистрироваться
                 </VBtn>
               </VCol>
 
@@ -164,12 +239,12 @@ const isPasswordVisible = ref(false)
                 cols="12"
                 class="text-center text-base"
               >
-                <span class="d-inline-block">Already have an account?</span>
+                <span class="d-inline-block">У вас уже есть аккаунт?</span>
                 <RouterLink
                   class="text-primary ms-1 d-inline-block"
                   :to="{ name: 'login' }"
                 >
-                  Sign in instead
+                  Войдите в систему
                 </RouterLink>
               </VCol>
 
@@ -178,7 +253,7 @@ const isPasswordVisible = ref(false)
                 class="d-flex align-center"
               >
                 <VDivider />
-                <span class="mx-4">or</span>
+                <span class="mx-4">или</span>
                 <VDivider />
               </VCol>
 

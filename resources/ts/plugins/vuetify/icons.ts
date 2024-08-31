@@ -1,3 +1,4 @@
+import { Icon } from '@iconify/vue'
 import type { IconAliases, IconProps } from 'vuetify'
 
 import checkboxChecked from '@images/svg/checkbox-checked.svg'
@@ -50,7 +51,7 @@ const aliases: Partial<IconAliases> = {
 }
 
 export const iconify = {
-  component: (props: IconProps) => {
+  component: (props: IconProps | any) => {
     // Load custom SVG directly instead of going through icon component
     if (typeof props.icon === 'string') {
       const iconComponent = customIcons[props.icon]
@@ -59,19 +60,7 @@ export const iconify = {
         return h(iconComponent)
     }
 
-    return h(
-      props.tag,
-      {
-        ...props,
-
-        // As we are using class based icons
-        class: [props.icon],
-
-        // Remove used props from DOM rendering
-        tag: undefined,
-        icon: undefined,
-      },
-    )
+    return h(Icon, props)
   },
 }
 

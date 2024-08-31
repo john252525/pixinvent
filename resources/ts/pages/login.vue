@@ -1,7 +1,7 @@
 <!-- ❗Errors in the form are set on line 60 -->
 <script setup lang="ts">
 import { VForm } from 'vuetify/components/VForm'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
+import AuthProvider from '@/views/components/AuthProvider.vue'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
 import authV2LoginIllustrationBorderedLight from '@images/pages/auth-v2-login-illustration-bordered-light.png'
@@ -38,15 +38,15 @@ const errors = ref<Record<string, string | undefined>>({
 const refVForm = ref<VForm>()
 
 const credentials = ref({
-  email: 'admin@demo.com',
-  password: 'admin',
+  email: 'admin@example.com',
+  password: '12344321',
 })
 
 const rememberMe = ref(false)
 
 const login = async () => {
   try {
-    const res = await $api('/auth/login', {
+    const res = await $api('/user/auth/login', {
       method: 'POST',
       body: {
         email: credentials.value.email,
@@ -137,22 +137,23 @@ const onSubmit = () => {
       >
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Welcome to <span class="text-capitalize"> {{ themeConfig.app.title }} </span>! 👋🏻
+            Добро пожаловать 👋
           </h4>
           <p class="mb-0">
-            Please sign-in to your account and start the adventure
+            Пожалуйста, войдите в свою учетную запись.
           </p>
         </VCardText>
         <VCardText>
           <VAlert
             color="primary"
             variant="tonal"
+            title="Только на время разработки"
           >
             <p class="text-sm mb-2">
-              Admin Email: <strong>admin@demo.com</strong> / Pass: <strong>admin</strong>
+              Admin Email: <strong>admin@example.com</strong> / Pass: <strong>12344321</strong>
             </p>
             <p class="text-sm mb-0">
-              Client Email: <strong>client@demo.com</strong> / Pass: <strong>client</strong>
+              Client Email: <strong>client@example.com</strong> / Pass: <strong>12344321</strong>
             </p>
           </VAlert>
         </VCardText>
@@ -164,10 +165,9 @@ const onSubmit = () => {
             <VRow>
               <!-- email -->
               <VCol cols="12">
-                <AppTextField
+                <VTextField
                   v-model="credentials.email"
-                  label="Email"
-                  placeholder="johndoe@email.com"
+                  label="Электронная почта"
                   type="email"
                   autofocus
                   :rules="[requiredValidator, emailValidator]"
@@ -177,10 +177,9 @@ const onSubmit = () => {
 
               <!-- password -->
               <VCol cols="12">
-                <AppTextField
+                <VTextField
                   v-model="credentials.password"
-                  label="Password"
-                  placeholder="············"
+                  label="Пароль"
                   :rules="[requiredValidator]"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :error-messages="errors.password"
@@ -191,13 +190,13 @@ const onSubmit = () => {
                 <div class="d-flex align-center flex-wrap justify-space-between my-6">
                   <VCheckbox
                     v-model="rememberMe"
-                    label="Remember me"
+                    label="Запомнить меня"
                   />
                   <RouterLink
                     class="text-primary ms-2 mb-1"
                     :to="{ name: 'forgot-password' }"
                   >
-                    Forgot Password?
+                    Забыли пароль?
                   </RouterLink>
                 </div>
 
@@ -205,7 +204,7 @@ const onSubmit = () => {
                   block
                   type="submit"
                 >
-                  Login
+                  Авторизоваться
                 </VBtn>
               </VCol>
 
@@ -214,12 +213,12 @@ const onSubmit = () => {
                 cols="12"
                 class="text-center"
               >
-                <span>New on our platform?</span>
+                <span>Впервые на нашем проекте?</span>
                 <RouterLink
                   class="text-primary ms-1"
                   :to="{ name: 'register' }"
                 >
-                  Create an account
+                  Создать аккаунт
                 </RouterLink>
               </VCol>
               <VCol
@@ -227,7 +226,7 @@ const onSubmit = () => {
                 class="d-flex align-center"
               >
                 <VDivider />
-                <span class="mx-4">or</span>
+                <span class="mx-4">или</span>
                 <VDivider />
               </VCol>
 

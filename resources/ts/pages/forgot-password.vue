@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { VForm } from 'vuetify/components/VForm'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
@@ -8,11 +9,15 @@ import authV2ForgotPasswordIllustrationLight from '@images/pages/auth-v2-forgot-
 import authV2MaskDark from '@images/pages/misc-mask-dark.png'
 import authV2MaskLight from '@images/pages/misc-mask-light.png'
 
+const authThemeImg = useGenerateImageVariant(authV2ForgotPasswordIllustrationLight, authV2ForgotPasswordIllustrationDark)
+const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
+
+const refVForm = ref<VForm>()
 const email = ref('')
 
-const authThemeImg = useGenerateImageVariant(authV2ForgotPasswordIllustrationLight, authV2ForgotPasswordIllustrationDark)
-
-const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
+const errors = ref({
+  email: undefined,
+})
 
 definePage({
   meta: {
@@ -20,6 +25,33 @@ definePage({
     unauthenticatedOnly: true,
   },
 })
+
+const sendLink = async () => {
+  try {
+    const res = await $api('/user/auth/forgot-password', {
+      method: 'POST',
+      body: {
+        email: email.value,
+      },
+      onResponseError({ response }) {
+        errors.value = response._data.errors
+      },
+    })
+
+    console.log(res)
+  }
+  catch (err) {
+    console.error(err)
+  }
+}
+
+const onSubmit = () => {
+  refVForm.value?.validate()
+    .then(({ valid }: any) => {
+      if (valid)
+        sendLink()
+    })
+}
 </script>
 
 <template>
@@ -74,24 +106,27 @@ definePage({
       >
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Forgot Password? 🔒
+            Забыли пароль? 🔒
           </h4>
           <p class="mb-0">
-            Enter your email and we'll send you instructions to reset your password
+            Введите свой адрес электронной почты, и мы вышлем вам инструкции по сбросу пароля
           </p>
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm
+            ref="refVForm"
+            @submit.prevent="onSubmit"
+          >
             <VRow>
               <!-- email -->
               <VCol cols="12">
-                <AppTextField
+                <VTextField
                   v-model="email"
                   autofocus
-                  label="Email"
+                  label="Электронная почта"
                   type="email"
-                  placeholder="johndoe@email.com"
+                  :rules="[requiredValidator, emailValidator]"
                 />
               </VCol>
 
@@ -101,7 +136,7 @@ definePage({
                   block
                   type="submit"
                 >
-                  Send Reset Link
+                  Отправить ссылку для сброса
                 </VBtn>
               </VCol>
 
@@ -116,7 +151,7 @@ definePage({
                     size="20"
                     class="me-1 flip-in-rtl"
                   />
-                  <span>Back to login</span>
+                  <span>Вернуться</span>
                 </RouterLink>
               </VCol>
             </VRow>

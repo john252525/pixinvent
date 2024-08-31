@@ -8,6 +8,7 @@ export const $api = ofetch.create({
       options.headers = {
         ...options.headers,
         Authorization: `Bearer ${accessToken}`,
+        // Accept: 'application/json',
       }
     }
   },

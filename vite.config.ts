@@ -11,6 +11,7 @@ import { defineConfig } from 'vite'
 import Layouts from 'vite-plugin-vue-layouts'
 import vuetify from 'vite-plugin-vuetify'
 import svgLoader from 'vite-svg-loader'
+import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,10 +25,12 @@ export default defineConfig({
           .toLowerCase()
       },
 
+      /*
       beforeWriteFiles: root => {
         root.insert('/apps/email/:filter', '/resources/ts/pages/apps/email/index.vue')
         root.insert('/apps/email/:label', '/resources/ts/pages/apps/email/index.vue')
       },
+      */
 
       routesFolder: 'resources/ts/pages',
     }),
@@ -43,6 +46,9 @@ export default defineConfig({
         },
       },
     }),
+    vueDevTools({
+      appendTo: 'resources/ts/main.ts',
+    }),
     laravel({
       input: ['resources/ts/main.ts'],
       refresh: true,
@@ -57,7 +63,7 @@ export default defineConfig({
       layoutsDirs: './resources/ts/layouts/',
     }), // Docs: https://github.com/antfu/unplugin-vue-components#unplugin-vue-components
     Components({
-      dirs: ['resources/ts/@core/components', 'resources/ts/views/demos', 'resources/ts/components'],
+      dirs: ['resources/ts/@core/components', 'resources/ts/components'/* , 'resources/ts/views/demos' */],
       dts: true,
       resolvers: [
         componentName => {

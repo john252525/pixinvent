@@ -1,3 +1,4 @@
+import first from './first'
 import apps from './apps'
 import charts from './charts'
 import dashboard from './dashboard'
@@ -8,4 +9,7 @@ import tables from './tables'
 import uiElements from './ui-elements'
 import type { HorizontalNavItems } from '@layouts/types'
 
-export default [...dashboard, ...apps, ...pages, ...uiElements, ...forms, ...tables, ...charts, ...misc] as HorizontalNavItems
+export default [
+  // ...dashboard, ...apps, ...pages, ...uiElements, ...forms, ...tables, ...charts, ...misc,
+  ...first,
+] as HorizontalNavItems
