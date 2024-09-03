@@ -11,11 +11,16 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { locale } = useI18n({ useScope: 'global' })
+
+const setLocale = (lang: string) => {
+  locale.value = lang
+  localStorage.setItem('locale', lang)
+}
 </script>
 
 <template>
   <IconBtn>
-    <VIcon icon="tabler-language" />
+    <VIcon :icon="`flagpack:${props.languages.find(lang => lang.i18nLang === locale)?.flag}`" />
 
     <!-- Menu -->
     <VMenu
@@ -34,7 +39,8 @@ const { locale } = useI18n({ useScope: 'global' })
           v-for="lang in props.languages"
           :key="lang.i18nLang"
           :value="lang.i18nLang"
-          @click="locale = lang.i18nLang"
+          :prepend-icon="`flagpack:${lang.flag}`"
+          @click="setLocale(lang.i18nLang)"
         >
           <!-- Language label -->
           <VListItemTitle>

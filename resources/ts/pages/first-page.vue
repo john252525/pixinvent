@@ -1,3 +1,13 @@
+<script setup lang="ts">
+
+definePage({
+  meta: {
+    action: 'read',
+    subject: 'user',
+  },
+})
+</script>
+
 <template>
   <div>
     <VCard

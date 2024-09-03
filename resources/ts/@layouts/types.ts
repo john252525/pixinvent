@@ -101,6 +101,7 @@ export declare type HorizontalNavItems = (NavLink | NavGroup)[]
 
 export interface I18nLanguage {
   label: string
+  flag: string
   i18nLang: string
   isRTL: boolean
 }

@@ -51,7 +51,7 @@ watch(
           @click="() => { configStore.theme = name }"
         >
           <VListItemTitle class="text-capitalize">
-            {{ name }}
+            {{ $t(name) }}
           </VListItemTitle>
         </VListItem>
       </VList>

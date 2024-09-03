@@ -1,6 +1,7 @@
 import { storeToRefs } from 'pinia'
 import { useTheme } from 'vuetify'
-import { cookieRef, useLayoutConfigStore } from '@layouts/stores/config'
+import { useStorage } from '@vueuse/core'
+import { cookieRef, namespaceConfig, useLayoutConfigStore } from '@layouts/stores/config'
 import { themeConfig } from '@themeConfig'
 
 // SECTION Store
@@ -70,6 +71,7 @@ export const initConfigStore = () => {
           ? 'dark'
           : 'light'
         : configStore.theme
+      useStorage<any>(namespaceConfig('color-scheme'), 'light').value = vuetifyTheme.global.name.value
     })
 
   onMounted(() => {

@@ -7,7 +7,15 @@ export const $api = ofetch.create({
     if (accessToken) {
       options.headers = {
         ...options.headers,
+        'Accept-Language': localStorage.getItem('locale') || 'en',
         Authorization: `Bearer ${accessToken}`,
+        // Accept: 'application/json',
+      }
+    }
+    else {
+      options.headers = {
+       ...options.headers,
+        'Accept-Language': localStorage.getItem('locale') || 'en',
         // Accept: 'application/json',
       }
     }

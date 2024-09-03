@@ -1,23 +1,29 @@
 export default [
-  { heading: 'Others' },
   {
-    title: 'Главная',
-    icon: { icon: 'mdi-home' },
-    to: 'first',
+    heading: 'User Dashboard',
     action: 'read',
-    subject: 'AclDemo',
+    subject: 'user',
   },
   {
-    title: 'Access Control',
+    title: 'Home',
+    icon: { icon: 'mdi-home' },
+    to: 'first-page',
+    action: 'read',
+    subject: 'user',
+  },
+  {
+    title: 'Limited access',
     icon: { icon: 'tabler-command' },
     to: 'access-control',
     action: 'read',
-    subject: 'AclDemo',
+    subject: 'premium',
   },
   {
     title: 'Documentation',
     href: 'https://demos.pixinvent.com/vuexy-vuejs-admin-template/documentation/guide/laravel-integration/folder-structure.html',
     icon: { icon: 'tabler-file-text' },
     target: '_blank',
+    action: 'manage',
+    subject: 'all',
   },
 ]

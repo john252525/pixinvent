@@ -1,20 +1,11 @@
-<!-- ❗Errors in the form are set on line 60 -->
 <script setup lang="ts">
-import { VForm } from 'vuetify/components/VForm'
-import AuthProvider from '@/views/components/AuthProvider.vue'
-import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
-import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
-import authV2LoginIllustrationBorderedLight from '@images/pages/auth-v2-login-illustration-bordered-light.png'
-import authV2LoginIllustrationDark from '@images/pages/auth-v2-login-illustration-dark.png'
-import authV2LoginIllustrationLight from '@images/pages/auth-v2-login-illustration-light.png'
-import authV2MaskDark from '@images/pages/misc-mask-dark.png'
-import authV2MaskLight from '@images/pages/misc-mask-light.png'
+import authV1BottomShape from '@images/svg/auth-v1-bottom-shape.svg?raw'
+import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
-
-const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV2LoginIllustrationDark, authV2LoginIllustrationBorderedLight, authV2LoginIllustrationBorderedDark, true)
-
-const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
+import { VForm } from 'vuetify/components/VForm'
+import type { ThemeSwitcherTheme } from '@layouts/types'
+import LangSwitcherI18n from '@core/components/I18n.vue'
 
 definePage({
   meta: {
@@ -22,6 +13,21 @@ definePage({
     unauthenticatedOnly: true,
   },
 })
+
+const themes: ThemeSwitcherTheme[] = [
+  {
+    name: 'light',
+    icon: 'tabler-sun-high',
+  },
+  {
+    name: 'dark',
+    icon: 'tabler-moon-stars',
+  },
+  {
+    name: 'system',
+    icon: 'tabler-device-desktop-analytics',
+  },
+]
 
 const isPasswordVisible = ref(false)
 
@@ -42,16 +48,11 @@ const credentials = ref({
   password: '12344321',
 })
 
-const rememberMe = ref(false)
-
 const login = async () => {
   try {
     const res = await $api('/user/auth/login', {
       method: 'POST',
-      body: {
-        email: credentials.value.email,
-        password: credentials.value.password,
-      },
+      body: credentials.value,
       onResponseError({ response }) {
         errors.value = response._data.errors
       },
@@ -86,77 +87,54 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <RouterLink to="/">
-    <div class="auth-logo d-flex align-center gap-x-3">
-      <VNodeRenderer :nodes="themeConfig.app.logo" />
-      <h1 class="auth-title">
-        {{ themeConfig.app.title }}
-      </h1>
-    </div>
-  </RouterLink>
+  <div class="auth-wrapper d-flex align-center justify-center pa-4">
+    <div class="position-relative my-sm-16">
+      <!-- 👉 Top shape -->
+      <VNodeRenderer
+        :nodes="h('div', { innerHTML: authV1TopShape })"
+        class="text-primary auth-v1-top-shape d-none d-sm-block"
+      />
 
-  <VRow
-    no-gutters
-    class="auth-wrapper bg-surface"
-  >
-    <VCol
-      md="8"
-      class="d-none d-md-flex"
-    >
-      <div class="position-relative bg-background w-100 me-0">
-        <div
-          class="d-flex align-center justify-center w-100 h-100"
-          style="padding-inline: 6.25rem;"
-        >
-          <VImg
-            max-width="613"
-            :src="authThemeImg"
-            class="auth-illustration mt-16 mb-2"
-          />
-        </div>
+      <!-- 👉 Bottom shape -->
+      <VNodeRenderer
+        :nodes="h('div', { innerHTML: authV1BottomShape })"
+        class="text-primary auth-v1-bottom-shape d-none d-sm-block"
+      />
 
-        <img
-          class="auth-footer-mask"
-          :src="authThemeMask"
-          alt="auth-footer-mask"
-          height="280"
-          width="100"
-        >
-      </div>
-    </VCol>
-
-    <VCol
-      cols="12"
-      md="4"
-      class="auth-card-v2 d-flex align-center justify-center"
-    >
+      <!-- 👉 Auth Card -->
       <VCard
-        flat
-        :max-width="500"
-        class="mt-12 mt-sm-0 pa-4"
+        class="auth-card"
+        max-width="460"
+        :class="$vuetify.display.smAndUp ? 'pa-6' : 'pa-0'"
       >
+        <ThemeSwitcher :themes="themes" class="float-end" />
+        <LangSwitcherI18n
+          v-if="themeConfig.app.i18n.enable && themeConfig.app.i18n.langConfig?.length"
+          :languages="themeConfig.app.i18n.langConfig"
+          class="float-end"
+        />
+        <VCardItem class="justify-center">
+          <VCardTitle>
+            <RouterLink to="/">
+              <div class="app-logo">
+                <VNodeRenderer :nodes="themeConfig.app.logo" />
+                <h1 class="app-logo-title">
+                  {{ $t(themeConfig.app.title) }}
+                </h1>
+              </div>
+            </RouterLink>
+          </VCardTitle>
+        </VCardItem>
+
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Добро пожаловать 👋
+            {{ $t('Welcome to') }} <span class="text-capitalize">{{ $t(themeConfig.app.title) }}</span>! 👋🏻
           </h4>
           <p class="mb-0">
-            Пожалуйста, войдите в свою учетную запись.
+            {{ $t('Please sign - in to your account and start the adventure') }}
           </p>
         </VCardText>
-        <VCardText>
-          <VAlert
-            color="primary"
-            variant="tonal"
-            title="Только на время разработки"
-          >
-            <p class="text-sm mb-2">
-              Admin Email: <strong>admin@example.com</strong> / Pass: <strong>12344321</strong>
-            </p>
-            <p class="text-sm mb-0">
-              Client Email: <strong>client@example.com</strong> / Pass: <strong>12344321</strong>
-            </p>
-          </VAlert>
-        </VCardText>
+
         <VCardText>
           <VForm
             ref="refVForm"
@@ -167,7 +145,7 @@ const onSubmit = () => {
               <VCol cols="12">
                 <VTextField
                   v-model="credentials.email"
-                  label="Электронная почта"
+                  :label="$t('login.email')"
                   type="email"
                   autofocus
                   :rules="[requiredValidator, emailValidator]"
@@ -179,7 +157,7 @@ const onSubmit = () => {
               <VCol cols="12">
                 <VTextField
                   v-model="credentials.password"
-                  label="Пароль"
+                  :label="$t('login.password')"
                   :rules="[requiredValidator]"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :error-messages="errors.password"
@@ -187,64 +165,53 @@ const onSubmit = () => {
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
 
-                <div class="d-flex align-center flex-wrap justify-space-between my-6">
-                  <VCheckbox
-                    v-model="rememberMe"
-                    label="Запомнить меня"
-                  />
+                <!-- remember me checkbox -->
+                <div class="d-flex align-center justify-end flex-wrap my-6">
+                  <!-- VCheckbox
+                    v-model="form.remember"
+                    label="Remember me"
+                  / -->
+
                   <RouterLink
-                    class="text-primary ms-2 mb-1"
+                    class="text-primary"
                     :to="{ name: 'forgot-password' }"
                   >
-                    Забыли пароль?
+                    {{ $t('Forgot Password?') }}
                   </RouterLink>
                 </div>
 
+                <!-- login button -->
                 <VBtn
                   block
                   type="submit"
                 >
-                  Авторизоваться
+                  {{ $t('Login') }}
                 </VBtn>
               </VCol>
 
               <!-- create account -->
               <VCol
                 cols="12"
-                class="text-center"
+                class="text-body-1 text-center"
               >
-                <span>Впервые на нашем проекте?</span>
+                <span class="d-inline-block">
+                  {{ $t('New on our platform?') }}
+                </span>
                 <RouterLink
-                  class="text-primary ms-1"
+                  class="text-primary ms-1 d-inline-block text-body-1"
                   :to="{ name: 'register' }"
                 >
-                  Создать аккаунт
+                  {{ $t('Create an account') }}
                 </RouterLink>
-              </VCol>
-              <VCol
-                cols="12"
-                class="d-flex align-center"
-              >
-                <VDivider />
-                <span class="mx-4">или</span>
-                <VDivider />
-              </VCol>
-
-              <!-- auth providers -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
-                <AuthProvider />
               </VCol>
             </VRow>
           </VForm>
         </VCardText>
       </VCard>
-    </VCol>
-  </VRow>
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
-@use "@core-scss/template/pages/page-auth.scss";
+@use "@core-scss/template/pages/page-auth";
 </style>

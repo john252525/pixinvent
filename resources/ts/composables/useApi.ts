@@ -5,7 +5,7 @@ export const useApi = createFetch({
   baseUrl: import.meta.env.VITE_API_BASE_URL || '/api',
   fetchOptions: {
     headers: {
-      Accept: 'application/json',
+      'Accept-Language': localStorage.getItem('locale') || 'en',
     },
   },
   options: {
