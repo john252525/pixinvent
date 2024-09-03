@@ -32,6 +32,8 @@ node_modules
 dist
 dist-ssr
 *.local
+vite.config.ts
+certs
 
 /cypress/videos/
 /cypress/screenshots/
