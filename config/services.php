@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'ukassa' => [
+        'id' => env('UKASSA_ID'),
+        'secret' => env('UKASSA_SECRET'),
+    ],
+
 ];

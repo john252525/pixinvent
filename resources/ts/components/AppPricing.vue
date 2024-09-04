@@ -2,6 +2,7 @@
 import safeBoxWithGoldenCoin from '@images/misc/3d-safe-box-with-golden-dollar-coins.png'
 import spaceRocket from '@images/misc/3d-space-rocket-with-smoke.png'
 import dollarCoinPiggyBank from '@images/misc/dollar-coins-flying-pink-piggy-bank.png'
+import { vConfetti } from '@neoconfetti/vue'
 
 interface Pricing {
   title?: string
@@ -37,8 +38,8 @@ const pricingPlans = [
     name: 'Standard',
     tagLine: 'For small to medium businesses',
     logo: safeBoxWithGoldenCoin,
-    monthlyPrice: 49,
-    yearlyPrice: 499,
+    monthlyPrice: 150,
+    yearlyPrice: 1200,
     isPopular: true,
     current: false,
     features: [
@@ -53,8 +54,8 @@ const pricingPlans = [
     name: 'Enterprise',
     tagLine: 'Solution for big organizations',
     logo: spaceRocket,
-    monthlyPrice: 99,
-    yearlyPrice: 999,
+    monthlyPrice: 350,
+    yearlyPrice: 3600,
     isPopular: false,
     current: false,
     features: [
@@ -66,13 +67,61 @@ const pricingPlans = [
     ],
   },
 ]
+
+const seedConfetti = ref(false)
+const onSubmit = async (amount: Number) => {
+  const response = await $api('/payments/yookassa', {
+    method: 'POST',
+    body: { amount },
+  })
+
+  // Инициализация виджета. Все параметры обязательные, кроме объекта customization.
+  const checkout = new window.YooMoneyCheckoutWidget({
+    confirmation_token: response.confirmation.confirmation_token, // Токен, который перед проведением оплаты нужно получить от ЮKassa
+    // return_url: window.location.href, // Ссылка на страницу завершения оплаты
+
+    //Настройка виджета
+    customization: {
+      //Настройка цветовой схемы, минимум один параметр, значения цветов в HEX
+      colors: {
+        /*background: '#2F3349', // Цвет фона платежной формы
+         control_primary: '#00BF96', // Цвет кнопки Заплатить и других акцентных элементов
+         control_primary_content: '#FFFFFF', // Цвет текста кнопки Заплатить
+         control_secondary: '#366093', // Цвет неакцентных элементов интерфейса
+         border: '#244166', // Цвет границ и разделителей
+         text: '#DBDCE0' // Цвет текста*/
+      },
+
+      //Настройка способа отображения
+      modal: true
+    },
+    error_callback: function (error: any) {
+      console.log(error)
+    }
+  })
+
+  checkout.on('complete', (res: any) => {
+    //Код, который нужно выполнить после оплаты.
+    seedConfetti.value = true
+
+    setTimeout(() => {
+      seedConfetti.value = false;
+    }, 10000)
+
+    //Удаление инициализированного виджета
+    checkout.destroy();
+  });
+
+  //Отображение платежной формы в контейнере
+  checkout.render('payment-form');
+}
 </script>
 
 <template>
   <!-- 👉 Title and subtitle -->
   <div class="text-center">
     <h3 class="text-h3 pricing-title mb-2">
-      {{ props.title ? props.title : 'Pricing Plans' }}
+      {{ props.title ? props.title : $t('Pricing Plans') }}
     </h3>
     <p class="mb-0">
       All plans include 40+ advanced tools and features to boost your product.
@@ -89,7 +138,7 @@ const pricingPlans = [
       for="pricing-plan-toggle"
       class="me-3"
     >
-      Monthly
+      {{ $t('Monthly') }}
     </VLabel>
 
     <div class="position-relative">
@@ -99,7 +148,7 @@ const pricingPlans = [
       >
         <template #label>
           <div class="text-body-1 font-weight-medium">
-            Annually
+            {{ $t('Annually') }}
           </div>
         </template>
       </VSwitch>
@@ -110,12 +159,16 @@ const pricingPlans = [
           size="24"
           class="flip-in-rtl mt-2 text-disabled"
         />
+        <div
+          v-if="seedConfetti"
+          v-confetti
+        />
         <VChip
           label
           color="primary"
           size="small"
         >
-          Save up to 10%
+          {{ $t('Save up to 10%') }}
         </VChip>
       </div>
     </div>
@@ -123,6 +176,7 @@ const pricingPlans = [
 
   <!-- SECTION pricing plans -->
   <VRow>
+
     <VCol
       v-for="plan in pricingPlans"
       :key="plan.logo"
@@ -146,7 +200,7 @@ const pricingPlans = [
             color="primary"
             size="small"
           >
-            Popular
+            {{ $t('Popular') }}
           </VChip>
         </VCardText>
 
@@ -172,13 +226,13 @@ const pricingPlans = [
           <div class="position-relative">
             <div class="d-flex justify-center pt-5 pb-10">
               <div class="text-body-1 align-self-start font-weight-medium">
-                $
+                {{ $t('$') }}
               </div>
               <h1 class="text-h1 font-weight-medium text-primary">
                 {{ annualMonthlyPlanPriceToggler ? Math.floor(Number(plan.yearlyPrice) / 12) : plan.monthlyPrice }}
               </h1>
               <div class="text-body-1 font-weight-medium align-self-end">
-                /month
+                /{{ $t('month') }}
               </div>
             </div>
 
@@ -187,7 +241,7 @@ const pricingPlans = [
               v-show="annualMonthlyPlanPriceToggler"
               class="annual-price-text position-absolute text-caption text-disabled pb-4"
             >
-              {{ plan.yearlyPrice === 0 ? 'free' : `USD ${plan.yearlyPrice}/Year` }}
+              {{ plan.yearlyPrice === 0 ? 'free' : `${$t('USD')} ${plan.yearlyPrice}/${ $t('Year') }` }}
             </span>
           </div>
 
@@ -217,8 +271,9 @@ const pricingPlans = [
             block
             :color="plan.current ? 'success' : 'primary'"
             :variant="plan.isPopular ? 'elevated' : 'tonal'"
-            :to="{ name: 'front-pages-payment' }"
             :active="false"
+            :disabled="plan.yearlyPrice === 0"
+            @click="onSubmit(annualMonthlyPlanPriceToggler ? plan.yearlyPrice : plan.monthlyPrice)"
           >
             {{ plan.yearlyPrice === 0 ? 'Your Current Plan' : 'Upgrade' }}
           </VBtn>

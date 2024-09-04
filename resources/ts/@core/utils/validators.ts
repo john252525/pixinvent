@@ -123,3 +123,21 @@ export const alphaDashValidator = (value: unknown) => {
 
   return /^[\w-]*$/.test(valueAsString) || t('All Character are not valid')
 }
+
+export const numericValidator = (value: unknown) => {
+  if (isEmpty(value))
+    return true;
+
+  const valueAsString = String(value);
+
+  return /^\d+$/.test(valueAsString) || t('Value must be a valid number');
+}
+
+export const positiveIntegerValidator = (value: unknown) => {
+  if (isEmpty(value))
+    return true;
+
+  const valueAsString = String(value);
+
+  return /^([1-9]\d*)$/.test(valueAsString) || t('Value must be a positive integer');
+}

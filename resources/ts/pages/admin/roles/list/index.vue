@@ -15,6 +15,8 @@ const dialogColor = ref(false)
 const dialogDelete = ref(false)
 const roleForm = ref()
 
+const { t } = useI18n()
+
 // Data table options
 const search = ref('')
 const itemsPerPage = ref(10)
@@ -24,12 +26,12 @@ const orderBy = ref()
 
 const headers = ref([
   { title: '#', align: 'start', key: 'id', width: 20 },
-  { title: 'Название', align: 'start', sortable: false, key: 'name' },
-  // { title: 'slug', align: 'start', sortable: false, key: 'name' },
-  // { title: 'Объект', key: 'meta.subject', align: 'center' },
-  { title: 'Права', key: 'permissions', align: 'start', sortable: false },
-  { title: 'Время', key: 'timestamps', align: 'start', sortable: false },
-  { title: 'Действия', key: 'actions', align: 'end', sortable: false },
+  { title: t('name'), key: 'name', align: 'start', sortable: false },
+  // { title: 'name', key: 'name', align: 'start', sortable: false },
+  // { title: 'meta.subject', key: 'meta.subject', align: 'center' },
+  { title: t('permissions'), key: 'permissions', align: 'start', sortable: false },
+  { title: t('timestamps'), key: 'timestamps', align: 'start', sortable: false },
+  { title: t('actions'), key: 'actions', align: 'end', sortable: false },
 ])
 
 const objects = ref<Subjects[]>(['all', 'admin', 'user', 'premium'])
@@ -52,26 +54,12 @@ const editedItem = ref({
   name: '',
   permissions: [],
   guard_name: 'web',
-  meta: {
-    subject: null,
-    name: '',
-    color: 'default',
-    icon: '',
-    description: '',
-  },
 })
 
 const defaultItem = ref({
   name: '',
   permissions: [],
   guard_name: 'web',
-  meta: {
-    subject: null,
-    name: '',
-    color: 'default',
-    icon: '',
-    description: '',
-  },
 })
 
 function formatDate(date: Dayjs) {
@@ -79,7 +67,7 @@ function formatDate(date: Dayjs) {
 }
 
 const formTitle = computed(() => {
-  return editedIndex.value === -1 ? 'Создание новой роли' : 'Редактирование роли'
+  return editedIndex.value === -1 ? t('Создание новой роли') : t('Редактирование роли')
 })
 
 const updateOptions = (options: any) => {
@@ -246,7 +234,7 @@ watch(dialogDelete, val => {
                       <VCol cols="12">
                         <VTextField
                           v-model="editedItem.name"
-                          label="Название роли"
+                          :label="t('Название роли')"
                           :rules="[requiredValidator]"
                           :error-messages="errors?.name"
                         />
