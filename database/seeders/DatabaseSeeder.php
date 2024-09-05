@@ -25,9 +25,22 @@ class DatabaseSeeder extends Seeder
             'email' => 'user@example.com',
             'password' => \Hash::make('12344321'),
         ]);
+
         User::factory()->create([
-            'name' => 'Premium User',
-            'email' => 'premium@example.com',
+            'name' => 'Domain1 User',
+            'email' => 'domain1@example.com',
+            'password' => \Hash::make('12344321'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Domain2 User',
+            'email' => 'domain2@example.com',
+            'password' => \Hash::make('12344321'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Domain3 User',
+            'email' => 'domain3@example.com',
             'password' => \Hash::make('12344321'),
         ]);
 

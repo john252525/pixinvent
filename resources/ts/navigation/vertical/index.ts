@@ -3,6 +3,7 @@ import type { VerticalNavItems } from '@layouts/types'
 import first from './first'
 import admin from './admin'
 import payments from './payments'
+import autopage from './autopage'
 
 import charts from './charts'
 import dashboard from './dashboard'
@@ -11,5 +12,5 @@ import uiElements from './ui-elements'
 
 export default [
   // ...dashboard, ...appsAndPages, ...uiElements, ...forms, ...charts, ...others
-  ...admin, ...first, ...payments
+  ...admin, ...first, ...payments, ...autopage,
 ] as VerticalNavItems

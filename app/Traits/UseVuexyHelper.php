@@ -24,11 +24,23 @@ trait UseVuexyHelper
     {
         $roles = $this->roles;
         $abilities = [];
+
+        $role = match (request()->getHost()) {
+            env('DOMAIN_APP1') => 'domain1',
+            env('DOMAIN_APP2') => 'domain2',
+            env('DOMAIN_APP3') => 'domain3',
+        };
+
+        $abilities[] = [
+            'subject' => $role,
+            'action' => 'read',
+        ];
+
         foreach ($roles as $role) {
             $permissions = $role->permissions;
             foreach ($permissions as $permission) {
                 $abilities[] = [
-                    'subject' => /*$role->name === 'admin'? 'all' : */ $role->name,
+                    'subject' => $role->name,
                     'action' => $permission->name,
                 ];
             }

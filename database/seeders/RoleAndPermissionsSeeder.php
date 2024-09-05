@@ -57,16 +57,18 @@ class RoleAndPermissionsSeeder extends Seeder
         $userRole = $this->createRole(RolesEnum::USER);
         $userRole->givePermissionTo(PermissionsEnum::READ);
 
-        $premiumRole = $this->createRole(RolesEnum::PREMIUM);
-        $premiumRole->givePermissionTo(PermissionsEnum::READ);
+        $domain1Role = $this->createRole(RolesEnum::DOMAIN1);
+        $domain1Role->givePermissionTo(PermissionsEnum::READ);
+
+        $domain2Role = $this->createRole(RolesEnum::DOMAIN2);
+        $domain2Role->givePermissionTo(PermissionsEnum::READ);
+
+        $domain3Role = $this->createRole(RolesEnum::DOMAIN3);
+        $domain3Role->givePermissionTo(PermissionsEnum::READ);
 
         // Assign role to super-admin user
         $superAdmin = User::find(1);
         $superAdmin->assignRole(RolesEnum::ALL);
-
-        // Assign role to admin user
-        $admin = User::find(4);
-        $admin->assignRole(RolesEnum::ADMIN, RolesEnum::USER, RolesEnum::PREMIUM);
 
         //Assign role to client user
         $client = User::find(2);
@@ -74,6 +76,19 @@ class RoleAndPermissionsSeeder extends Seeder
 
         // Assign role to premium user
         $operator = User::find(3);
-        $operator->assignRole(RolesEnum::PREMIUM, RolesEnum::USER);
+        $operator->assignRole(RolesEnum::DOMAIN1, RolesEnum::USER);
+
+        // Assign role to premium user
+        $operator = User::find(4);
+        $operator->assignRole(RolesEnum::DOMAIN2, RolesEnum::USER);
+
+        // Assign role to premium user
+        $operator = User::find(5);
+        $operator->assignRole(RolesEnum::DOMAIN3, RolesEnum::USER);
+
+        // Assign role to admin user
+        $admin = User::find(6);
+        $admin->assignRole(RolesEnum::ADMIN, RolesEnum::USER, RolesEnum::DOMAIN1, RolesEnum::DOMAIN2, RolesEnum::DOMAIN3);
+
     }
 }

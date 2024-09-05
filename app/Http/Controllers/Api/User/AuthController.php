@@ -28,7 +28,14 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();
-        $user->assignRole(RolesEnum::USER);
+
+        $role = match ($request->getHost()) {
+            env('DOMAIN_APP1') => RolesEnum::DOMAIN1,
+            env('DOMAIN_APP2') => RolesEnum::DOMAIN2,
+            env('DOMAIN_APP3') => RolesEnum::DOMAIN3,
+        };
+
+        $user->assignRole(RolesEnum::USER, $role);
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
