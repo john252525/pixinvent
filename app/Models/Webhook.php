@@ -11,7 +11,7 @@ class Webhook extends Model
     protected function casts(): array
     {
         return [
-            'request' => 'array',
+            'payload' => 'array',
         ];
     }
 }
