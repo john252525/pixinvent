@@ -3,10 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('{any?}', function () {
-    return view('application');
-})->where('any', '.*');
-
 Route::any('webhooks/{service}/{type?}', function (Request $request, string $service, ?string $type = null) {
     try {
         \App\Models\Webhook::create(['service' => $service, 'type' => $type, 'payload' => $request->all()]);
@@ -18,3 +14,8 @@ Route::any('webhooks/{service}/{type?}', function (Request $request, string $ser
 });
 
 Route::get('auth/password/reset', [\App\Http\Controllers\Api\User\AuthController::class, 'passwordReset'])->name('password.reset');
+
+Route::get('{any?}', function () {
+    return view('application');
+})->where('any', '.*');
+
