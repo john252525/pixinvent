@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Webhook extends Model
 {
+    protected $guarded = [];
+
     protected function casts(): array
     {
         return [
