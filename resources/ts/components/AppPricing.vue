@@ -70,14 +70,14 @@ const pricingPlans = [
 
 const seedConfetti = ref(false)
 const onSubmit = async (amount: Number) => {
-  const response = await $api('/payments/yookassa', {
+  const { confirmation_token }: any = await $api('/payments/yookassa', {
     method: 'POST',
     body: { amount },
   })
 
   // Инициализация виджета. Все параметры обязательные, кроме объекта customization.
   const checkout = new window.YooMoneyCheckoutWidget({
-    confirmation_token: response.confirmation.confirmation_token, // Токен, который перед проведением оплаты нужно получить от ЮKassa
+    confirmation_token, // Токен, который перед проведением оплаты нужно получить от ЮKassa
     // return_url: window.location.href, // Ссылка на страницу завершения оплаты
 
     //Настройка виджета

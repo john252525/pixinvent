@@ -11,14 +11,14 @@ const refVForm = ref()
 const amount = ref('')
 const onSubmit = () => {
   refVForm.value.validate().then(async (isValid: boolean) => {
-    const response = await $api('/payments/yookassa', {
+    const { confirmation_token } = await $api('/payments/yookassa', {
       method: 'POST',
       body: { amount: amount.value },
     })
 
     // Инициализация виджета. Все параметры обязательные, кроме объекта customization.
     const checkout = new window.YooMoneyCheckoutWidget({
-      confirmation_token: response.confirmation.confirmation_token, // Токен, который перед проведением оплаты нужно получить от ЮKassa
+      confirmation_token, // Токен, который перед проведением оплаты нужно получить от ЮKassa
       // return_url: window.location.href, // Ссылка на страницу завершения оплаты
 
       //Настройка виджета

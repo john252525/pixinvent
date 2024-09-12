@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Integrations\Ukassa\Requests;
+namespace App\Http\Integrations\Yookassa\Requests;
 
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class MeRequest extends Request
+class PaymentList extends Request
 {
     /**
      * The HTTP method of the request
@@ -17,6 +17,6 @@ class MeRequest extends Request
      */
     public function resolveEndpoint(): string
     {
-        return '/me';
+        return '/payments';
     }
 }

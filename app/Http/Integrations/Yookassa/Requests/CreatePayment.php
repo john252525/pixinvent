@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Integrations\Ukassa\Requests;
+namespace App\Http\Integrations\Yookassa\Requests;
 
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
@@ -18,16 +18,22 @@ class CreatePayment extends Request implements HasBody
 
     public function __construct(
         protected readonly string $amount,
+        protected readonly string $idempotence_key,
+        protected readonly array $metadata = [],
         protected readonly string $description = '',
         protected readonly string $currency = 'RUB',
         protected readonly string $type = 'embedded',
         protected readonly bool $capture = true,
     ) {}
 
+    /**
+     * Default headers for every request
+     */
     protected function defaultHeaders(): array
     {
         return [
             'Content-Type' => 'application/json',
+            'Idempotence-Key' => $this->idempotence_key,
         ];
     }
 
@@ -52,6 +58,7 @@ class CreatePayment extends Request implements HasBody
             ],
             'capture' => $this->capture,
             'description' => $this->description,
+            'metadata' => $this->metadata,
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Integrations\Ukassa\Requests;
+namespace App\Http\Integrations\Yookassa\Requests;
 
 use Saloon\Enums\Method;
 use Saloon\Http\Request;

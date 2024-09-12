@@ -35,9 +35,12 @@ return [
         ],
     ],
 
-    'ukassa' => [
-        'id' => env('UKASSA_ID'),
-        'secret' => env('UKASSA_SECRET'),
+    'yookassa' => [
+        'id' => env('YOOKASSA_ID'),
+        'secret' => env('YOOKASSA_SECRET'),
     ],
 
+    'telegram-bot-api' => [
+        'token' => env('TELEGRAM_BOT_TOKEN'),
+    ],
 ];
