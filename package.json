@@ -9,7 +9,7 @@
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint . -c .eslintrc.cjs --fix --rulesdir eslint-internal-rules/ --ext .ts,.js,.cjs,.vue,.tsx,.jsx",
     "build:icons": "tsx resources/ts/plugins/iconify/build-icons.ts",
-    "postinstall": "npm run build:icons"
+    "postinstall": "bun run build:icons"
   },
   "dependencies": {
     "@asika32764/vue-animate": "^3.0.2",
@@ -29,6 +29,7 @@
     "@tiptap/starter-kit": "^2.5.8",
     "@tiptap/vue-3": "^2.5.8",
     "@unhead/vue": "^1.10.4",
+    "@vuepic/vue-datepicker": "^9.0.3",
     "@vueuse/core": "10.11.0",
     "@vueuse/math": "10.11.0",
     "apexcharts": "3.51.0",
@@ -135,8 +136,5 @@
     "@tiptap/core": "^2",
     "@types/video.js": "^7",
     "sass": "1.76.0"
-  },
-  "msw": {
-    "workerDirectory": "public"
   }
 }

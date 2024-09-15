@@ -1,0 +1,69 @@
+export const useUserStore = defineStore('user-store', () => {
+  const userData = ref({
+    role: 'guest',
+    balance: 0,
+  })
+
+  const ability = useAbility()
+  const accessToken = useCookie('accessToken').value
+
+  const userSettings = ref({})
+  const userAbilityRules = ref([])
+
+  const setAbilities = (abilities: any) => {
+    ability.update(abilities)
+  }
+
+  async function fetchUserData(updateAbilities = false) {
+    const { data, error } = await useApi(createUrl('/user'))
+
+    if (error.value) {
+      return error.value
+    }
+    else {
+      userData.value = data.value.userData
+      userAbilityRules.value = data.value.userAbilityRules
+
+      if (updateAbilities)
+        setAbilities(userAbilityRules.value)
+
+      return userData
+    }
+  }
+
+  const logout = async () => {
+    useCookie('accessToken').value = null
+
+    localStorage.removeItem('accessToken')
+    userAbilityRules.value = []
+
+    setAbilities(userAbilityRules.value)
+    userData.value = Object({})
+
+    return true
+  }
+
+  onBeforeMount(async () => {
+    if (userData.value.id === undefined && accessToken !== undefined) {
+
+      await fetchUserData()
+        .then(() => {
+          setAbilities(userAbilityRules.value)
+        })
+    }
+  })
+
+  return {
+    // 👉 state
+    userData,
+    userAbilityRules,
+    ability,
+
+    // 👉 getters
+
+    // 👉 actions
+    setAbilities,
+    fetchUserData,
+    logout,
+  }
+})

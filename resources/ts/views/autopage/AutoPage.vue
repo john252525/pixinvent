@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const component =  defineModel('component')
+const component: any =  defineModel('component')
 </script>
 
 <template>

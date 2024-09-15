@@ -1,0 +1,26 @@
+input.dp__pointer.dp__input_readonly.dp__input.dp__input_icon_pad.dp__input_reg {
+  background-color: rgb(var(--v-theme-surface));
+  border-color: rgba(var(--v-border-color), var(--v-border-opacity));
+  border-radius: 6px;
+}
+.dp__menu.dp__menu_index.dp__theme_light,
+.dp__menu.dp__menu_index.dp__theme_dark {
+  background-color: rgb(var(--v-theme-surface));
+  border-color: rgba(var(--v-border-color), var(--v-border-opacity));
+}
+.dp__arrow_top {
+  background-color: rgb(var(--v-theme-surface));
+  border-color: rgba(var(--v-border-color), var(--v-border-opacity));
+}
+.dp__calendar_header_separator {
+  background-color: rgba(var(--v-border-color), var(--v-border-opacity));
+}
+.dp__action_buttons .dp__action_select {
+  background: rgb(var(--v-theme-primary));
+}
+.dp__today {
+  border-color: rgb(var(--v-theme-primary));
+}
+.dp__range_end, .dp__range_start, .dp__active_date {
+  background: rgb(var(--v-theme-primary));
+}

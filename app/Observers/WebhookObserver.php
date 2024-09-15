@@ -39,7 +39,10 @@ class WebhookObserver
                 ]],
         ]);
 
-        $message = "*Оплата совершена*\nПользователь ID: ".$transaction->user_id."\nСумма: ".\Arr::get($webhook->payload, 'object.amount.value')." рублей\nКомиссия удержана: ".\Arr::get($webhook->payload, 'object.income_amount.value').' рублей';
+        $message = $transaction->status === 'canceled'
+            ? "*Оплата отменена*\nПользователь ID: ".$transaction->user_id."\nСумма: ".\Arr::get($webhook->payload, 'object.amount.value').' рублей'
+            : "*Оплата совершена*\nПользователь ID: ".$transaction->user_id."\nСумма: ".\Arr::get($webhook->payload, 'object.amount.value')." рублей\nКомиссия удержана: ".\Arr::get($webhook->payload, 'object.amount.value') - \Arr::get($webhook->payload, 'object.income_amount.value').' рублей';
+
 
         \Notification::route('telegram', -1002431671559)->notify(new TelegramNotification($message));
     }

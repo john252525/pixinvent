@@ -16,6 +16,14 @@ export default [
         subject: 'admin',
         action: 'read',
       },
+    ],
+  },
+  {
+    title: 'Access management',
+    icon: { icon: 'mdi-user-access-control' },
+    subject: 'admin',
+    action: 'read',
+    children: [
       {
         title: 'Roles',
         to: { name: 'admin-roles-list' },
@@ -28,18 +36,19 @@ export default [
         subject: 'admin',
         action: 'read',
       },
+    ],
+  },
+  {
+    title: 'Payments management',
+    icon: { icon: 'mdi-account-payment-outline' },
+    subject: 'admin',
+    action: 'read',
+    children: [
       {
-        title: 'Level 2.2',
-        children: [
-          {
-            title: 'Level 3.1',
-            to: null,
-          },
-          {
-            title: 'Level 3.2',
-            to: null,
-          },
-        ],
+        title: 'Transactions',
+        to: { name: 'admin-payments-transactions' },
+        subject: 'admin',
+        action: 'read',
       },
     ],
   },

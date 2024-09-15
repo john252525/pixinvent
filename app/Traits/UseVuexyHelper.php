@@ -2,13 +2,14 @@
 
 namespace App\Traits;
 
+
 trait UseVuexyHelper
 {
-    public function getUserData(string $token): array
+    public function getUserData(?string $token = null): array
     {
         return [
             'userAbilityRules' => $this->getAbilities(),
-            'accessToken' => $token,
+            'accessToken' => $token ?? request()->bearerToken(),
             'userData' => [
                 'id' => $this->id,
                 'fullName' => $this->email,
@@ -16,6 +17,7 @@ trait UseVuexyHelper
                 'avatar' => '/images/avatars/avatar-1.png',
                 'email' => $this->email,
                 'role' => $this->roles[0]->name === 'all' ? 'sadmin' : $this->roles[0]->name,
+                'balance' => $this->balance,
             ],
         ];
     }

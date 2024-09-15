@@ -6,6 +6,7 @@ import { themeConfig } from '@themeConfig'
 import { VForm } from 'vuetify/components/VForm'
 import type { ThemeSwitcherTheme } from '@layouts/types'
 import LangSwitcherI18n from '@core/components/I18n.vue'
+import { useUserStore} from '@/stores/UserStore'
 
 definePage({
   meta: {
@@ -48,6 +49,7 @@ const credentials = ref({
   password: '12344321',
 })
 
+const userStore = useUserStore()
 const login = async () => {
   try {
     const res = await $api('/user/auth/login', {
@@ -59,6 +61,8 @@ const login = async () => {
     })
 
     const { accessToken, userData, userAbilityRules } = res
+
+    userStore.$patch({ accessToken, userData, userAbilityRules })
 
     useCookie('userAbilityRules').value = userAbilityRules
     ability.update(userAbilityRules)

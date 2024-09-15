@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/', function (Request $request) {
+    return $request->user()->getUserData();
 })->middleware('auth:sanctum');
 
 /** Authentication Routes... */
@@ -17,3 +18,8 @@ Route::prefix('auth')->group(function () {
     Route::post('reset-password', [AuthController::class, 'resetPassword']);
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
+
+Route::group(['prefix' => 'transactions', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/', [TransactionController::class, 'index']);
+});
+

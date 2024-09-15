@@ -48,6 +48,10 @@ class User extends Authenticatable
         ];
     }
 
+    public function getBalanceAttribute()
+    {
+        return $this->transactions()->where('status', '=', 'succeeded')->sum('amount');
+    }
     public function transactions()
     {
         return $this->hasMany(Transaction::class);

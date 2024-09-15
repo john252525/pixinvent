@@ -34,6 +34,19 @@ class UsersController extends Controller
         ]);
     }
 
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+        $relation = $request->input('relation');
+
+        $users = User::when($relation, fn ($user) => $user->has($relation));
+        $users->when($search, fn ($user) => $user
+            ->where('name', 'like', "%$search%")
+            ->orWhere('email', 'like', "%$search%"));
+
+        return UsersResource::collection($users->paginate(10));
+    }
+
     public function store(UserCreateRequest $request)
     {
         $requestRoles = $request->validated('roles');

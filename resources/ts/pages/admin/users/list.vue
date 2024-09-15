@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import ActionUserDrawer from '@/views/admin/users/ActionUserDrawer.vue'
 import type { UserProperties } from '@/views/admin/users/types'
+import { getI18n } from '@/plugins/i18n'
+import { toMoney } from '@/utils/helpers'
 
 definePage({
   meta: {
@@ -12,6 +14,7 @@ definePage({
 // Setup
 const route = useRoute()
 const router = useRouter()
+const { t } = getI18n().global
 
 // Filters
 const search = ref()
@@ -56,11 +59,12 @@ const total = computed(() => usersData.value.meta.total)
 
 // Headers
 const headers = [
-  { title: '№', key: 'id', width: '20px', align: 'center' },
-  { title: 'Имя', key: 'name', sortable: false },
-  { title: 'Роли', key: 'roles', sortable: false },
-  { title: 'Даты', key: 'created_at' },
-  { title: 'Actions', key: 'actions', sortable: false, align: 'end' },
+  { title: t('id'), key: 'id', width: '20px', align: 'center' },
+  { title: t('name'), key: 'name' },
+  { title: t('balance'), key: 'balance', sortable: false },
+  { title: t('roles'), key: 'roles', sortable: false },
+  { title: t('created_at'), key: 'created_at' },
+  { title: t('actions'), key: 'actions', sortable: false, align: 'end' },
 ]
 
 const user = ref<UserProperties>({
@@ -161,6 +165,10 @@ const deleteUser = async (deletedUser: any) => {
                   </VAvatar>
                 </template>
               </VListItem>
+            </template>
+
+            <template #item.balance="{ item }">
+              {{ toMoney(item.balance) }}
             </template>
 
             <template #item.roles="{ item }">
