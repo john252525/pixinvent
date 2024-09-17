@@ -22,7 +22,9 @@ class SourcesApiConnector extends Connector
      */
     protected function defaultHeaders(): array
     {
-        return [];
+        return [
+            'Accept' => 'application/json',
+        ];
     }
 
     /**

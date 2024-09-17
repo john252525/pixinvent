@@ -71,6 +71,18 @@ const total = computed(() => sourcesData.value.clients.length)
         </VRow>
         <VDivider />
       </template>
+      <template #item.step="{ item }">
+        <span :class="item.step ? 'cursor-help': 'cursor-not-allowed'">
+          {{ item.step ? item.step.value : 'Не получен' }}
+        <VTooltip
+          v-if="item.step"
+          activator="parent"
+          location="top"
+        >
+          {{ item.step.message }}
+        </VTooltip>
+        </span>
+      </template>
     </VDataTableServer>
   </VCard>
 </template>

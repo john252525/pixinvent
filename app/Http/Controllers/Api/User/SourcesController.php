@@ -9,20 +9,28 @@ use Illuminate\Http\Request;
 
 class SourcesController extends Controller
 {
-    public function __construct(
-        protected $sourcesApi = new SourcesApiConnector,
-    ) {}
-
     public function index(Request $request)
     {
-        $source = $request->input('source');
 
+        $source = $request->input('source');
+        $token = $request->user()->external_token;
+        $endpoint = config('services.api_gate.sources_data_url').'getInfoByToken';
+
+        /*
+        $sourcesApi = new SourcesApiConnector;
         $getInfoByTokenRequest = new GetInfoByToken(
+            token: $token,
             source: $source,
         );
-        $response = $this->sourcesApi->send($getInfoByTokenRequest);
+        $response = $sourcesApi->send($getInfoByTokenRequest);
+        */
 
-        return $response->json();
+        $response = \Http::post($endpoint, [
+            'token' => $token,
+            'source' => $source,
+        ]);
+
+        return $response->ok() ? response()->json($response->json(), 201) : null;
     }
 
     public function store(Request $request) {}
