@@ -208,6 +208,9 @@
       "ariaLabel": {
         "item": "элемент"
       }
+    },
+    "dataIterator": {
+      "loadingText": "Загрузка..."
     }
   },
 

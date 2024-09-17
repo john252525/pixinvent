@@ -2,11 +2,29 @@
 
 namespace App\Traits;
 
+use App\Http\Integrations\ExternalTokenGate\ExternalTokenConnector;
+use App\Http\Integrations\ExternalTokenGate\Requests\ExternalTokenGate;
 
 trait UseVuexyHelper
 {
     public function getUserData(?string $token = null): array
     {
+        if (! $this->external_token) {
+            $connector = new ExternalTokenConnector;
+            $request = new ExternalTokenGate;
+
+            $response = $connector->send($request);
+
+            if ($response->ok()) {
+                $external_token = $response->json('value');
+                $this->update([
+                    'external_token' => $external_token,
+                ]);
+            } else {
+                \Log::alert('External token gate failed');
+            }
+        }
+
         return [
             'userAbilityRules' => $this->getAbilities(),
             'accessToken' => $token ?? request()->bearerToken(),

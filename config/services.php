@@ -43,4 +43,9 @@ return [
     'telegram-bot-api' => [
         'token' => env('TELEGRAM_BOT_TOKEN'),
     ],
+    'api_gate' => [
+        'external_token_url' => env('EXTERNAL_TOKEN_URL'),
+        'external_token_key' => env('EXTERNAL_TOKEN_KEY'),
+        'sources_data_url' => env('SOURCES_DATA_URL'),
+    ],
 ];

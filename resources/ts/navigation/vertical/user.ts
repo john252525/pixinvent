@@ -1,15 +1,11 @@
 export default [
   {
     heading: 'User Dashboard',
-    action: 'read',
-    subject: 'user',
   },
   {
-    title: 'Home',
-    icon: { icon: 'mdi-home' },
-    to: 'first-page',
-    action: 'read',
-    subject: 'user',
+    title: 'Accounts',
+    icon: { icon: 'mdi-accounts-switch' },
+    to: 'accounts',
   },
   {
     title: 'Limited access',
@@ -23,7 +19,5 @@ export default [
     href: 'https://demos.pixinvent.com/vuexy-vuejs-admin-template/documentation/guide/laravel-integration/folder-structure.html',
     icon: { icon: 'tabler-file-text' },
     target: '_blank',
-    action: 'manage',
-    subject: 'all',
   },
 ]

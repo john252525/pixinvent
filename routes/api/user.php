@@ -23,3 +23,7 @@ Route::group(['prefix' => 'transactions', 'middleware' => 'auth:sanctum'], funct
     Route::get('/', [TransactionController::class, 'index']);
 });
 
+Route::group(['prefix' => 'sources', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/', [SourcesController::class, 'index']);
+});
+
