@@ -10,7 +10,7 @@ class GetInfoByToken extends Request
     public function __construct(
         protected ?string $token = null,
         protected string $source = 'all',
-        protected bool $skipDetails = true,
+        protected bool $skipDetails = false,
     ) {
         $this->token = $token ?? request()->user()->external_token;
     }
