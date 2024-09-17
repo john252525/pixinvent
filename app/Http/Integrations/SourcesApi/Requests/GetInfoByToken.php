@@ -9,8 +9,8 @@ class GetInfoByToken extends Request
 {
     public function __construct(
         protected ?string $token = null,
-        protected string $source = 'all',
-        protected bool $skipDetails = false,
+        protected string $source = 'telegram',
+        // protected bool $skipDetails = false,
     ) {
         $this->token = $token ?? request()->user()->external_token;
     }
@@ -32,7 +32,7 @@ class GetInfoByToken extends Request
         return [
             'token' => $this->token,
             'source' => $this->source,
-            'skipDetails' => $this->skipDetails,
+            // 'skipDetails' => $this->skipDetails,
         ];
     }
 }
