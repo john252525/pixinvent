@@ -38,6 +38,16 @@ const headers = ref([
 
 const clients = computed(() => sourcesData.value.clients)
 const total = computed(() => sourcesData.value.clients.length)
+
+const deleteAccount = async (login: string) => {
+  const response = await $api(`user/sources/${source.value}`, {
+    method: 'DELETE',
+    body: {
+      login: login,
+    },
+  })
+  fetchSources()
+}
 </script>
 
 <template>
@@ -73,7 +83,7 @@ const total = computed(() => sourcesData.value.clients.length)
       </template>
       <template #item.step="{ item }">
         <span :class="item.step ? 'cursor-help': 'cursor-not-allowed'">
-          {{ item.step ? item.step.value : 'Не получен' }}
+          {{ item.step ? item.step.value : $t('offline') }}
         <VTooltip
           v-if="item.step"
           activator="parent"
@@ -82,6 +92,21 @@ const total = computed(() => sourcesData.value.clients.length)
           {{ item.step.message }}
         </VTooltip>
         </span>
+      </template>
+
+      <template #item.actions="{ item }">
+        <VIcon
+          start
+          size="small"
+        >
+          mdi-pencil
+        </VIcon>
+        <VIcon
+          size="small"
+          @click="deleteAccount(item.login)"
+        >
+          mdi-delete
+        </VIcon>
       </template>
     </VDataTableServer>
   </VCard>

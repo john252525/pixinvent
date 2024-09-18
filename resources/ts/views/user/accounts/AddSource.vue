@@ -8,7 +8,7 @@ const { t } = getI18n().global
 const selectSourceContent: CustomInputContent[] = [
   {
     title: t('Whatsapp'),
-    desc: t('For freelancers who work with multiple clients'),
+    desc: t('To add an account you will need to enter your login'),
     value: 'whatsapp',
     icon: { icon: 'logos:whatsapp-icon', size: '28' },
   },
@@ -22,9 +22,9 @@ const selectSourceContent: CustomInputContent[] = [
 
 const selectSourceTypeContent: CustomInputContent[] = [
   {
-    title: t('Link activation'),
-    desc: t('For freelancers who work with multiple clients'),
-    value: 'link',
+    title: t('Account name'),
+    desc: t('Use any name convenient for you'),
+    value: 'login',
     icon: { icon: 'mdi-link-variant', size: '28' },
   },
   {
@@ -36,11 +36,46 @@ const selectSourceTypeContent: CustomInputContent[] = [
 ]
 
 const selectedSource = ref('whatsapp')
+const setStatus = ref(true)
+const login = ref()
 const selectedSourceType = ref('link')
+
+const firstStep = () => {
+  step.value = 2
+}
+const secondStep = async () => {
+  const response = await $api(`user/sources/${selectedSource.value}`, {
+    method: 'PUT',
+    body: {
+      setStatus: setStatus.value,
+      login: login.value,
+    },
+  })
+  console.log(response)
+}
+const thirdStep = () => {
+  console.log(step.value)
+}
+const finalStep = () => {
+  console.log(step.value)
+}
+
+const steps = [
+  firstStep,
+  secondStep,
+  thirdStep,
+  finalStep,
+]
+const nextStep = () => {
+  steps[step.value - 1]()
+}
+const previousStep = () => {
+  step.value--
+}
 </script>
 
 <template>
-  <VDialog max-width="500">
+  <VDialog>
     <template #activator="{ props: activatorProps }">
       <VBtn
         v-bind="activatorProps"
@@ -53,14 +88,17 @@ const selectedSourceType = ref('link')
     <template #default="{ isActive }">
       <VCard
         class="mx-auto"
-        max-width="450"
+        max-width="500"
+        min-width="450"
       >
         <VCardTitle class="text-h6 font-weight-regular justify-space-between">
+          {{ $t('Step: ') }}
           <VAvatar
             color="primary"
             size="24"
             v-text="step"
-          ></VAvatar>
+          >
+          </VAvatar>
         </VCardTitle>
 
         <VWindow v-model="step" class="ma-3">
@@ -73,11 +111,24 @@ const selectedSourceType = ref('link')
           </VWindowItem>
 
           <VWindowItem :value="2">
-            <CustomRadiosWithIcon
-              v-model:selected-radio="selectedSourceType"
-              :radio-content="selectSourceTypeContent"
-              :grid-column="{ cols: '6' }"
-            />
+            <VCardTitle>{{ $t('Account creation') }}</VCardTitle>
+            <div v-if="selectedSource === 'whatsapp'" class="pa-4 text-center">
+              <VCardText>
+                <v-text-field
+                  label="Enter your account name"
+                  v-model="login"
+                ></v-text-field>
+              </VCardText>
+              <VCardText class="pb-0">
+                <VSwitch
+                  v-model="setStatus"
+                  label="Start account"
+                />
+                <span class="text-caption text-grey-darken-1">
+                  {{ $t('You can start your account immediately after creation') }}
+                </span>
+              </VCardText>
+            </div>
           </VWindowItem>
 
           <VWindowItem :value="3">
@@ -106,16 +157,15 @@ const selectedSourceType = ref('link')
           <VBtn
             v-if="step > 1"
             variant="text"
-            @click="step--"
+            @click="previousStep"
           >
             Back
           </VBtn>
           <VSpacer></VSpacer>
           <VBtn
-            v-if="step < 3"
             color="primary"
             variant="flat"
-            @click="step++"
+            @click="nextStep"
           >
             Next
           </VBtn>

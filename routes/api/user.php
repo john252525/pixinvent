@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\User;
 
-use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,5 +24,7 @@ Route::group(['prefix' => 'transactions', 'middleware' => 'auth:sanctum'], funct
 
 Route::group(['prefix' => 'sources', 'middleware' => 'auth:sanctum'], function () {
     Route::get('/', [SourcesController::class, 'index']);
+    Route::put('/{source}', [SourcesController::class, 'store']);
+    Route::delete('/{source}', [SourcesController::class, 'destroy']);
 });
 
