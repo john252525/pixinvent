@@ -4,7 +4,7 @@ import { getI18n } from '@/plugins/i18n'
 
 const { t } = getI18n().global
 const page = ref(1)
-const source = ref('whatsapp')
+const source = ref(localStorage.getItem('source') || 'whatsapp')
 const itemsPerPage = ref(10)
 const sortBy = ref('id')
 const orderBy = ref('desc')
@@ -48,6 +48,10 @@ const deleteAccount = async (login: string) => {
   })
   fetchSources()
 }
+
+const setSource = (source: string) => {
+  localStorage.setItem('source', source)
+}
 </script>
 
 <template>
@@ -65,7 +69,7 @@ const deleteAccount = async (login: string) => {
           <VCol cols="12" class="d-flex justify-space-between">
             <VCardTitle>Accounts</VCardTitle>
             <div class="d-flex gap-3">
-              <AddSource />
+              <AddSource @fetch-sources="fetchSources" />
               <VBtn color="success" icon="mdi-refresh" rounded @click="fetchSources" />
             </div>
           </VCol>
@@ -76,6 +80,7 @@ const deleteAccount = async (login: string) => {
               v-model="source"
               :items="['telegram', 'whatsapp']"
               :label="$t('Select source')"
+              @update:model-value="setSource"
             />
           </VCol>
         </VRow>

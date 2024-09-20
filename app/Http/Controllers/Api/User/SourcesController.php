@@ -20,6 +20,10 @@ class SourcesController extends Controller
     public function index(Request $request)
     {
 
+        if ($request->input('sortBy')) {
+            return response()->json(['clients' => []]);
+        }
+
         $source = $request->input('source');
 
         /*
@@ -49,7 +53,7 @@ class SourcesController extends Controller
             'source' => $source,
             'login' => $login,
         ]);
-        dd($response->json());
+
         if ($response->ok()) {
             if ($activateSource) {
                 $response = \Http::post($this->endpoint.'setState', [
@@ -57,11 +61,90 @@ class SourcesController extends Controller
                     'source' => $source,
                     'login' => $login,
                     'setState' => true,
+                    'qrLogin' => true,
                 ]);
             }
         }
 
         return response()->json($response->json(), 201);
+    }
+
+    public function getQR(Request $request, string $source)
+    {
+        $login = $request->input('loginQR');
+
+        if ($login === 'undefined') {
+            return response()->json([], 201);
+        }
+
+        if ($source === 'whatsapp') {
+
+            $qr = \Http::post($this->endpoint.'getQr', [
+                'token' => $this->token,
+                'source' => $source,
+                'login' => $login,
+            ]);
+        } elseif ($source === 'telegram') {
+            $qr = \Http::post($this->endpoint.'getQr', [
+                'token' => $this->token,
+                'source' => $source,
+                'login' => $login,
+            ]);
+            dd($qr->json());
+        }
+
+        return response()->json($qr->json('value'), 201);
+    }
+
+    public function getInfoByToken(Request $request, string $source)
+    {
+        $login = $request->input('login');
+
+        if ($login === 'undefined') {
+            return response()->json([], 201);
+        }
+
+        $state = \Http::post($this->endpoint.'getInfoByToken', [
+            'token' => $this->token,
+            'source' => $source,
+        ]);
+        return response()
+            ->json(collect($state->json('clients'))->first(function ($value, $key) use ($login) {
+                return $value['login'] === $login;
+            }), 201);
+
+    }
+
+    public function solveChallenge(Request $request, string $source)
+    {
+        $login = $request->input('login');
+        $code = $request->input('code');
+
+        if ($login === 'undefined') {
+            return response()->json([], 201);
+        }
+
+        $result = \Http::post($this->endpoint.'solveChallenge', [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+            'code' => $code,
+        ]);
+
+        $result = $result->json();
+
+        if ($result['status'] === 'error' && \Str::contains($result['error']['message'], 'expired')) {
+            $result = \Http::post($this->endpoint.'solveChallenge', [
+                'token' => $this->token,
+                'source' => $source,
+                'login' => $login,
+                'code' => $code,
+            ]);
+        }
+
+        return response()
+            ->json($result, 201);
+
     }
 
     public function show($id) {}
