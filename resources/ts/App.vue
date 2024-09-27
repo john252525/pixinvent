@@ -5,6 +5,7 @@ import initCore from '@core/initCore'
 import { initConfigStore, useConfigStore } from '@core/stores/config'
 import { hexToRgb } from '@core/utils/colorConverter'
 import { Toaster, toast } from 'vue-sonner'
+import { useUserStore } from '@/stores/UserStore'
 
 const { global } = useTheme()
 

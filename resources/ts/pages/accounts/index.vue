@@ -3,6 +3,7 @@ import { getI18n } from '@/plugins/i18n'
 import WhatsappAccounts from '@/views/user/accounts/whatsapp/WhatsappAccounts.vue'
 import AddSource from '@/views/user/accounts/AddSource.vue'
 import type { Source } from '@/stores/types/accounts'
+import { useAccountsStore } from '@/stores/AccountsStore'
 
 const { t } = getI18n()
 

@@ -6,6 +6,8 @@ import ForceStopComponent from '@/views/user/accounts/whatsapp/ForceStopComponen
 import ClearSessionComponent from '@/views/user/accounts/whatsapp/ClearSessionComponent.vue'
 import { useClipboard } from '@vueuse/core'
 import ShowQrCodeComponent from '@/views/user/accounts/whatsapp/ShowQrCodeComponent.vue'
+import { useUserStore } from '@/stores/UserStore'
+import { useAccountsStore } from '@/stores/AccountsStore'
 
 const { t } = getI18n().global
 const accountSettingsDrawer = ref(false)

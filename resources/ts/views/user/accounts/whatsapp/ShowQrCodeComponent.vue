@@ -3,6 +3,7 @@ import QRCodeVue3 from "qrcode-vue3"
 import WhatsappLazy from '@images/misc/whatsapp-lazy.png'
 import { getI18n } from '@/plugins/i18n'
 import type { AccountClient } from '@/stores/types/accounts'
+import { useAccountsStore } from '@/stores/AccountsStore'
 
 const props = withDefaults(defineProps<{
   account: AccountClient,

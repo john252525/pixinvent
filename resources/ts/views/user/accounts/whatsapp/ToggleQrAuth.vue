@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { type MaskaDetail, type MaskInputOptions } from 'maska'
 import type { AccountClient } from '@/stores/types/accounts'
+import { useAccountsStore } from '@/stores/AccountsStore'
 
 const props = defineProps<{
   account: AccountClient
