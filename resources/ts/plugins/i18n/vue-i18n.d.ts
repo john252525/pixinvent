@@ -7,11 +7,13 @@
  * you need to import the some interfaces
  */
 import en from '@/plugins/i18n/locales/en.json';
+import ru from '@/plugins/i18n/locales/ru.json';
 import 'vue-i18n';
 
-type LocaleMessage = typeof en
+type LocaleMessage = typeof en | typeof ru;
 
-declare module 'vue-i18n' { 
+declare module 'vue-i18n' {
   export interface DefineLocaleMessage extends LocaleMessage {
+
   }
 }

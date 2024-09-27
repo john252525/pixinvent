@@ -4,8 +4,12 @@ import ScrollToTop from '@core/components/ScrollToTop.vue'
 import initCore from '@core/initCore'
 import { initConfigStore, useConfigStore } from '@core/stores/config'
 import { hexToRgb } from '@core/utils/colorConverter'
+import { Toaster, toast } from 'vue-sonner'
 
 const { global } = useTheme()
+
+const userStore = useUserStore()
+userStore.toast = toast
 
 // ℹ️ Sync current theme with initial loader theme
 initCore()
@@ -21,5 +25,6 @@ const configStore = useConfigStore()
       <RouterView />
       <ScrollToTop />
     </VApp>
+    <Toaster />
   </VLocaleProvider>
 </template>

@@ -23,11 +23,18 @@ Route::group(['prefix' => 'transactions', 'middleware' => 'auth:sanctum'], funct
 });
 
 Route::group(['prefix' => 'sources', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('/', [SourcesController::class, 'index']);
+    Route::get('{source}', [SourcesController::class, 'index']);
     Route::put('{source}', [SourcesController::class, 'store']);
     Route::delete('{source}', [SourcesController::class, 'destroy']);
-    Route::get('{source}/get-qr-code', [\App\Http\Controllers\Api\User\SourcesController::class, 'getQR']);
-    Route::get('{source}/get-info-by-token', [\App\Http\Controllers\Api\User\SourcesController::class, 'getInfoByToken']);
+    Route::post('{source}/get-qr-code', [\App\Http\Controllers\Api\User\SourcesController::class, 'getInfo']);
+    Route::post('{source}/get-info-by-token', [\App\Http\Controllers\Api\User\SourcesController::class, 'getInfoByToken']);
+    Route::post('{source}/get-info', [\App\Http\Controllers\Api\User\SourcesController::class, 'getInfo']);
     Route::get('{source}/solve-challenge', [\App\Http\Controllers\Api\User\SourcesController::class, 'getQR']);
+    Route::post('{source}/switch-state', [\App\Http\Controllers\Api\User\SourcesController::class, 'switchState']);
+    Route::post('{source}/set-state', [\App\Http\Controllers\Api\User\SourcesController::class, 'setStateAction']);
+    Route::post('{source}/force-stop', [\App\Http\Controllers\Api\User\SourcesController::class, 'forceStopAction']);
+    Route::post('{source}/switch-auth', [\App\Http\Controllers\Api\User\SourcesController::class, 'switchAuth']);
+    Route::post('{source}/get-auth-code', [\App\Http\Controllers\Api\User\SourcesController::class, 'getInfo']);
+    Route::post('{source}/clear-session', [\App\Http\Controllers\Api\User\SourcesController::class, 'clearSessionAction']);
 });
 

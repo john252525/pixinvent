@@ -4,6 +4,7 @@ export const useUserStore = defineStore('user-store', () => {
     balance: 0,
   })
 
+  const toast = ref()
   const ability = useAbility()
   const accessToken = useCookie('accessToken').value
 
@@ -15,20 +16,17 @@ export const useUserStore = defineStore('user-store', () => {
   }
 
   async function fetchUserData(updateAbilities = false) {
-    const { data, error } = await useApi(createUrl('/user'))
-
-    if (error.value) {
-      return error.value
-    }
-    else {
-      userData.value = data.value.userData
-      userAbilityRules.value = data.value.userAbilityRules
-
-      if (updateAbilities)
-        setAbilities(userAbilityRules.value)
-
-      return userData
-    }
+    await $api('/user', {
+      onResponseError({ error }){
+        console.info(error?.message)
+      },
+      onResponse({ response }) {
+        userData.value = response._data.userData
+        userAbilityRules.value = response._data.userAbilityRules
+        if (updateAbilities)
+          setAbilities(userAbilityRules.value)
+      }
+    })
   }
 
   const logout = async () => {
@@ -58,6 +56,7 @@ export const useUserStore = defineStore('user-store', () => {
     userData,
     userAbilityRules,
     ability,
+    toast,
 
     // 👉 getters
 
