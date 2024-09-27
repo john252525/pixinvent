@@ -17,6 +17,7 @@ declare module 'vue' {
     AppCardActions: typeof import('./resources/ts/@core/components/cards/AppCardActions.vue')['default']
     AppCardCode: typeof import('./resources/ts/@core/components/cards/AppCardCode.vue')['default']
     AppCombobox: typeof import('./resources/ts/@core/components/app-form-elements/AppCombobox.vue')['default']
+    AppDatePicker: typeof import('./resources/ts/components/AppDatePicker.vue')['default']
     AppDateTimePicker: typeof import('./resources/ts/@core/components/app-form-elements/AppDateTimePicker.vue')['default']
     AppDrawerHeaderSection: typeof import('./resources/ts/@core/components/AppDrawerHeaderSection.vue')['default']
     AppLoadingIndicator: typeof import('./resources/ts/components/AppLoadingIndicator.vue')['default']
@@ -63,5 +64,6 @@ declare module 'vue' {
     TwoFactorAuthDialog: typeof import('./resources/ts/components/dialogs/TwoFactorAuthDialog.vue')['default']
     UserInfoEditDialog: typeof import('./resources/ts/components/dialogs/UserInfoEditDialog.vue')['default']
     UserUpgradePlanDialog: typeof import('./resources/ts/components/dialogs/UserUpgradePlanDialog.vue')['default']
+    VAppDatePicker: typeof import('./resources/ts/components/VAppDatePicker.vue')['default']
   }
 }
