@@ -31,19 +31,26 @@ const states = {
     disabled: false,
     readonly: false,
   },
+  initializing: {
+    state: true,
+    loading: false,
+    color: 'info',
+    disabled: false,
+    readonly: false,
+  },
   connecting: {
     state: true,
     loading: 'warning',
     color: 'secondary',
-    disabled: true, // TODO: dev only
-    readonly: false,
+    disabled: false, // TODO: dev only
+    readonly: true,
   },
   disconnecting: {
     state: true,
     loading: 'error',
     color: 'error',
-    disabled: true, // TODO: dev only
-    readonly: false,
+    disabled: false, // TODO: dev only
+    readonly: true,
   },
 }
 

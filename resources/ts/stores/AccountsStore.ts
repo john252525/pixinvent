@@ -8,7 +8,7 @@ const storedSource = localStorage.getItem('source')
 export const useAccountsStore = defineStore('accounts-store', () => {
   const accountStates = [
     { state: 'offline', value: null, label: t('stateOffline'), color: 'error', qrColor: null, currentState: 'offline', nextState: 'checkState()', disabled: false, loading: false },
-    { state: 'connected', value: 0, label: t('Account just started to start'), color: 'info', qrColor: null, currentState: 'offline', nextState: 'checkState()', disabled: false, loading: true },
+    { state: 'initializing', value: 0, label: t('Account just started to start'), color: 'info', qrColor: null, currentState: 'offline', nextState: 'checkState()', disabled: false, loading: true },
     { state: 'connected', value: 2.2, label: t('QR code received'), color: 'warning', qrColor: 'success', currentState: '(account: any) => showQrCode(account)', nextState: 'showQrCode()', disabled: false, loading: false },
     { state: 'connected', value: 2.22, label: t('Код авторизации получен'), color:'warning', qrColor: null, currentState: 'waiting', nextState: 'checkState', disabled: false, loading: false },
     { state: 'connecting', value: 3, label: t('Can not update QR'), color: 'warning', qrColor: 'error', currentState: 'offline', nextState: 'updateQrState', disabled: false, loading: false },

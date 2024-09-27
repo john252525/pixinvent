@@ -3,3 +3,7 @@
 :focus {
   outline: none !important;
 }
+
+.v-switch__track {
+  background-color: rgba(var(--v-theme-on-surface), var(--v-focus-opacity)) !important;
+}
