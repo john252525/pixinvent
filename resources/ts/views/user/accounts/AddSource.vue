@@ -1,13 +1,33 @@
 <script setup lang="ts">
 import { getI18n } from '@/plugins/i18n'
 import { vConfetti } from '@neoconfetti/vue'
+import type { MaskaDetail, MaskInputOptions } from 'maska'
+import { isEmpty } from '@core/utils/helpers'
 
 const props = defineProps(['source'])
-const emits = defineEmits(['on-added'])
+const accountsStore = useAccountsStore()
 
 const { t } = getI18n().global
 
-const login = ref()
+const phone = ref()
+
+const onMaskaError = ref(true)
+const maskaOptions = reactive<MaskInputOptions>({
+  mask: (value: string) => value.startsWith('8') ? '8 (###) ###-##-##' : '+7 (###) ###-##-##',
+  onMaska: (detail: MaskaDetail) => {
+    onMaskaError.value = detail.completed
+    phone.value = detail.unmasked
+  },
+})
+
+const onMaska = (event: CustomEvent<MaskaDetail>) => {
+  if (event.detail.completed) {
+    phone.value = `7${event.detail.unmasked}`
+  } else {
+    phone.value = null
+  }
+}
+
 const loading = ref(false)
 const isActive = ref(false)
 
@@ -16,23 +36,34 @@ const saveAccount = async () => {
   await $api(`user/sources/${ props.source }`, {
     method: 'PUT',
     body: {
-      login: login.value,
+      account: { login: phone.value },
     },
-    onResponseError(error): Promise<void> | void {
+    onResponseError({ response }): Promise<void> | void {
+      accountsStore.getAccounts()
       loading.value = false
-      console.log(error)
+      isActive.value = false
+      console.log(response)
     },
     onResponse({ response }) {
       loading.value = false
-      if (response.status === 201) {
-        emits('on-added', login.value)
-      }
+      accountsStore.addAccount(response._data)
+      isActive.value = false
     },
   })
 }
 
+const notInValidator = () => {
+  if (isEmpty(phone.value))
+    return true;
+
+  if (phone.value.length < 10)
+    return t('phone.format')
+
+  return accountsStore.accounts[accountsStore.source].filter(account => account.login === phone.value).length === 0 || 'Такой аккаунт уже существует'
+}
+
 const clearSession = () => {
-  login.value = null
+  phone.value = null
 }
 
 defineExpose({ isActive })
@@ -74,9 +105,11 @@ defineExpose({ isActive })
         >
           <VCardItem>
             <VTextField
-              v-model="login"
-              :label="$t('accLogin')"
+              v-maska="maskaOptions"
+              :label="$t('Enter your phone number')"
               class="my-3"
+              :rules="[notInValidator]"
+              @maska="onMaska"
             />
           </VCardItem>
 
@@ -89,7 +122,7 @@ defineExpose({ isActive })
 
         <VCardActions class="mt-3">
           <VBtn variant="outlined" @click="isActive.value = false">Отмена</VBtn>
-          <VBtn variant="flat" @click="saveAccount">Создать</VBtn>
+          <VBtn :disabled="!phone" :loading variant="flat" @click="saveAccount">Создать</VBtn>
         </VCardActions>
       </VCard>
     </template>

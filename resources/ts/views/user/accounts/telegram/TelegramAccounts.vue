@@ -1,21 +1,27 @@
 <script lang="ts" setup>
 import { getI18n } from '@/plugins/i18n'
-import type { AccountClient } from '@/stores/types/accounts'
 import StateSwitch from '@/views/user/accounts/StateSwitch.vue'
 import ToggleQrAuth from '@/views/user/accounts/whatsapp/ToggleQrAuth.vue'
 import ForceStopComponent from '@/views/user/accounts/whatsapp/ForceStopComponent.vue'
 import ClearSessionComponent from '@/views/user/accounts/whatsapp/ClearSessionComponent.vue'
+import { useClipboard } from '@vueuse/core'
 import ShowQrCodeComponent from '@/views/user/accounts/whatsapp/ShowQrCodeComponent.vue'
+import { useUserStore } from '@/stores/UserStore'
 import { useAccountsStore } from '@/stores/AccountsStore'
 import type { SortItem } from '@core/types'
-import DeleteAccountComponent from '@/views/user/accounts/whatsapp/DeleteAccountComponent.vue'
-import WhatsappAuthCodeActionColumn from '@/views/user/accounts/whatsapp/WhatsappAuthCodeActionColumn.vue'
 
 const { t } = getI18n().global
 const accountSettingsDrawer = ref(false)
-const account = ref<AccountClient | null>()
 
 const accountsStore = useAccountsStore()
+const userStore = useUserStore()
+const toast = userStore.toast
+const { copy } = useClipboard()
+
+const copyText = (text: string) => {
+  copy(text)
+  toast.success(t('Text copied to clipboard'))
+}
 
 // Определяем тип для значений value
 const apiStates = {
@@ -38,35 +44,20 @@ const apiStates = {
 }
 
 const sortBy = ref<SortItem[]>([{ key: 'login', order: 'asc' }])
+
 const headers = ref([
   { title: t('accLogin'), key: 'login', align: 'start' },
   { title: t('Step'), key: 'step', align: 'start' },
   { title: t('Action'), key:'action', align:'start', sortable: false, width: '100%' },
   { title: t('Actions'), key: 'actions', align: 'end', sortable: false },
 ])
-
-const updateAccountLoader = ref(false)
-const editWebhookUrls = (client: AccountClient) => {
-  account.value = client
-  accountSettingsDrawer.value = true
-}
-
-const saveWebhookUrls = async () => {
-  updateAccountLoader.value = true
-  if (account.value)
-    await accountsStore.updateAccount(account.value, 'update-webhook-urls')
-
-  account.value = null
-  updateAccountLoader.value = false
-  accountSettingsDrawer.value = false
-}
 </script>
 
 <template>
   <div>
     <VDataTable
       :sort-by="sortBy"
-      :items="accountsStore.accounts.whatsapp"
+      :items="accountsStore.accounts.telegram"
       :loading="accountsStore.loading.accounts"
       :headers
       class="text-no-wrap users-table"
@@ -80,7 +71,47 @@ const saveWebhookUrls = async () => {
           <VListItemSubtitle>Если инициализация аккаунта занимает больше минуты</VListItemSubtitle>
           <VListItemSubtitle>Выключите и снова включите желтый переключатель справа</VListItemSubtitle>
         </VListItem>
-        <WhatsappAuthCodeActionColumn v-if="item.step?.value === 2.22" :account="item" />
+        <VListItem v-if="item.step?.value === 2.22">
+          <VListItemSubtitle v-if="item.phone_code">
+            Код авторизации WhatsApp:
+            <VBtn
+              variant="text"
+              color="info"
+              size="small"
+              @click="copyText(item.phone_code)"
+              >
+               {{ item.phone_code }}
+            </VBtn>
+          </VListItemSubtitle>
+          <VListItemSubtitle v-else>
+            Для показа кода нажмите кнопку справа 👉
+          </VListItemSubtitle>
+          <template #append>
+            <IconBtn v-if="!item.phone_code" @click.stop="accountsStore.getAuthCode(item)">
+              <VTooltip :text="t('Click on this button to get WhatsApp authorization code')">
+                <template v-slot:activator="{ props }">
+                  <VIcon v-bind="props" icon="tabler-http-get" />
+                </template>
+              </VTooltip>
+            </IconBtn>
+            <div v-else>
+              <IconBtn @click.stop="accountsStore.getAuthCode(item)">
+                <VTooltip :text="t('If the code is outdated, click this button to update it')">
+                  <template v-slot:activator="{ props }">
+                    <VIcon v-bind="props" icon="mdi-refresh" />
+                  </template>
+                </VTooltip>
+              </IconBtn>
+              <IconBtn square @click.stop="accountsStore.getInfo(item)">
+                <VTooltip :text="t('After entering the code in the WhatsApp application, click this button to update the status')">
+                  <template v-slot:activator="{ props }">
+                    <VIcon v-bind="props" icon="mdi-check" />
+                  </template>
+                </VTooltip>
+              </IconBtn>
+            </div>
+          </template>
+        </VListItem>
         <VListItem v-if="item.step?.value === 2.2">
           <span v-if="item.qr_code">
             Для показа QR кода нажмите кнопку справа 👉
@@ -102,22 +133,26 @@ const saveWebhookUrls = async () => {
 
           <ForceStopComponent :account="item" />
 
-          <StateSwitch
-            source="whatsapp"
-            :account="item"
-            :key="`state-switch-${item.login}`"
-            @check-state="accountsStore.getState(item)?.currentState"
-          />
+          <IconBtn>
+            <StateSwitch
+              source="telegram"
+              :model-value="item"
+              :key="`state-switch-${item.login}`"
+              @check-state="accountsStore.getState(item)?.currentState"
+            />
+          </IconBtn>
 
           <ToggleQrAuth :account="item" :key="`toggle-qr-auth-${item.login}`" />
 
-          <IconBtn @click="editWebhookUrls(item)">
+          <IconBtn @click="accountSettingsDrawer = !accountSettingsDrawer">
             <VIcon icon="mdi-pencil" />
           </IconBtn>
 
           <ClearSessionComponent :account="item" />
 
-          <DeleteAccountComponent :account="item"/>
+          <IconBtn>
+            <VIcon icon="mdi-delete" />
+          </IconBtn>
         </div>
       </template>
     </VDataTable>
@@ -125,7 +160,6 @@ const saveWebhookUrls = async () => {
       <VNavigationDrawer
         v-model="accountSettingsDrawer"
         temporary
-        width="350"
         location="right"
       >
         <VListItem class="pe-0">
@@ -136,46 +170,6 @@ const saveWebhookUrls = async () => {
             </IconBtn>
           </template>
         </VListItem>
-        <VListItemTitle>Webhook URLs</VListItemTitle>
-        <div v-if="account">
-          <VListItem v-for="(webhookUrl, index) in account.webhookUrls">
-            <VTextarea
-              v-model="account.webhookUrls[index]"
-              label="Webhook URL"
-              rows="6"
-              class="py-3"
-              counter
-              clearable
-            >
-              <template #clear>
-                <IconBtn class="position-absolute right-0 top-0" @click.stop="account.webhookUrls.splice(index, 1)">
-                  <VIcon icon="mdi-close" />
-                </IconBtn>
-              </template>
-            </VTextarea>
-          </VListItem>
-          <VListItemAction class="ma-3">
-            <VBtn
-              block
-              color="success"
-              variant="outlined"
-              @click="account.webhookUrls.push('')"
-            >
-              Добавить
-            </VBtn>
-          </VListItemAction>
-          <VListItemAction class="d-flex justify-space-between ma-3">
-            <VBtn color="secondary" @click="accountSettingsDrawer = false">Отмена</VBtn>
-            <VBtn
-              color="primary"
-              :disabled="updateAccountLoader"
-              :loading="updateAccountLoader"
-              @click="saveWebhookUrls"
-            >
-              Сохранить
-            </VBtn>
-          </VListItemAction>
-        </div>
       </VNavigationDrawer>
     </Teleport>
   </div>

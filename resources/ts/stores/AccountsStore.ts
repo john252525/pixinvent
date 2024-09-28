@@ -7,14 +7,15 @@ const { t } = getI18n().global
 const storedSource = localStorage.getItem('source')
 export const useAccountsStore = defineStore('accounts-store', () => {
   const accountStates = [
-    { state: 'offline', value: null, label: t('stateOffline'), color: 'error', qrColor: null, currentState: 'offline', nextState: 'checkState()', disabled: false, loading: false },
-    { state: 'initializing', value: 0, label: t('Account just started to start'), color: 'info', qrColor: null, currentState: 'offline', nextState: 'checkState()', disabled: false, loading: true },
-    { state: 'connected', value: 2.2, label: t('QR code received'), color: 'warning', qrColor: 'success', currentState: '(account: any) => showQrCode(account)', nextState: 'showQrCode()', disabled: false, loading: false },
-    { state: 'connected', value: 2.22, label: t('Код авторизации получен'), color:'warning', qrColor: null, currentState: 'waiting', nextState: 'checkState', disabled: false, loading: false },
-    { state: 'connecting', value: 3, label: t('Can not update QR'), color: 'warning', qrColor: 'error', currentState: 'offline', nextState: 'updateQrState', disabled: false, loading: false },
-    { state: 'disconnecting', value: 4, label: t('Can not update QR'), color: 'warning', qrColor: 'error', currentState: 'offline', nextState: 'updateQrState', disabled: false, loading: false },
-    { state: 'connected', value: 2.3, label: t('Can not update QR'), color: 'warning', qrColor: 'error', currentState: 'offline', nextState: 'updateQrState', disabled: false, loading: false },
-    { state: 'online', value: 5, label: t('Account started successfully & realtime init done'), qrColor: null, color:'success', currentState: 'connected', nextState: null, disabled: false, loading: false },
+    { state: 'disconnected', value: null, label: t('stateOffline'), color: 'error', currentState: false, disabled: false, loading: false },
+    { state: 'initializing', value: 0, label: t('Account just started to start'), color: 'info', currentState: true, disabled: false, loading: 'info' },
+    { state: 'connected', value: 2.2, label: t('QR code received'), color: 'warning', currentState: true, disabled: false, loading: false },
+    { state: 'connected', value: 2.22, label: t('Код авторизации получен'), color:'warning', currentState: true, disabled: false, loading: false },
+    { state: 'connected', value: 2.25, label: t('Код авторизации получен'), color:'warning', currentState: true, disabled: false, loading: false },
+    { state: 'connected', value: 2.3, label: t('Can not update QR'), color: 'warning', currentState: true, disabled: false, loading: false },
+    { state: 'connecting', value: 3, label: t('Can not update QR'), color: 'secondary', currentState: true, disabled: false, loading: 'warning' },
+    { state: 'disconnecting', value: 4, label: t('Can not update QR'), color: 'secondary', currentState: false, disabled: false, loading: 'error' },
+    { state: 'online', value: 5, label: t('Account started successfully & realtime init done'), color: 'success', currentState: true, disabled: false, loading: false },
   ]
 
   const source = ref<Source>(storedSource === 'whatsapp' || storedSource === 'telegram' ? storedSource : 'telegram')
@@ -33,30 +34,25 @@ export const useAccountsStore = defineStore('accounts-store', () => {
   const total = computed(() => accounts.value[source.value].length ?? 0)
 
   const getStep = computed(() => {
-    return (account: AccountClient): Step | null => {
-      const foundClient = accounts.value[source.value].find((client: AccountClient): client is AccountClient => client.login === account.login)
-      return foundClient ? foundClient.step : null;
-    };
-  });
+    return (account: AccountClient): Step | null => getAccount(account)?.step || { value: null, message: 'disconnected' }
+  })
 
   function getState(account: AccountClient) {
-    return accountStates.find(state => state.value == (account?.step?.value ?? null))
+    return accountStates.find(state => state.value === (account?.step?.value ?? null))
   }
 
-  function setState(account: AccountClient, step: number|null) {
-    const accountIndex = accounts.value[source.value].findIndex(client => client.login === account.login)
-    if (accountIndex) {
-      accounts.value[source.value][accountIndex].step = { value: step, message: '' }
-    }
+  function setState(account: AccountClient, stepValue: number, stepMessage: string) {
+    const accountIndex = getAccountIndex(account)
+    if (accountIndex !== -1)
+      accounts.value[source.value][accountIndex].step = { value: stepValue, message: stepMessage }
   }
 
-  function getAccount(client: AccountClient) {
-    return accounts.value[source.value].find((c: AccountClient) => c.login === client.login)
+  function getAccount(account: AccountClient) {
+    return accounts.value[source.value].find((client: AccountClient) => client.login === account.login)
   }
 
-  function getAccountIndex(client: AccountClient) {
-    console.log(client)
-    return accounts.value[source.value].findIndex(account => account.login === client.login)
+  function getAccountIndex(account: AccountClient) {
+    return accounts.value[source.value].findIndex(client => account.login === client.login)
   }
 
   function setAccount(client: AccountClient) {
@@ -66,8 +62,8 @@ export const useAccountsStore = defineStore('accounts-store', () => {
     }
   }
 
-  function updateAccount(client: AccountClient) {
-    console.log(client)
+  function addAccount(client: AccountClient) {
+    accounts.value[source.value].push(client)
   }
 
   async function setSource(currentSource: Source) {
@@ -130,8 +126,9 @@ export const useAccountsStore = defineStore('accounts-store', () => {
       onResponse: ({ response }) => {
         accounts.value[source.value] = response._data.clients
       },
-      onResponseError({ error }) {
-        console.log(error?.message)
+      onResponseError({ response }) {
+        console.log(response)
+        getAccounts()
       },
     })
     loading.value.accounts = false
@@ -198,6 +195,38 @@ export const useAccountsStore = defineStore('accounts-store', () => {
     })
   }
 
+  async function updateAccount(account: AccountClient, type: string) {
+    const action = 'update-account'
+
+    return await $api(`user/sources/${source.value}`, {
+      method: 'POST',
+      body: { account, action, type },
+      onResponse({ response }) {
+        setAccount(response._data)
+      },
+      async onResponseError({ response }) {
+        console.log(response)
+        await getAccounts()
+      }
+    })
+  }
+
+  async function deleteAccount(account: AccountClient) {
+    const action = 'delete-account'
+
+    return await $api(`user/sources/${source.value}`, {
+      method: 'DELETE',
+      body: { account, action },
+      onResponse({ response }) {
+        accounts.value[source.value] = response._data.clients
+      },
+      async onResponseError({ response }) {
+        console.log(response)
+        await getAccounts()
+      }
+    })
+  }
+
   onBeforeMount(async () => {
     await getAccounts()
   })
@@ -215,7 +244,6 @@ export const useAccountsStore = defineStore('accounts-store', () => {
     getStep,
 
     // functions
-    updateAccount,
     getAccounts,
     getAccount,
     setAccount,
@@ -230,5 +258,8 @@ export const useAccountsStore = defineStore('accounts-store', () => {
     clearSession,
     getAuthCode,
     getQrCode,
+    deleteAccount,
+    addAccount,
+    updateAccount,
   }
 })

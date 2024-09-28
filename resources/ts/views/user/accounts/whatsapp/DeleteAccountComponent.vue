@@ -6,52 +6,50 @@ const props = defineProps<{ account: AccountClient }>()
 
 const accountsStore = useAccountsStore()
 
-const showForceStopDialog = ref(false)
 const loading = ref(false)
+const showDeleteDialog = ref(false)
 
-const doForceStop = async () => {
-  showForceStopDialog.value = false
+const deleteAccount = async () => {
   loading.value = true
-  const isReady = await accountsStore.forceStop(props.account)
-  if (isReady) {
-    loading.value = false
-  }
+  await accountsStore.deleteAccount(props.account)
+  loading.value = false
+  showDeleteDialog.value = false
 }
 </script>
 
 <template>
   <VDialog
-    v-model="showForceStopDialog"
+    v-model="showDeleteDialog"
     persistent
     max-width="500"
-    >
+  >
     <template #activator>
-      <IconBtn @click="showForceStopDialog = true">
-        <VIcon :size="loading?20:28" :icon="loading ? 'svg-spinners:clock' : 'openmoji:stop-sign'"/>
+      <IconBtn @click="showDeleteDialog = true">
+        <VIcon :icon="loading ? 'svg-spinners:clock' : 'mdi-delete'"/>
       </IconBtn>
     </template>
     <template #default="{ isActive }">
       <VCard :loading>
         <VCardTitle>
           <VIcon icon="openmoji:stop-sign"/>
-          <span class="title">Attention!!! Force stop</span>
+          <span class="title">{{ $t(`account.${accountsStore.source}.delete.title`) }}</span>
         </VCardTitle>
         <VCardText>
           <p>
-            {{ $t('Are you sure you want to force stop the account?') }}
+            {{ $t(`account.${accountsStore.source}.delete.text`) }}
           </p>
         </VCardText>
         <VCardActions>
           <VBtn color="primary" variant="outlined" @click="isActive.value = false">
-            Отмена
+            {{ $t('Cancel') }}
           </VBtn>
           <VBtn
             color="error"
             variant="flat"
             :loading
-            @click="doForceStop"
+            @click="deleteAccount"
           >
-            Принудительная остановка
+            {{ $t('account.delete.button') }}
           </VBtn>
         </VCardActions>
       </VCard>

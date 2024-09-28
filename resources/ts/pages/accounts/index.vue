@@ -4,13 +4,16 @@ import WhatsappAccounts from '@/views/user/accounts/whatsapp/WhatsappAccounts.vu
 import AddSource from '@/views/user/accounts/AddSource.vue'
 import type { Source } from '@/stores/types/accounts'
 import { useAccountsStore } from '@/stores/AccountsStore'
+import TelegramAccounts from '@/views/user/accounts/telegram/TelegramAccounts.vue'
 
 const { t } = getI18n()
+
+const accountsStore = useAccountsStore()
 
 const whatsappRef = ref<typeof WhatsappAccounts | null>(null)
 const addSourceRef = ref<typeof AddSource | null>(null)
 
-const accountsStore = useAccountsStore()
+const refreshAccounts = ref(false)
 
 const state = ref({
   source: localStorage.getItem('source') || 'telegram',
@@ -76,9 +79,15 @@ const onAdded = (login: any) => {
       @loading="checkIt"
     />
 
+    <TelegramAccounts
+      ref="telegramRef"
+      v-if="accountsStore.source === 'telegram'"
+      @loading="checkIt"
+    />
+
     <!-- 👉 Overlay -->
     <VOverlay
-      v-model="state.refreshAccounts"
+      v-model="refreshAccounts"
       contained
       persistent
       scroll-strategy="none"

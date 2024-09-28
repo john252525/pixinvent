@@ -25,6 +25,7 @@ Route::group(['prefix' => 'transactions', 'middleware' => 'auth:sanctum'], funct
 Route::group(['prefix' => 'sources', 'middleware' => 'auth:sanctum'], function () {
     Route::get('{source}', [SourcesController::class, 'index']);
     Route::put('{source}', [SourcesController::class, 'store']);
+    Route::post('{source}', [SourcesController::class, 'update']);
     Route::delete('{source}', [SourcesController::class, 'destroy']);
     Route::post('{source}/get-qr-code', [\App\Http\Controllers\Api\User\SourcesController::class, 'getInfo']);
     Route::post('{source}/get-info-by-token', [\App\Http\Controllers\Api\User\SourcesController::class, 'getInfoByToken']);

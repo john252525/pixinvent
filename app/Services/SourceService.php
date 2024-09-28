@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Request;
 
@@ -13,22 +14,16 @@ class SourceService
 
     /**
      * Timeout duration in seconds.
-     *
-     * @var int
      */
     protected int $timeout = 120;
 
     /**
      * Number of retry attempts.
-     *
-     * @var int
      */
     protected int $retryTimes = 100;
 
     /**
      * Delay between retries in seconds.
-     *
-     * @var int
      */
     protected int $retryDelay = 100;
 
@@ -50,16 +45,18 @@ class SourceService
 
     public function store(Request $request, string $source)
     {
-        $login = $request->input('login');
+        $login = $request->input('account.login');
         $this->actions[] = 'add-account';
 
-        $response = $this->http->post($this->endpoint.'addAccount', [
+        $this->http->post($this->endpoint.'addAccount', [
             'token' => $this->token,
             'source' => $source,
             'login' => $login,
         ]);
 
-        return $this->prepareResponse($response);
+        $this->setState($request, $source);
+
+        return $this->getInfo($request, $source);
     }
 
     public function forceStopAction(Request $request, string $source)
@@ -115,6 +112,9 @@ class SourceService
         return $this->getInfo($request, $source);
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function switchState(Request $request, string $source)
     {
         $account = $request->input('account');
@@ -140,30 +140,46 @@ class SourceService
         ])->json('value');
     }
 
+    /**
+     * @throws ConnectionException
+     */
+    public function updateWebhookUrls(Request $request, string $source)
+    {
+        $login = $request->input('account.login');
+        $webhookUrls = $request->input('account.webhookUrls');
+
+        $this->actions[] = 'update-webhook-urls';
+
+        $this->http->post($this->endpoint.'updateAccount', [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+            'webhookUrls' => $webhookUrls,
+        ])->json('value');
+
+        return $this->getInfo($request, $source);
+    }
+
     public function getInfoByToken(Request $request, string $source)
     {
-        $login = $request->input('login');
-
-        if ($login === 'undefined') {
-            return response()->json([], 201);
-        }
-
-        $this->actions[] = 'get-info-by-token';
-
-        return $this->http->post($this->endpoint.'getInfoByToken', [
+        $accounts = $this->http->post($this->endpoint.'getInfoByToken', [
             'token' => $this->token,
             'source' => $source,
         ])->json();
+
+        $this->actions[] = 'get-info-by-token';
+        $accounts['actions'] = $this->actions;
+
+        return $accounts;
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function solveChallenge(Request $request, string $source)
     {
         $login = $request->input('login');
         $code = $request->input('code');
-
-        if ($login === 'undefined') {
-            return response()->json([], 201);
-        }
 
         $this->actions[] = 'solve-challenge';
 
@@ -172,7 +188,7 @@ class SourceService
             'source' => $source,
             'login' => $login,
             'code' => $code,
-        ]);
+        ])->json();
     }
 
     public function clearSessionAction(Request $request, string $source)
@@ -182,28 +198,38 @@ class SourceService
         return $this->getInfo($request, $source);
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function getInfo(Request $request, string $source)
     {
         $login = $request->input('account.login');
 
-        $account = $this->http->post($this->endpoint.'getInfo', [
-            'token' => $this->token,
-            'source' => $source,
-            'login' => $login,
-        ])->json();
+        $account = $this->http
+            ->post($this->endpoint.'getInfo', [
+                'token' => $this->token,
+                'source' => $source,
+                'login' => $login,
+            ])
+            ->json();
+
         $this->actions[] = 'get-info';
         $account['actions'] = $this->actions;
 
         if (\Arr::get($account, 'step.value') === null) {
+            $account['actions'] = $this->actions;
+
             return $account;
         }
 
         if (\Arr::get($account, 'step.value') === 2.2) {
             $account['qr_code'] = $this->getQR($request, $source);
+            $account['actions'] = $this->actions;
         }
 
         if (\Arr::get($account, 'step.value') === 2.22) {
             $account['phone_code'] = $this->getAuthCode($request, $source);
+            $account['actions'] = $this->actions;
         }
 
         return $account;
@@ -234,7 +260,7 @@ class SourceService
         return $this->http->post($this->endpoint.'getAuthCode', $data)->json('authCode');
     }
 
-    public function setState(Request $request, string $source, $state = true)
+    public function setState(Request $request, string $source, $state = true): void
     {
         $login = $request->input('account.login');
 
@@ -245,22 +271,22 @@ class SourceService
             'setState' => $state,
         ];
 
-        $this->actions[] = 'set-state-'.(bool) $state;
+        $this->actions[] = 'set-state-'.(string) $state;
         $this->http->post($this->endpoint.'setState', $data)->json();
     }
 
     public function destroy(Request $request, string $source)
     {
-        $login = $request->input('login');
+        $login = $request->input('account.login');
         $this->actions[] = 'delete-account';
 
-        $response = $this->http->post($this->endpoint.'deleteAccount', [
+        $this->http->post($this->endpoint.'deleteAccount', [
             'token' => $this->token,
             'source' => $source,
             'login' => $login,
-        ]);
+        ])->json();
 
-        return $this->getInfo($request, $source);
+        return $this->index($request, $source);
     }
 
     private function prepareResponse($response)

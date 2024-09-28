@@ -10,6 +10,7 @@ class ExternalTokenGate extends Request
     public function __construct(
         protected ?int $user_id = null,
     ) {
+        // TODO: Check request user instance
         $this->user_id = $user_id ?? request()->user()->id;
     }
 

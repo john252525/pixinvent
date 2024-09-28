@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Services\SourceService;
 use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,8 +22,6 @@ class SourcesController extends Controller
     /**
      * Display a listing of the sources.
      *
-     * @param Request $request
-     * @param string $source
      * @return mixed
      */
     public function index(Request $request, string $source)
@@ -33,8 +32,6 @@ class SourcesController extends Controller
     /**
      * Store a newly created source.
      *
-     * @param Request $request
-     * @param string $source
      * @return mixed
      */
     public function store(Request $request, string $source)
@@ -45,8 +42,6 @@ class SourcesController extends Controller
     /**
      * Force stop the specified source action.
      *
-     * @param Request $request
-     * @param string $source
      * @return mixed
      */
     public function forceStopAction(Request $request, string $source)
@@ -57,8 +52,6 @@ class SourcesController extends Controller
     /**
      * Set the state of the specified source action.
      *
-     * @param Request $request
-     * @param string $source
      * @return mixed
      */
     public function setStateAction(Request $request, string $source)
@@ -69,8 +62,6 @@ class SourcesController extends Controller
     /**
      * Switch authentication for the specified source.
      *
-     * @param Request $request
-     * @param string $source
      * @return mixed
      */
     public function switchAuth(Request $request, string $source)
@@ -81,9 +72,8 @@ class SourcesController extends Controller
     /**
      * Switch the state of the specified source.
      *
-     * @param Request $request
-     * @param string $source
      * @return mixed
+     * @throws ConnectionException
      */
     public function switchState(Request $request, string $source)
     {
@@ -93,8 +83,6 @@ class SourcesController extends Controller
     /**
      * Get the QR code for the specified source.
      *
-     * @param Request $request
-     * @param string $source
      * @return mixed
      */
     public function getQR(Request $request, string $source)
@@ -105,8 +93,6 @@ class SourcesController extends Controller
     /**
      * Get information by token for the specified source.
      *
-     * @param Request $request
-     * @param string $source
      * @return mixed
      */
     public function getInfoByToken(Request $request, string $source)
@@ -117,8 +103,6 @@ class SourcesController extends Controller
     /**
      * Solve a challenge for the specified source.
      *
-     * @param Request $request
-     * @param string $source
      * @return PromiseInterface|Response|JsonResponse
      */
     public function solveChallenge(Request $request, string $source)
@@ -129,8 +113,6 @@ class SourcesController extends Controller
     /**
      * Clear the session for the specified source.
      *
-     * @param Request $request
-     * @param string $source
      * @return mixed
      */
     public function clearSessionAction(Request $request, string $source)
@@ -141,8 +123,6 @@ class SourcesController extends Controller
     /**
      * Get information for the specified source.
      *
-     * @param Request $request
-     * @param string $source
      * @return mixed
      */
     public function getInfo(Request $request, string $source)
@@ -153,8 +133,20 @@ class SourcesController extends Controller
     /**
      * Remove the specified source.
      *
-     * @param Request $request
-     * @param string $source
+     * @return mixed
+     */
+    public function update(Request $request, string $source)
+    {
+        $type = $request->get('type');
+        return match ($type) {
+            'update-webhook-urls' => $this->sourceService->updateWebhookUrls($request, $source),
+            default => $this->sourceService->getInfo($request, $source)
+        };
+    }
+
+    /**
+     * Remove the specified source.
+     *
      * @return mixed
      */
     public function destroy(Request $request, string $source)

@@ -63,7 +63,7 @@ export interface Payment {
 }
 
 export interface ApiResponse {
-  clients: TelegramUser[] | WhatsappUser[];
+  clients: TelegramClient[] | WhatsappClient[];
   summary: Summary;
   errors: string[];
   status: string;
@@ -71,7 +71,7 @@ export interface ApiResponse {
 }
 
 // WhatsApp specific properties
-export interface WhatsappUser extends AccountClient {
+export interface WhatsappClient extends AccountClient {
   step: Step | null;
   state: boolean;
   webhookUrls: string[];
@@ -87,7 +87,7 @@ export interface WhatsappUser extends AccountClient {
   __v: number;
 }
 // Telegram specific properties
-export interface TelegramUser extends AccountClient {
+export interface TelegramClient extends AccountClient {
   owner: string;
   login: string;
   proxyString: string;

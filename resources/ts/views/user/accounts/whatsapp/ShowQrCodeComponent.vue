@@ -13,20 +13,27 @@ const accountsStore = useAccountsStore()
 
 const t = getI18n().global
 
-const loading = ref(false)
-
 const { pause, resume, isActive: isTimerActive } = useIntervalFn(async () => {
 
 }, import.meta.env.VITE_QR_TIMEOUT * 1000)
 
 const { ready, start, stop } = useTimeout(2000, { controls: true })
 
-const refreshQr = () => {
+const loading = reactive({
+  refresh: false,
+  confirm: false,
+})
+
+const refreshQr = async () => {
+  loading.refresh = true
   accountsStore.accounts[accountsStore.source][accountsStore.getAccountIndex(props.account)].qr_code = undefined
-  accountsStore.getQrCode(props.account)
+  await accountsStore.getQrCode(props.account)
+  loading.refresh = false
 }
-const confirmQr = () => {
-  accountsStore.getQrCode(props.account)
+const confirmQr = async () => {
+  loading.confirm = true
+  await accountsStore.getQrCode(props.account)
+  loading.confirm = false
 }
 </script>
 
@@ -59,7 +66,7 @@ const confirmQr = () => {
       </IconBtn>
     </template>
     <template #default="{ isActive }">
-      <VCard flat>
+      <VCard min-height="500" flat>
         <VCardItem class="px-3">
           <template #prepend>
             <VIcon icon="mdi-qrcode"/>
@@ -76,8 +83,8 @@ const confirmQr = () => {
             <VImg
               v-if="!props.account.qr_code"
               class="mx-auto"
-              height="390"
-              width="390"
+              height="380"
+              width="380"
               :lazy-src="WhatsappLazy"
               :src="undefined"
             >
@@ -122,10 +129,10 @@ const confirmQr = () => {
         </VCardItem>
         <VDivider/>
         <VCardActions>
-          <VBtn variant="outlined" color="success" @click="refreshQr">
+          <VBtn :loading="loading.refresh" variant="outlined" color="success" @click="refreshQr">
             {{ $t('Refresh') }}
           </VBtn>
-          <VBtn variant="flat" color="primary" @click="confirmQr">
+          <VBtn :loading="loading.confirm" variant="flat" color="primary" @click="confirmQr">
             {{ $t('Confirm') }}
           </VBtn>
         </VCardActions>
