@@ -10,35 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with: 
-          php-verison: '8.2'
-          extensions: mbstring, xml, curl
-          
-      - name: Checkout code
+      - name: Checkout code 
         uses: actions/checkout@v2
-        
-      - name: Composer install
-        run: | 
-          composer update
-          
-      - name: Install dependencies
-        run: | 
-          npm i
 
-      - name: Build project
-        run: | 
-          NODE_OPTIONS="--max-old-space-size=2048" bun run build
-        
-      - name: Create env file
-        run: | 
-           cp .env.example .env
-
-      - name: Generate app Key
-        run: | 
-          php artisan key:generate
-        
-      - name: Push Migrations 
-        run: | 
-          php artisan migrate:fresh -seed
+      - name: Deploy to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}  # Заменить
+          username: ${{ secrets.SSH_USERNAME }}  # Заменить 
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Заменить
+          script: |
+              composer --v
