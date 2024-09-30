@@ -1,0 +1,26 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependecies
+        run: | bun i && bun run build
+
+      - name: Create env file
+        run: | сp .env.example .env
+
+      - name: Generate app Key
+        run: | php artisan key:generate
+        
+      - name: Push Migrations 
+        run: | php artisan migrate:fresh -seed
