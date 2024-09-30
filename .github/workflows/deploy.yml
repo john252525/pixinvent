@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2
+        with: 
+          php-verison: '8.2'
+          extensions: mbstring, xml, curl
+          
       - name: Checkout code
         uses: actions/checkout@v2
         
