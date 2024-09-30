@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Setup PHP
-        uses: shivammathur/setup-php@2
+        uses: shivammathur/setup-php@v2
         with: 
           php-verison: '8.2'
           extensions: mbstring, xml, curl
