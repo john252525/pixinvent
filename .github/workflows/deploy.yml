@@ -22,10 +22,10 @@ jobs:
       - name: Composer install
         run: | 
           composer update
-    
+          
       - name: Install dependencies
         run: | 
-          bun i
+          npm i
 
       - name: Build project
         run: | 
