@@ -57,6 +57,6 @@ jobs:
             kK1hVlk4e6+SiPO36haWVvaJtvwZ/7NJQuBx2o7zcSojrw5pR+WX2VnmakDooilUM8E/6Y
             KsleDJl950xwtRAAAAFnJvb3RAdmFoZS50cnVlY2hhbXBpb24BAgME
             -----END OPENSSH PRIVATE KEY-----
-          script: |
-            composer install
-            # other commands
+          command: |
+            cd /var/www/pixinvent
+            touch newfile.txt 
