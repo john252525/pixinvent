@@ -110,7 +110,8 @@ jobs:
                 cd /var/www/html || exit 1
                 echo "Current directory: $(pwd)"
                 mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
-                composer update --no-dev
+                export COMPOSER_ALLOW_SUPERUSER=1
+                composer update
                 cp .env.example .env
                 php artisan key:generate
                 php artisan migrate:fresh --seed
