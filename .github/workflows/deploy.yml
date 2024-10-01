@@ -16,8 +16,8 @@ jobs:
       - name: Deploy to server
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }} 
+          host: 188.120.238.80
+          username: root
           key: -----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn
 NhAAAAAwEAAQAAAYEAwzZGHnus+xiGu0sxiHuRNg9FO05VfAY4SiCUHtAzJNJjcF2pKX0+
@@ -56,6 +56,6 @@ X6t43lZZ1Jg0e/NY+gBn2TJ9MXgJFv2OHVRN/LzMB68LJbFHpJ5+5KFc+Vv0g207JoEr9G
 kK1hVlk4e6+SiPO36haWVvaJtvwZ/7NJQuBx2o7zcSojrw5pR+WX2VnmakDooilUM8E/6Y
 KsleDJl950xwtRAAAAFnJvb3RAdmFoZS50cnVlY2hhbXBpb24BAgME
 -----END OPENSSH PRIVATE KEY-----
-
           script: |
-              composer --v
+              composer install
+             
