@@ -109,13 +109,14 @@ jobs:
                 echo "Current directory: $(pwd)"
                 cd /var/www/html || exit 1
                 echo "Current directory: $(pwd)"
-                chown -R www-data:www-data storage
+                chown -R www-data:www-data /var/www/html/storage
                 mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
                 export COMPOSER_ALLOW_SUPERUSER=1
                 composer update
                 cp .env.example .env
                 php artisan key:generate
                 php artisan migrate:fresh --seed
-                npm install --legacy-peer-deps
-                npm run build
+                export NODE_OPTIONS=--max-old-space-size=4096
+                bun install --legacy-peer-deps
+                bun run build
                 ls -la
