@@ -109,6 +109,7 @@ jobs:
                 echo "Current directory: $(pwd)"
                 cd /var/www/html || exit 1
                 echo "Current directory: $(pwd)"
+                chown -R www-data:www-data storage
                 mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
                 export COMPOSER_ALLOW_SUPERUSER=1
                 composer update
