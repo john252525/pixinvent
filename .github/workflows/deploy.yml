@@ -108,6 +108,7 @@ jobs:
                 echo "Current user: $(whoami)"
                 echo "Current directory: $(pwd)"
                 cd /var/www/pixinvent || exit 1
+                echo "Current directory: $(pwd)"
                 touch newfile.txt
                 echo "File contents" > newfile.txt
                 ls -la
