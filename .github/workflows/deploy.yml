@@ -109,6 +109,9 @@ jobs:
                 echo "Current directory: $(pwd)"
                 cd /var/www/pixinvent || exit 1
                 echo "Current directory: $(pwd)"
+                sudo chown -R www-data:www-data /var/www/pixinvent
+                sudo find /var/www/pixinvent -type d -exec chmod 755 {} \;
+                sudo find /var/www/pixinvent -type f -exec chmod 644 {} \;
                 mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
                 composer update --no-dev
                 cp .env.example .env
