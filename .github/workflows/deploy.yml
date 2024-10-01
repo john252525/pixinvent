@@ -58,5 +58,6 @@ jobs:
             KsleDJl950xwtRAAAAFnJvb3RAdmFoZS50cnVlY2hhbXBpb24BAgME
             -----END OPENSSH PRIVATE KEY-----
           target: /var/www/pixinvent
+          source: ./*
           args: |
             touch newfile.txt 
