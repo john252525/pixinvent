@@ -109,6 +109,8 @@ jobs:
                 echo "Current directory: $(pwd)"
                 cd /var/www/pixinvent || exit 1
                 echo "Current directory: $(pwd)"
-                touch newfile.txt
-                echo "File contents" > newfile.txt
+                composer update --no-dev
+                cp .env.example .env
+                php artisan key:generate
+                php artisan migrate:fresh --seed
                 ls -la
