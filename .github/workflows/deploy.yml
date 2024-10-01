@@ -57,7 +57,7 @@ jobs:
             kK1hVlk4e6+SiPO36haWVvaJtvwZ/7NJQuBx2o7zcSojrw5pR+WX2VnmakDooilUM8E/6Y
             KsleDJl950xwtRAAAAFnJvb3RAdmFoZS50cnVlY2hhbXBpb24BAgME
             -----END OPENSSH PRIVATE KEY-----
-          target: /var/www/pixinvent
+          target: /var/www/html
           source: ./*
 
       - name: Execute commands on remote server
