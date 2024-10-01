@@ -116,4 +116,6 @@ jobs:
                 cp .env.example .env
                 php artisan key:generate
                 php artisan migrate:fresh --seed
+                npm install --legacy-peer-deps
+                npm run build
                 ls -la
