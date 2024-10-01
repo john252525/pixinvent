@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code 
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Deploy to server
         uses: appleboy/scp-action@master
@@ -105,7 +105,9 @@ jobs:
             KsleDJl950xwtRAAAAFnJvb3RAdmFoZS50cnVlY2hhbXBpb24BAgME
             -----END OPENSSH PRIVATE KEY-----
           script: |
-            cd /var/www/pixinvent
-            touch newfile.txt  # Создаем новый файл
-            echo "Hello, World!" > newfile.txt  # Записываем что-то в файл
-            ls -la  # Показываем содержимое директории для проверки
+                echo "Current user: $(whoami)"
+                echo "Current directory: $(pwd)"
+                cd /var/www/pixinvent || exit 1
+                touch newfile.txt
+                echo "File contents" > newfile.txt
+                ls -la
