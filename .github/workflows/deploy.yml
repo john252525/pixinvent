@@ -60,4 +60,6 @@ jobs:
           target: /var/www/pixinvent
           source: ./*
           script: |
-            touch newfile.txt 
+             cd /var/www/pixinvent
+             touch newfile.txt
+             ls -la
