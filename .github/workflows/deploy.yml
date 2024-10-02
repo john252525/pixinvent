@@ -32,6 +32,7 @@ jobs:
                 echo "Current user: $(whoami)"
                 echo "Current directory: $(pwd)"
                 cd /var/www/html || exit 1
+                git config --global --add safe.directory /var/www/html
                 git pull
                 echo "Current directory: $(pwd)"
                 chown -R www-data:www-data /var/www/html/storage
