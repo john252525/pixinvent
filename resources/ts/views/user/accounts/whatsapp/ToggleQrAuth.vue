@@ -58,12 +58,14 @@ const switchAuthQR = async (account: AccountClient) => {
   >
     <template #activator>
       <div>
-        <IconBtn
+        <VListItem
+          :prepend-icon="toggleIcon"
           :disabled="props.account.state"
           @click="props.account.additional.config.services.authMethod === 'qr' ? switchAuthQR(props.account) : switchAuthPhone(props.account)"
         >
-          <VIcon :icon="toggleIcon" />
-        </IconBtn>
+          <VListItemTitle v-if="props.account.additional.config.services.authMethod === 'qr'">Авторизация по QR</VListItemTitle>
+          <VListItemTitle v-else>Авторизация по коду</VListItemTitle>
+        </VListItem>
         <VTooltip
           :disabled="!props.account.state"
           activator="parent"

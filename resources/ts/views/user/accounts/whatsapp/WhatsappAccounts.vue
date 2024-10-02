@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { mergeProps } from 'vue'
 import { getI18n } from '@/plugins/i18n'
 import type { AccountClient } from '@/stores/types/accounts'
 import StateSwitch from '@/views/user/accounts/StateSwitch.vue'
@@ -98,7 +99,7 @@ const saveWebhookUrls = async () => {
       </template>
 
       <template #item.actions="{ item }">
-        <div class="d-flex float-end">
+        <div class="d-flex float-end gap-3">
 
           <ForceStopComponent :account="item" />
 
@@ -109,15 +110,31 @@ const saveWebhookUrls = async () => {
             @check-state="accountsStore.getState(item)?.currentState"
           />
 
-          <ToggleQrAuth :account="item" :key="`toggle-qr-auth-${item.login}`" />
-
           <IconBtn @click="editWebhookUrls(item)">
-            <VIcon icon="mdi-pencil" />
+            <VIcon icon="mdi-settings" />
           </IconBtn>
 
-          <ClearSessionComponent :account="item" />
-
-          <DeleteAccountComponent :account="item"/>
+          <VMenu>
+            <template v-slot:activator="{ props: menu }">
+              <VTooltip location="top left">
+                <template v-slot:activator="{ props: tooltip }">
+                  <IconBtn
+                    icon="tabler-dots-vertical"
+                    v-bind="mergeProps(menu, tooltip)"
+                  />
+                </template>
+                <span>{{ $t('accounts.whatsapp.menu.tooltip') }}</span>
+              </VTooltip>
+            </template>
+            <VList>
+              <VListItem :key="`${$dayjs()}-1`">
+                <ClearSessionComponent :account="item" />
+              </VListItem>
+              <VListItem :key="`${$dayjs()}-2`">
+                <DeleteAccountComponent :account="item"/>
+              </VListItem>
+            </VList>
+          </VMenu>
         </div>
       </template>
     </VDataTable>
@@ -136,12 +153,17 @@ const saveWebhookUrls = async () => {
             </IconBtn>
           </template>
         </VListItem>
-        <VListItemTitle>Webhook URLs</VListItemTitle>
         <div v-if="account">
+          <VListItem :title="`${$t('accounts.settings.auth_method.title')}`">
+            <ToggleQrAuth :account :key="`toggle-qr-auth-${account.login}`" />
+          </VListItem>
+        </div>
+        <div v-if="account">
+          <VListItem :title="`${$t('accounts.settings.webhookUrls.title')}`" />
           <VListItem v-for="(webhookUrl, index) in account.webhookUrls">
             <VTextarea
               v-model="account.webhookUrls[index]"
-              label="Webhook URL"
+              :label="`${$t('accounts.settings.webhookUrls.label')}`"
               rows="6"
               class="py-3"
               counter

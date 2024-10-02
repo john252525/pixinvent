@@ -24,9 +24,14 @@ const deleteAccount = async () => {
     max-width="500"
   >
     <template #activator>
-      <IconBtn @click="showDeleteDialog = true">
-        <VIcon :icon="loading ? 'svg-spinners:clock' : 'mdi-delete'"/>
-      </IconBtn>
+      <VListItem
+        :prepend-icon="loading ? 'svg-spinners:clock' : 'mdi-delete'"
+        @click="showDeleteDialog = true"
+      >
+        <VListItemTitle>
+          удалить аккаунт
+        </VListItemTitle>
+      </VListItem>
     </template>
     <template #default="{ isActive }">
       <VCard :loading>

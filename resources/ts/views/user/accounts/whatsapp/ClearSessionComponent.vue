@@ -27,18 +27,20 @@ const doClearSession = async () => {
     max-width="500"
     >
     <template #activator>
-      <div>
-        <IconBtn
-          :disabled="props.account.state"
-          @click="showClearSessionDialog = true">
-          <VIcon :icon="loading ? 'svg-spinners:clock' : props.account.state ? 'emojione-monotone:vertical-traffic-light' : 'emojione:vertical-traffic-light'"/>
-        </IconBtn>
-        <VTooltip
-          :disabled="!props.account.state"
-          activator="parent"
-          text="Очистить сессию допускается только при выключенном состоянии"
-        />
-      </div>
+      <VListItem
+        :disabled="props.account.state"
+        :prepend-icon="loading ? 'svg-spinners:clock' : props.account.state ? 'emojione-monotone:vertical-traffic-light' : 'emojione:vertical-traffic-light'"
+        @click="showClearSessionDialog = true"
+      >
+        <VListItemTitle>
+          Очистить сессию
+        </VListItemTitle>
+      </VListItem>
+      <VTooltip
+        :disabled="!props.account.state"
+        activator="parent"
+        text="Очистить сессию допускается только при выключенном состоянии"
+      />
     </template>
     <template #default="{ isActive }">
       <VCard>

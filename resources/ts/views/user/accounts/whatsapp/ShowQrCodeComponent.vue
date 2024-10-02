@@ -41,7 +41,7 @@ const confirmQr = async () => {
   <VDialog
     max-width="380"
     @after-leave=""
-    @after-enter="refreshQr"
+    @after-enter="account?.qr_code?undefined:refreshQr()"
   >
     <template #activator="{ props: activatorProps }">
       <IconBtn
