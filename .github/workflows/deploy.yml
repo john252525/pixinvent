@@ -40,6 +40,7 @@ jobs:
             export COMPOSER_ALLOW_SUPERUSER=1
             composer update
             mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
+            php artisan key:generate
             php artisan migrate:fresh --seed
             export NODE_OPTIONS=--max-old-space-size=4096
             bun install --legacy-peer-deps
