@@ -18,7 +18,7 @@ jobs:
         with:
           host: 188.120.238.80
           username: root
-          key: ${{ secrets.PIXINVENT_KEY }}
+          key: ${{secrets.PIXINVENT_KEY}}
           target: /var/www/html
           source: ./*
 
@@ -27,7 +27,7 @@ jobs:
         with:
           host: 188.120.238.80
           username: root
-          key: ${{ secrets.PIXINVENT_KEY }}
+          key: ${{secrets.PIXINVENT_KEY}}
           script: |
                 git pull
                 echo "Current user: $(whoami)"
