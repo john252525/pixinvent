@@ -33,12 +33,12 @@ jobs:
             cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
             git config --global --add safe.directory /var/www/vue_apitter__usr7/data/www/vue.apitter.com
             git pull
-            chown -R www-data:www-data storage         
+            chown -R vue_apitter__usr7:vue_apitter__usr7 storage         
             if [ ! -f .env ]; then
               cp .env.example .env
             fi
             export COMPOSER_ALLOW_SUPERUSER=1
-            composer update
+            composer update --ignore-platform-req=ext-bcmath
             mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
             php artisan key:generate
             php artisan migrate:fresh --seed
