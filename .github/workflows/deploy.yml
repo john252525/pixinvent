@@ -39,8 +39,9 @@ jobs:
             fi
             export COMPOSER_ALLOW_SUPERUSER=1
             composer update --ignore-platform-req=ext-bcmath
-            curl -fsSL https://bun.sh/install | bash
+           #curl -fsSL https://bun.sh/install | bash
             cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
+            bun --help
             bun init
             cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
             bun install --legacy-peer-deps
