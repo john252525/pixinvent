@@ -4,119 +4,45 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main  
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code 
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy to server
-        uses: appleboy/scp-action@master
-        with:
-          host: 188.120.238.80
-          username: root
-          key: |
-            -----BEGIN OPENSSH PRIVATE KEY-----
-            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
-            -----END OPENSSH PRIVATE KEY-----
-          target: /var/www/html
-          source: ./*
+      - name: Setup SSH key
+        run: |
+          echo -e "${{ secrets.PIXINVENT_KEY }}" > key.pem
+          chmod 600 key.pem
 
-      - name: Execute commands on remote server
-        uses: appleboy/ssh-action@master 
-        with:
-          host: 188.120.238.80
-          username: root
-          key: |
-            -----BEGIN OPENSSH PRIVATE KEY-----
-            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
-            -----END OPENSSH PRIVATE KEY-----
-          script: |
-                echo "Current user: $(whoami)"
-                echo "Current directory: $(pwd)"
-                cd /var/www/html || exit 1
-                echo "Current directory: $(pwd)"
-                chown -R www-data:www-data /var/www/html/storage
-                mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
-                export COMPOSER_ALLOW_SUPERUSER=1
-                composer update
-                cp .env.example .env
-                php artisan key:generate
-                php artisan migrate:fresh --seed
-                export NODE_OPTIONS=--max-old-space-size=4096
-                bun install --legacy-peer-deps
-                bun run build
-                ls -la
+      - name: Deploy code to server
+        run: |
+          rsync -avz --delete -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./ root@188.120.238.80:/var/www/html
+
+      - name: Execute remote commands
+        run: |
+          ssh -i key.pem -o StrictHostKeyChecking=no root@188.120.238.80 << 'EOF'
+            echo "Current user: $(whoami)"
+            echo "Current directory: $(pwd)"
+            cd /var/www/html || exit 1
+            git config --global --add safe.directory /var/www/html
+            git pull
+            chown -R www-data:www-data storage         
+            if [ ! -f .env ]; then
+              cp .env.example .env
+            fi
+            export COMPOSER_ALLOW_SUPERUSER=1
+            composer update
+            mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
+            php artisan key:generate
+            php artisan migrate:fresh --seed
+            export NODE_OPTIONS=--max-old-space-size=4096
+            bun install --legacy-peer-deps
+            bun run build
+          EOF
