@@ -39,6 +39,7 @@ jobs:
             fi
             export COMPOSER_ALLOW_SUPERUSER=1
             composer update --ignore-platform-req=ext-bcmath
+            curl -fsSL https://bun.sh/install | bash
             bun install --legacy-peer-deps
             bun run build
             mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
