@@ -21,9 +21,9 @@ jobs:
           echo -e "${{ secrets.PIXINVENT_KEY }}" > key.pem
           chmod 600 key.pem
 
-#      - name: Deploy code to server
-#        run: |
-#          rsync -avz --delete -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./ root@188.120.238.80:/var/www/html
+      - name: Deploy code to server
+        run: |
+          rsync -avz --delete -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./ root@188.120.238.80:/var/www/html
 
       - name: Execute remote commands
         run: |
