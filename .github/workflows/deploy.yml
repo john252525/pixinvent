@@ -43,7 +43,7 @@ jobs:
             php artisan key:generate
             php artisan migrate:fresh --seed
             export NODE_OPTIONS=--max-old-space-size=4096
-            cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
+            apt install bun
             bun install --legacy-peer-deps
             bun run build
             chown -R vue_apitter__usr7:vue_apitter__usr7 storage
