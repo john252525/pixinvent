@@ -45,11 +45,10 @@ jobs:
            #/root/.bun/bin/bun init
            #sudo /root/.bun/bin/bun install --legacy-peer-deps
             sudo /root/.bun/bin/bun i
+            export NODE_OPTIONS=--max-old-space-size=4096
             sudo /root/.bun/bin/bun run build
-            mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
+           #mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
             php artisan key:generate
             php artisan migrate:fresh --seed
-            export NODE_OPTIONS=--max-old-space-size=4096
-            apt-get install bun
             chown -R vue_apitter__usr7:vue_apitter__usr7 storage
           EOF
