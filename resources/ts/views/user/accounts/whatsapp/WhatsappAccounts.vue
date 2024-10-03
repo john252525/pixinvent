@@ -3,14 +3,14 @@ import { mergeProps } from 'vue'
 import { getI18n } from '@/plugins/i18n'
 import type { AccountClient } from '@/stores/types/accounts'
 import StateSwitch from '@/views/user/accounts/StateSwitch.vue'
-import ToggleQrAuth from '@/views/user/accounts/whatsapp/ToggleQrAuth.vue'
 import ForceStopComponent from '@/views/user/accounts/whatsapp/ForceStopComponent.vue'
 import ClearSessionComponent from '@/views/user/accounts/whatsapp/ClearSessionComponent.vue'
-import ShowQrCodeComponent from '@/views/user/accounts/whatsapp/ShowQrCodeComponent.vue'
+import ShowAuthCodeComponent from '@/views/user/accounts/whatsapp/ShowAuthCodeComponent.vue'
 import { useAccountsStore } from '@/stores/AccountsStore'
 import type { SortItem } from '@core/types'
 import DeleteAccountComponent from '@/views/user/accounts/whatsapp/DeleteAccountComponent.vue'
 import WhatsappAuthCodeActionColumn from '@/views/user/accounts/whatsapp/WhatsappAuthCodeActionColumn.vue'
+import SettingsDrawerComponent from '@/views/user/accounts/whatsapp/settings/SettingsDrawerComponent.vue'
 
 const { t } = getI18n().global
 const accountSettingsDrawer = ref(false)
@@ -52,14 +52,8 @@ const editWebhookUrls = (client: AccountClient) => {
   accountSettingsDrawer.value = true
 }
 
-const saveWebhookUrls = async () => {
-  updateAccountLoader.value = true
-  if (account.value)
-    await accountsStore.updateAccount(account.value, 'update-webhook-urls')
-
-  account.value = null
-  updateAccountLoader.value = false
-  accountSettingsDrawer.value = false
+const updateIsDrawerOpen = (isDrawerOpen: boolean) => {
+  accountSettingsDrawer.value = isDrawerOpen
 }
 </script>
 
@@ -81,25 +75,16 @@ const saveWebhookUrls = async () => {
           <VListItemSubtitle>Если инициализация аккаунта занимает больше минуты</VListItemSubtitle>
           <VListItemSubtitle>Выключите и снова включите желтый переключатель справа</VListItemSubtitle>
         </VListItem>
-        <WhatsappAuthCodeActionColumn v-if="item.step?.value === 2.22" :account="item" />
-        <VListItem v-if="item.step?.value === 2.2">
-          <span v-if="item.qr_code">
-            Для показа QR кода нажмите кнопку справа 👉
-          </span>
-          <span v-else>
-            Для показа QR кода нажмите кнопку справа 👉
-          </span>
-          <template #append>
-            <ShowQrCodeComponent
-              :account="item"
-              :key="`show-qr-code-component-${item.login}`"
-            />
-          </template>
+        <VListItem>
+          <ShowAuthCodeComponent
+            :account="item"
+            :key="`show-qr-code-component-${item.login}`"
+          />
         </VListItem>
       </template>
 
       <template #item.actions="{ item }">
-        <div class="d-flex float-end gap-3">
+        <div class="d-flex float-end gap-2">
 
           <ForceStopComponent :account="item" />
 
@@ -138,67 +123,9 @@ const saveWebhookUrls = async () => {
         </div>
       </template>
     </VDataTable>
-    <Teleport to="body">
-      <VNavigationDrawer
-        v-model="accountSettingsDrawer"
-        temporary
-        width="350"
-        location="right"
-      >
-        <VListItem class="pe-0">
-          <VListItemTitle>Настройки аккаунта</VListItemTitle>
-          <template #append>
-            <IconBtn @click.stop="accountSettingsDrawer = false">
-              <VIcon icon="mdi-close" />
-            </IconBtn>
-          </template>
-        </VListItem>
-        <div v-if="account">
-          <VListItem :title="`${$t('accounts.settings.auth_method.title')}`">
-            <ToggleQrAuth :account :key="`toggle-qr-auth-${account.login}`" />
-          </VListItem>
-        </div>
-        <div v-if="account">
-          <VListItem :title="`${$t('accounts.settings.webhookUrls.title')}`" />
-          <VListItem v-for="(webhookUrl, index) in account.webhookUrls">
-            <VTextarea
-              v-model="account.webhookUrls[index]"
-              :label="`${$t('accounts.settings.webhookUrls.label')}`"
-              rows="6"
-              class="py-3"
-              counter
-              clearable
-            >
-              <template #clear>
-                <IconBtn class="position-absolute right-0 top-0" @click.stop="account.webhookUrls.splice(index, 1)">
-                  <VIcon icon="mdi-close" />
-                </IconBtn>
-              </template>
-            </VTextarea>
-          </VListItem>
-          <VListItemAction class="ma-3">
-            <VBtn
-              block
-              color="success"
-              variant="outlined"
-              @click="account.webhookUrls.push('')"
-            >
-              Добавить
-            </VBtn>
-          </VListItemAction>
-          <VListItemAction class="d-flex justify-space-between ma-3">
-            <VBtn color="secondary" @click="accountSettingsDrawer = false">Отмена</VBtn>
-            <VBtn
-              color="primary"
-              :disabled="updateAccountLoader"
-              :loading="updateAccountLoader"
-              @click="saveWebhookUrls"
-            >
-              Сохранить
-            </VBtn>
-          </VListItemAction>
-        </div>
-      </VNavigationDrawer>
-    </Teleport>
+    <SettingsDrawerComponent
+      :account :key="`settings-drawer-${account?.login}`"
+      :isDrawerOpen="accountSettingsDrawer"
+      @is-drawer-open="updateIsDrawerOpen" />
   </div>
 </template>

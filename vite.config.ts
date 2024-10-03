@@ -79,6 +79,7 @@ export default defineConfig({
         './resources/ts/@core/utils',
         './resources/ts/@core/composable/',
         './resources/ts/composables/',
+        './resources/ts/stores/*',
         './resources/ts/utils/',
         './resources/ts/plugins/*/composables/*',
       ],

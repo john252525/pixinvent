@@ -15,7 +15,7 @@ class SourceService
     /**
      * Timeout duration in seconds.
      */
-    protected int $timeout = 120;
+    protected int $timeout = 3600;
 
     /**
      * Number of retry attempts.
@@ -23,7 +23,7 @@ class SourceService
     protected int $retryTimes = 100;
 
     /**
-     * Delay between retries in seconds.
+     * Delay between retries in milliseconds.
      */
     protected int $retryDelay = 100;
 
@@ -86,9 +86,14 @@ class SourceService
         ])->json();
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function switchAuth(Request $request, string $source)
     {
         $currentAuth = $request->input('account.additional.config.services.authMethod');
+        $type = $request->input('type');
+
         $login = $request->input('account.login');
         $phone = $request->input('phone');
 
@@ -99,12 +104,16 @@ class SourceService
             'phone' => $phone,
         ];
 
-        if ($currentAuth === 'code') {
+        if ($type === 'qr') {
             $this->http->post($this->endpoint.'disablePhoneAuth', $data)->json();
             $this->actions[] = 'disable-phone-auth';
-        }
-
-        if ($currentAuth === 'qr') {
+        } elseif ($type === 'code') {
+            $this->http->post($this->endpoint.'enablePhoneAuth', $data)->json();
+            $this->actions[] = 'enable-phone-auth';
+        } elseif ($currentAuth === 'qr') {
+            $this->http->post($this->endpoint.'disablePhoneAuth', $data)->json();
+            $this->actions[] = 'disable-phone-auth';
+        } elseif ($currentAuth === 'code') {
             $this->http->post($this->endpoint.'enablePhoneAuth', $data)->json();
             $this->actions[] = 'enable-phone-auth';
         }
@@ -118,10 +127,14 @@ class SourceService
     public function switchState(Request $request, string $source)
     {
         $account = $request->input('account');
+        $state = $request->input('state');
 
-        if (\Arr::get($account, 'step.value') === 3) {
+        if ($state || $state === false) {
+            $this->setState($request, $source, $state);
+        }
+        if (\Arr::get($account, 'step.value') === 100) {
             $this->setState($request, $source);
-        } else {
+        } elseif (\Arr::get($account, 'step.value') === 200) {
             $this->setState($request, $source, false);
         }
 
@@ -271,7 +284,8 @@ class SourceService
             'setState' => $state,
         ];
 
-        $this->actions[] = 'set-state-'.(string) $state;
+        $stateAction = $state ? 'on' : 'off';
+        $this->actions[] = "set-state-$stateAction";
         $this->http->post($this->endpoint.'setState', $data)->json();
     }
 

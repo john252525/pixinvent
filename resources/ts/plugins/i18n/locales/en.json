@@ -1,4 +1,63 @@
 {
+  "accounts": {
+    "whatsapp": {
+      "phone-button-proceed": "Proceed",
+      "auth-code-column-text": "Auth code column text",
+      "auth": {
+        "code": {
+          "title": "Code confirmation"
+        }
+      }
+    },
+    "states": {
+      "messages": {
+        "switching": {
+          "off": "Deactivating your account",
+          "on": "Enabling your account",
+          "auth_mode_to_code": "Switching to authorization mode by code",
+          "auth_mode_to_qr": "Switching to authorization mode by QR code"
+        }
+      }
+    },
+    "settings": {
+      "title": "Account settings",
+      "auth_method": {
+        "title": "Choose an authorization method",
+        "label": {
+          "qr": "QR code",
+          "code": "Phone code"
+        },
+        "qr": {
+          "title": "Switching the authorization method",
+          "label": "Are you sure you want to change the authorization method to QR code?",
+          "button": {
+            "cancel": "Cancel",
+            "ok": "Change"
+          }
+        },
+        "phone": {
+          "label": "Phone number of the account",
+          "title": "Linking to a phone number",
+          "button": {
+            "cancel": "Cancel",
+            "ok": "Save"
+          }
+        }
+      },
+      "add_webhook_url": {
+        "title": "Webhooks",
+        "label": "Enter Webhook",
+        "button": {
+          "add": "Add Webhook"
+        }
+      },
+      "button": {
+        "cancel": "Cancel",
+        "save": "Save changes"
+      }
+    }
+  },
+
   "all": "All",
   "Click on this button to get WhatsApp qr code": "Click on this button to get WhatsApp qr code",
   "Click on this button to get WhatsApp authorization code": "Click on this button to get WhatsApp authorization code",

@@ -13,8 +13,8 @@ export const useAccountsStore = defineStore('accounts-store', () => {
     { state: 'connected', value: 2.22, label: t('Код авторизации получен'), color:'warning', currentState: true, disabled: false, loading: false },
     { state: 'connected', value: 2.25, label: t('Код авторизации получен'), color:'warning', currentState: true, disabled: false, loading: false },
     { state: 'connected', value: 2.3, label: t('Can not update QR'), color: 'warning', currentState: true, disabled: false, loading: false },
-    { state: 'connecting', value: 3, label: t('Can not update QR'), color: 'secondary', currentState: true, disabled: false, loading: 'warning' },
-    { state: 'disconnecting', value: 4, label: t('Can not update QR'), color: 'secondary', currentState: false, disabled: false, loading: 'error' },
+    { state: 'connecting', value: 100, label: t('Connecting...'), color: 'secondary', currentState: true, disabled: true, loading: 'warning' },
+    { state: 'disconnecting', value: 200, label: t('Disconnecting...'), color: 'secondary', currentState: false, disabled: true, loading: 'error' },
     { state: 'online', value: 5, label: t('Account started successfully & realtime init done'), color: 'success', currentState: true, disabled: false, loading: false },
   ]
 
@@ -102,12 +102,12 @@ export const useAccountsStore = defineStore('accounts-store', () => {
     })
   }
 
-  async function switchAuth(account: AccountClient, phone: number|string|undefined) {
+  async function switchAuth(account: AccountClient, phone: any, type: string | null = null) {
     const action = 'switch-auth'
 
     return await $api(`/user/sources/${source.value}/switch-auth`, {
       method: 'POST',
-      body: { account, phone, action },
+      body: { account, phone, action, type },
       onResponse: ({ response }) => {
         setAccount(response._data)
       },
@@ -134,14 +134,16 @@ export const useAccountsStore = defineStore('accounts-store', () => {
     loading.value.accounts = false
   }
 
-  async function switchState(account: AccountClient) {
+  async function switchState(account: AccountClient, state = true, updateAccount: boolean) {
     const action = 'switch-state'
 
     return await $api(`user/sources/${source.value}/switch-state`, {
       method: 'POST',
-      body: { account, action },
+      body: { account, action, state },
       onResponse({ response }) {
-        setAccount(response._data)
+        if (updateAccount)
+          setAccount(response._data)
+
         return response._data
       },
       onResponseError({ response }) {

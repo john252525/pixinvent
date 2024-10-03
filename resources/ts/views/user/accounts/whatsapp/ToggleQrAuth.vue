@@ -101,7 +101,8 @@ const switchAuthQR = async (account: AccountClient) => {
             :loading="toggleLoading"
             :color="onMaskaError ? 'success' : 'primary'"
             :variant="onMaskaError ? 'flat' : 'text'"
-            :disabled="!onMaskaError" @click="switchAuthQR(props.account)"
+            :disabled="!onMaskaError"
+            @click="switchAuthQR(props.account)"
           >
             Ок
           </VBtn>

@@ -9,14 +9,14 @@ const accountStore = useAccountsStore()
 
 const switchState = async (value: any) => {
   if (value) {
-    accountStore.setState(account, 3, 'Connecting...')
+    accountStore.setState(account, 100, 'Connecting...')
   } else {
-    accountStore.setState(account, 4, 'Disconnecting...')
+    accountStore.setState(account, 200, 'Disconnecting...')
   }
 
   if (account) {
     const newAccount: WhatsappClient = accountStore.getAccount(account) ?? account
-    await accountStore.switchState(newAccount)
+    await accountStore.switchState(newAccount, value, true)
   }
 }
 </script>
