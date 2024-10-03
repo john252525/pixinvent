@@ -43,8 +43,9 @@ jobs:
            #echo $(which bun)
            #chown -R vue_apitter__usr:vue_apitter__usr /var/www/vue_apitter__usr7/data/www/vue.apitter.com
            #/root/.bun/bin/bun init
-            /root/.bun/bin/bun install --legacy-peer-deps
-            /root/.bun/bin/bun run build
+           #sudo /root/.bun/bin/bun install --legacy-peer-deps
+            sudo /root/.bun/bin/bun i
+            sudo /root/.bun/bin/bun run build
             mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
             php artisan key:generate
             php artisan migrate:fresh --seed
