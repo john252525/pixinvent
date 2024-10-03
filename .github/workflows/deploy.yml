@@ -42,6 +42,7 @@ jobs:
            #curl -fsSL https://bun.sh/install | bash
             cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
             bun --help
+            chown -R vue_apitter__usr7:vue_apitter__usr7 /var/www/vue_apitter__usr7/data/www/vue.apitter.com
             bun init
             cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
             bun install --legacy-peer-deps
