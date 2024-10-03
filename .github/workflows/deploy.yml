@@ -39,12 +39,12 @@ jobs:
             fi
             export COMPOSER_ALLOW_SUPERUSER=1
             composer update --ignore-platform-req=ext-bcmath
+            bun install --legacy-peer-deps
+            bun run build
             mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
             php artisan key:generate
             php artisan migrate:fresh --seed
             export NODE_OPTIONS=--max-old-space-size=4096
             apt-get install bun
-            bun install --legacy-peer-deps
-            bun run build
             chown -R vue_apitter__usr7:vue_apitter__usr7 storage
           EOF
