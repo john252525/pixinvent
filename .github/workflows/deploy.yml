@@ -40,13 +40,10 @@ jobs:
             export COMPOSER_ALLOW_SUPERUSER=1
             composer update --ignore-platform-req=ext-bcmath
            #curl -fsSL https://bun.sh/install | bash
-            cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
-            echo $(which bun)
+           #echo $(which bun)
            #chown -R vue_apitter__usr:vue_apitter__usr /var/www/vue_apitter__usr7/data/www/vue.apitter.com
-            /root/.bun/bin/bun init
-            cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
+           #/root/.bun/bin/bun init
             /root/.bun/bin/bun install --legacy-peer-deps
-            cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
             /root/.bun/bin/bun run build
             mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
             php artisan key:generate
