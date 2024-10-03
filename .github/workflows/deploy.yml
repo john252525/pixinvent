@@ -23,15 +23,15 @@ jobs:
 
       - name: Deploy code to server
         run: |
-          rsync -avz --delete -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./ root@188.120.238.80:/var/www/html
+          rsync -avz --delete -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./ root@188.120.236.47:/var/www/vue_apitter__usr7/data/www/vue.apitter.com
 
       - name: Execute remote commands
         run: |
-          ssh -i key.pem -o StrictHostKeyChecking=no root@188.120.238.80 << 'EOF'
+          ssh -i key.pem -o StrictHostKeyChecking=no root@188.120.236.47 << 'EOF'
             echo "Current user: $(whoami)"
             echo "Current directory: $(pwd)"
-            cd /var/www/html || exit 1
-            git config --global --add safe.directory /var/www/html
+            cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
+            git config --global --add safe.directory /var/www/vue_apitter__usr7/data/www/vue.apitter.com
             git pull
             chown -R www-data:www-data storage         
             if [ ! -f .env ]; then
