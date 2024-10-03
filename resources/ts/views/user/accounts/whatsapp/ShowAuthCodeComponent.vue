@@ -95,10 +95,10 @@ const updateAuthMethod = async (value: string) => {
     return;
   }
 
-  showPhoneDialog.value = false;
+  showPhoneDialog.value = true;
   updateAccountLoader.value = true;
 
-  await switchAccountState(account.value, false, true);
+  await switchAccountState(account.value, false, false);
   await accountsStore.switchAuth(account.value, phone.value, value);
   await switchAccountState(account.value, true);
 
@@ -112,6 +112,7 @@ const switchAccountState = async (accountValue: any, state: boolean, updateAccou
 
 const resetState = () => {
   updateAccountLoader.value = false;
+  showPhoneDialog.value = false;
   stateText.value = '';
   authMethod.value = null;
 }
@@ -163,7 +164,7 @@ const resetState = () => {
             class="d-flex justify-center align-content-center"
           >
             <VImg
-              v-if="account.step?.value === 2.2 && !account.qr_code"
+              v-if="!account.qr_code"
               class="mx-auto"
               height="350"
               width="350"
@@ -235,6 +236,7 @@ const resetState = () => {
                 v-model="phonePlaceholder"
                 class="my-3"
                 v-maska="maskaOptions"
+                :disabled="updateAccountLoader"
                 :label="$t('accounts.settings.auth_method.phone.label')"
                 inputmode="numeric"
                 @maska="onMaska"
@@ -256,6 +258,7 @@ const resetState = () => {
             v-model="account.additional.config.services.authMethod"
             :hint="stateText"
             persistent-hint
+            :disabled="loading.refresh || loading.confirm || updateAccountLoader"
             @update:model-value="updateAuthMethod"
           >
             <VRadio :label="$t('accounts.settings.auth_method.label.qr')" value="qr"></VRadio>
@@ -266,18 +269,18 @@ const resetState = () => {
         <VCardActions>
           <VBtn
             v-if="showPhoneDialog"
-            :loading="loading.refresh"
+            :loading="loading.refresh || updateAccountLoader"
             variant="flat"
-            color="info"
+            color="primary"
             @click="updateAuthMethod('code')"
           >
             {{ $t('accounts.whatsapp.phone-button-proceed') }}
           </VBtn>
           <div v-else>
-            <VBtn :loading="loading.refresh" variant="outlined" color="success" @click="refreshQr">
+            <VBtn :loading="loading.refresh || updateAccountLoader" variant="outlined" color="success" @click="refreshQr">
               {{ $t('Refresh') }}
             </VBtn>
-            <VBtn :loading="loading.confirm" variant="flat" color="primary" @click="confirmQr">
+            <VBtn :loading="loading.confirm || updateAccountLoader" variant="flat" color="primary" @click="confirmQr">
               {{ $t('Confirm') }}
             </VBtn>
           </div>
