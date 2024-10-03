@@ -45,8 +45,9 @@ jobs:
            #/root/.bun/bin/bun init
            #sudo /root/.bun/bin/bun install --legacy-peer-deps
             sudo /root/.bun/bin/bun i
-            export NODE_OPTIONS=--max-old-space-size=4096
-            sudo /root/.bun/bin/bun run build
+           #export NODE_OPTIONS=--max-old-space-size=4096
+           #sudo /root/.bun/bin/bun run build
+            NODE_OPTIONS="--max-old-space-size=2048" bun run build
            #mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
             php artisan key:generate
             php artisan migrate:fresh --seed
