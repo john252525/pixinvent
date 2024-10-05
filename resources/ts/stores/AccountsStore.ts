@@ -1,5 +1,5 @@
 import { onBeforeMount } from 'vue'
-import type { AccountClient, Source, Step } from '@/stores/types/accounts'
+import type { AccountClient, TelegramClient, Source, Step } from '@/stores/types/accounts'
 import { getI18n } from '@/plugins/i18n'
 
 const { t } = getI18n().global
@@ -7,15 +7,16 @@ const { t } = getI18n().global
 const storedSource = localStorage.getItem('source')
 export const useAccountsStore = defineStore('accounts-store', () => {
   const accountStates = [
-    { state: 'disconnected', value: null, label: t('stateOffline'), color: 'error', currentState: false, disabled: false, loading: false },
-    { state: 'initializing', value: 0, label: t('Account just started to start'), color: 'info', currentState: true, disabled: false, loading: 'info' },
-    { state: 'connected', value: 2.2, label: t('QR code received'), color: 'warning', currentState: true, disabled: false, loading: false },
-    { state: 'connected', value: 2.22, label: t('Код авторизации получен'), color:'warning', currentState: true, disabled: false, loading: false },
-    { state: 'connected', value: 2.25, label: t('Код авторизации получен'), color:'warning', currentState: true, disabled: false, loading: false },
-    { state: 'connected', value: 2.3, label: t('Can not update QR'), color: 'warning', currentState: true, disabled: false, loading: false },
-    { state: 'connecting', value: 100, label: t('Connecting...'), color: 'secondary', currentState: true, disabled: true, loading: 'warning' },
-    { state: 'disconnecting', value: 200, label: t('Disconnecting...'), color: 'secondary', currentState: false, disabled: true, loading: 'error' },
-    { state: 'online', value: 5, label: t('Account started successfully & realtime init done'), color: 'success', currentState: true, disabled: false, loading: false },
+    { state: 'disconnected', value: null, label: t('stateOffline'), color: 'red', currentState: false, disabled: false, loading: false, indeterminate: false },
+    { state: 'initializing', value: 0, label: t('Account just started to start'), color: 'info', currentState: true, disabled: false, loading: 'info', indeterminate: false },
+    { state: 'force-stopping', value: 0.1, label: t('Account force stopping'), color: 'red', currentState: false, disabled: false, loading: false, indeterminate: false },
+    { state: 'connected', value: 2.2, label: t('QR code received'), color: 'warning', currentState: true, disabled: false, loading: false, indeterminate: false },
+    { state: 'connected', value: 2.22, label: t('Код авторизации получен'), color:'warning', currentState: true, disabled: false, loading: false, indeterminate: false },
+    { state: 'connected', value: 2.25, label: t('Код авторизации получен'), color:'warning', currentState: true, disabled: false, loading: false, indeterminate: false },
+    { state: 'connected', value: 2.3, label: t('Can not update QR'), color: 'warning', currentState: true, disabled: false, loading: false, indeterminate: false },
+    { state: 'connecting', value: 100, label: t('Connecting...'), color: 'secondary', currentState: false, disabled: true, loading: 'warning', indeterminate: true },
+    { state: 'disconnecting', value: 200, label: t('Disconnecting...'), color: 'secondary', currentState: false, disabled: true, loading: 'error', indeterminate: true },
+    { state: 'online', value: 5, label: t('Account started successfully & realtime init done'), color: 'success', currentState: true, disabled: false, loading: false, indeterminate: false },
   ]
 
   const source = ref<Source>(storedSource === 'whatsapp' || storedSource === 'telegram' ? storedSource : 'telegram')
@@ -42,13 +43,40 @@ export const useAccountsStore = defineStore('accounts-store', () => {
   }
 
   function setState(account: AccountClient, stepValue: number, stepMessage: string) {
-    const accountIndex = getAccountIndex(account)
-    if (accountIndex !== -1)
-      accounts.value[source.value][accountIndex].step = { value: stepValue, message: stepMessage }
+    const currentAccount = getAccount(account)
+    if(currentAccount)
+      currentAccount.step = { value: stepValue, message: stepMessage }
+  }
+
+  function setAccountStateMessage(account: AccountClient, message: string): void {
+    const currentAccount = getAccount(account)
+    if (currentAccount && currentAccount.step) {
+      currentAccount.step.message = message
+    }
+  }
+
+  async function setAccountState(account: AccountClient, state = true, updateAccount: boolean = true) {
+    const action = 'set-state'
+
+    return await $api(`user/sources/${source.value}/set-state`, {
+      method: 'POST',
+      body: { account, state, action },
+      onResponse({ response }) {
+        if (updateAccount)
+          setAccount(response._data)
+
+        return response._data
+      },
+      onResponseError({ response }) {
+        console.log(response)
+        getAccounts()
+      },
+    })
   }
 
   function getAccount(account: AccountClient) {
-    return accounts.value[source.value].find((client: AccountClient) => client.login === account.login)
+    const accountIndex = getAccountIndex(account)
+    return accountIndex !== -1 ? accounts.value[source.value][accountIndex] : accounts.value[source.value].find((client: AccountClient) => client.login === account.login)
   }
 
   function getAccountIndex(account: AccountClient) {
@@ -81,7 +109,8 @@ export const useAccountsStore = defineStore('accounts-store', () => {
       onResponse: ({ response }) => {
         setAccount(response._data)
       },
-      async onResponseError() {
+      async onResponseError({ response}) {
+        console.log(response)
         await getAccounts()
       },
     })
@@ -96,8 +125,56 @@ export const useAccountsStore = defineStore('accounts-store', () => {
       onResponse: ({ response }) => {
         setAccount(response._data)
       },
-      onResponseError({ error }) {
-        console.log(error?.message)
+      onResponseError({ response }) {
+        console.log(response)
+      },
+    })
+  }
+
+  async function solveChallenge(account: TelegramClient, code: string) {
+    const action = 'solve-challenge'
+
+    return await $api(`/user/sources/${source.value}/solve-challenge`, {
+      method: 'POST',
+      body: { account, action, code },
+      onResponse: ({ response }) => {
+        setAccount(response._data)
+      },
+      onResponseError({ response }) {
+        console.log(response)
+      },
+    })
+  }
+
+  async function sendTwoFactorAuth(account: TelegramClient, code: string) {
+    const action = 'send-two-factor-auth'
+
+    return await $api(`/user/sources/${source.value}/send-two-factor-auth`, {
+      method: 'POST',
+      body: { account, action, code },
+      onResponse: ({ response }) => {
+        setAccount(response._data)
+      },
+      onResponseError({ response }) {
+        console.log(response)
+      },
+    })
+  }
+
+  async function sendTelegramCode(account: TelegramClient | undefined) {
+    if(!account)
+      return
+
+    const action = 'send-telegram-code'
+
+    return await $api(`/user/sources/${source.value}/send-telegram-code`, {
+      method: 'POST',
+      body: { account, action },
+      onResponse: ({ response }) => {
+        setAccount(response._data)
+      },
+      onResponseError({ response }) {
+        console.log(response)
       },
     })
   }
@@ -168,7 +245,7 @@ export const useAccountsStore = defineStore('accounts-store', () => {
   }
 
   async function getQrCode(account: AccountClient) {
-    const action = 'get-info'
+    const action = 'get-qr-code'
 
     return await $api(`user/sources/${source.value}/get-qr-code`, {
       method: 'POST',
@@ -176,7 +253,24 @@ export const useAccountsStore = defineStore('accounts-store', () => {
       onResponse({ response }) {
         return setAccount(response._data)
       },
-      async onResponseError() {
+      async onResponseError({ response}) {
+        console.log(response)
+        await getAccounts()
+      }
+    })
+  }
+
+  async function getQr(account: AccountClient) {
+    const action = 'get-qr'
+
+    return await $api(`user/sources/${source.value}/get-qr`, {
+      method: 'POST',
+      body: { account, action },
+      onResponse({ response }) {
+        return setAccount(response._data)
+      },
+      async onResponseError({ response }) {
+        console.log(response)
         await getAccounts()
       }
     })
@@ -191,7 +285,8 @@ export const useAccountsStore = defineStore('accounts-store', () => {
       onResponse({ response }) {
         return setAccount(response._data)
       },
-      async onResponseError() {
+      async onResponseError({ response }) {
+        console.log(response)
         await getAccounts()
       }
     })
@@ -233,6 +328,10 @@ export const useAccountsStore = defineStore('accounts-store', () => {
     await getAccounts()
   })
 
+  onUnmounted(() => {
+    console.log('onUnmounted')
+  })
+
   return {
     // states
     accountStates,
@@ -263,5 +362,11 @@ export const useAccountsStore = defineStore('accounts-store', () => {
     deleteAccount,
     addAccount,
     updateAccount,
+    setAccountState,
+    sendTelegramCode,
+    solveChallenge,
+    sendTwoFactorAuth,
+    getQr,
+    setAccountStateMessage,
   }
 })

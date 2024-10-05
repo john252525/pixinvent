@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { WhatsappClient } from '@/stores/types/accounts'
+import type { AccountClient } from '@/stores/types/accounts'
 import { useAccountsStore } from '@/stores/AccountsStore'
 
-const { account } = defineProps<{ account: WhatsappClient }>()
+const { account } = defineProps<{ account: AccountClient }>()
 
 
 const accountStore = useAccountsStore()
@@ -15,7 +15,7 @@ const switchState = async (value: any) => {
   }
 
   if (account) {
-    const newAccount: WhatsappClient = accountStore.getAccount(account) ?? account
+    const newAccount: AccountClient = accountStore.getAccount(account) ?? account
     await accountStore.switchState(newAccount, value, true)
   }
 }
@@ -29,6 +29,7 @@ const switchState = async (value: any) => {
       :loading="accountStore.getState(account)?.loading"
       class="state-switch-account mx-auto"
       hide-details
+      :indeterminate="accountStore.getState(account)?.indeterminate"
       @update:model-value="switchState"
     />
   </IconBtn>

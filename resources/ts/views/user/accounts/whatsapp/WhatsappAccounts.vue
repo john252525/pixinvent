@@ -2,14 +2,13 @@
 import { mergeProps } from 'vue'
 import { getI18n } from '@/plugins/i18n'
 import type { AccountClient } from '@/stores/types/accounts'
-import StateSwitch from '@/views/user/accounts/StateSwitch.vue'
+import StateSwitch from '@/views/user/accounts/whatsapp/WhatsappStateSwitch.vue'
 import ForceStopComponent from '@/views/user/accounts/whatsapp/ForceStopComponent.vue'
 import ClearSessionComponent from '@/views/user/accounts/whatsapp/ClearSessionComponent.vue'
-import ShowAuthCodeComponent from '@/views/user/accounts/whatsapp/ShowAuthCodeComponent.vue'
+import ShowWhatsappAuthCodeComponent from '@/views/user/accounts/whatsapp/ShowWhatsappAuthCodeComponent.vue'
 import { useAccountsStore } from '@/stores/AccountsStore'
 import type { SortItem } from '@core/types'
 import DeleteAccountComponent from '@/views/user/accounts/whatsapp/DeleteAccountComponent.vue'
-import WhatsappAuthCodeActionColumn from '@/views/user/accounts/whatsapp/WhatsappAuthCodeActionColumn.vue'
 import SettingsDrawerComponent from '@/views/user/accounts/whatsapp/settings/SettingsDrawerComponent.vue'
 
 const { t } = getI18n().global
@@ -76,7 +75,7 @@ const updateIsDrawerOpen = (isDrawerOpen: boolean) => {
           <VListItemSubtitle>Выключите и снова включите желтый переключатель справа</VListItemSubtitle>
         </VListItem>
         <VListItem>
-          <ShowAuthCodeComponent
+          <ShowWhatsappAuthCodeComponent
             :account="item"
             :key="`show-qr-code-component-${item.login}`"
           />

@@ -28,9 +28,12 @@ Route::group(['prefix' => 'sources', 'middleware' => 'auth:sanctum'], function (
     Route::post('{source}', [SourcesController::class, 'update']);
     Route::delete('{source}', [SourcesController::class, 'destroy']);
     Route::post('{source}/get-qr-code', [\App\Http\Controllers\Api\User\SourcesController::class, 'getInfo']);
+    Route::post('{source}/get-qr', [\App\Http\Controllers\Api\User\SourcesController::class, 'getQR']);
     Route::post('{source}/get-info-by-token', [\App\Http\Controllers\Api\User\SourcesController::class, 'getInfoByToken']);
     Route::post('{source}/get-info', [\App\Http\Controllers\Api\User\SourcesController::class, 'getInfo']);
-    Route::get('{source}/solve-challenge', [\App\Http\Controllers\Api\User\SourcesController::class, 'getQR']);
+    Route::post('{source}/send-two-factor-auth', [\App\Http\Controllers\Api\User\SourcesController::class, 'twoFactorAuth']);
+    Route::post('{source}/send-telegram-code', [\App\Http\Controllers\Api\User\SourcesController::class, 'sendTelegramCode']);
+    Route::post('{source}/solve-challenge', [\App\Http\Controllers\Api\User\SourcesController::class, 'solveChallenge']);
     Route::post('{source}/switch-state', [\App\Http\Controllers\Api\User\SourcesController::class, 'switchState']);
     Route::post('{source}/set-state', [\App\Http\Controllers\Api\User\SourcesController::class, 'setStateAction']);
     Route::post('{source}/force-stop', [\App\Http\Controllers\Api\User\SourcesController::class, 'forceStopAction']);

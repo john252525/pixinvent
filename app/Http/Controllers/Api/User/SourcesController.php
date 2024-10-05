@@ -53,6 +53,7 @@ class SourcesController extends Controller
      * Set the state of the specified source action.
      *
      * @return mixed
+     * @throws ConnectionException
      */
     public function setStateAction(Request $request, string $source)
     {
@@ -104,6 +105,7 @@ class SourcesController extends Controller
      * Solve a challenge for the specified source.
      *
      * @return PromiseInterface|Response|JsonResponse
+     * @throws ConnectionException
      */
     public function solveChallenge(Request $request, string $source)
     {
@@ -111,9 +113,26 @@ class SourcesController extends Controller
     }
 
     /**
+     * @throws ConnectionException
+     */
+    public function twoFactorAuth(Request $request, string $source)
+    {
+        return $this->sourceService->twoFactorAuth($request, $source);
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function sendTelegramCode(Request $request, string $source)
+    {
+        return $this->sourceService->sendTelegramCode($request, $source);
+    }
+
+    /**
      * Clear the session for the specified source.
      *
      * @return mixed
+     * @throws ConnectionException
      */
     public function clearSessionAction(Request $request, string $source)
     {
@@ -124,6 +143,7 @@ class SourcesController extends Controller
      * Get information for the specified source.
      *
      * @return mixed
+     * @throws ConnectionException
      */
     public function getInfo(Request $request, string $source)
     {

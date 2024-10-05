@@ -30,6 +30,7 @@ class SourceService
     private PendingRequest $http;
 
     public array $actions = [];
+    public array $messages = [];
 
     public function __construct()
     {
@@ -43,6 +44,9 @@ class SourceService
         return $this->getInfoByToken($request, $source);
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function store(Request $request, string $source)
     {
         $login = $request->input('account.login');
@@ -66,15 +70,19 @@ class SourceService
         return $this->getInfo($request, $source);
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function setStateAction(Request $request, string $source)
     {
-        $state = $request->input('state');
-        $this->setState($request, $source, $state);
+        $source === 'telegram'
+        ? $this->setTelegramState($request, 'telegram')
+        : $this->setState($request, $source);
 
         return $this->getInfo($request, $source);
     }
 
-    public function forceStop(Request $request, string $source)
+    public function forceStop(Request $request, string $source): void
     {
         $login = $request->input('account.login');
         $this->actions[] = 'force-stop';
@@ -121,36 +129,18 @@ class SourceService
         return $this->getInfo($request, $source);
     }
 
-    /**
-     * @throws ConnectionException
-     */
-    public function switchState(Request $request, string $source)
-    {
-        $account = $request->input('account');
-        $state = $request->input('state');
-
-        if ($state || $state === false) {
-            $this->setState($request, $source, $state);
-        }
-        if (\Arr::get($account, 'step.value') === 100) {
-            $this->setState($request, $source);
-        } elseif (\Arr::get($account, 'step.value') === 200) {
-            $this->setState($request, $source, false);
-        }
-
-        return $this->getInfo($request, $source);
-    }
-
     public function getQR(Request $request, string $source)
     {
         $login = $request->input('account.login');
-        $this->actions[] = 'get-qr';
 
-        return $this->http->post($this->endpoint.'getQr', [
+        $data = [
             'token' => $this->token,
             'source' => $source,
             'login' => $login,
-        ])->json('value');
+        ];
+
+        $this->actions[] = 'get-qr';
+        return $this->http->post($this->endpoint.'getQr', $data)->json('value');
     }
 
     /**
@@ -191,7 +181,7 @@ class SourceService
      */
     public function solveChallenge(Request $request, string $source)
     {
-        $login = $request->input('login');
+        $login = $request->input('account.login');
         $code = $request->input('code');
 
         $this->actions[] = 'solve-challenge';
@@ -204,6 +194,87 @@ class SourceService
         ])->json();
     }
 
+    /**
+     * @throws ConnectionException
+     */
+    public function twoFactorAuth(Request $request, string $source)
+    {
+        $login = $request->input('account.login');
+        $code = $request->input('code');
+
+        $this->actions[] = 'two-factor-auth';
+
+        return $this->http->post($this->endpoint.'twoFactorAuth', [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+            'code' => $code,
+        ])->json();
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function sendTelegramCode(Request $request, string $source)
+    {
+        $login = $request->input('account.login');
+
+        $this->actions[] = 'send-telegram-code';
+
+        $result['forceStop1'] = $this->http->post($this->endpoint.'forceStop', [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+            'setState' => false,
+        ])->json();
+
+        $result['getNewProxy2'] = $this->http->post($this->endpoint.'getNewProxy', [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+        ])->json();
+
+
+        /*$result['clearSession3'] = $this->http->post($this->endpoint.'clearSession', [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+        ])->json();*/
+
+        $result['enablePhoneAuth4'] = $this->http->post($this->endpoint.'enablePhoneAuth', [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+        ])->json();
+
+        /*$result['forceStop5'] = $this->http->post($this->endpoint.'forceStop', [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+            'setState' => false,
+        ])->json();*/
+
+
+        $result['setState6'] = $this->http->post($this->endpoint.'setState', [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+            'setState' => true,
+        ])->json();
+
+
+        return [...$this->http->post($this->endpoint.'getInfo', [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+        ])->json(),
+            'qr_code' => $this->getQR($request, $source),
+        ];
+    }
+
+    /**
+     * @throws ConnectionException
+     */
     public function clearSessionAction(Request $request, string $source)
     {
         $this->clearSession($request, $source);
@@ -217,6 +288,7 @@ class SourceService
     public function getInfo(Request $request, string $source)
     {
         $login = $request->input('account.login');
+        $action = $request->input('action');
 
         $account = $this->http
             ->post($this->endpoint.'getInfo', [
@@ -229,13 +301,25 @@ class SourceService
         $this->actions[] = 'get-info';
         $account['actions'] = $this->actions;
 
-        if (\Arr::get($account, 'step.value') === null) {
-            $account['actions'] = $this->actions;
-
+        if (\Arr::get($account, 'step.value') === null && $action !== 'get-qr-code') {
             return $account;
         }
 
         if (\Arr::get($account, 'step.value') === 2.2) {
+            $account['qr_code'] = $this->getQR($request, $source);
+            $account['actions'] = $this->actions;
+        }
+
+        if (\Arr::get($account, 'step.value') === 0.1) {
+            $this->forceStop($request, $source);
+            $this->setStateAction($request, $source);
+            $account['qr_code'] = $this->getQR($request, $source);
+            $account['actions'] = $this->actions;
+        }
+
+        if (\Arr::get($account, 'step.value') === 2.3) {
+            $this->forceStop($request, $source);
+            $this->setStateAction($request, $source);
             $account['qr_code'] = $this->getQR($request, $source);
             $account['actions'] = $this->actions;
         }
@@ -245,10 +329,15 @@ class SourceService
             $account['actions'] = $this->actions;
         }
 
+        $account['messages'] = $this->messages;
+
         return $account;
     }
 
-    public function clearSession(Request $request, string $source)
+    /**
+     * @throws ConnectionException
+     */
+    public function clearSession(Request $request, string $source): void
     {
         $data = [
             'token' => $this->token,
@@ -260,6 +349,9 @@ class SourceService
         $this->http->post($this->endpoint.'clearSession', $data)->json('authCode');
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function getAuthCode(Request $request, string $source)
     {
         $data = [
@@ -273,9 +365,30 @@ class SourceService
         return $this->http->post($this->endpoint.'getAuthCode', $data)->json('authCode');
     }
 
-    public function setState(Request $request, string $source, $state = true): void
+    /**
+     * @throws ConnectionException
+     */
+    public function switchState(Request $request, string $source)
     {
+        if ($source === 'telegram') {
+            $this->setTelegramState($request, $source);
+        } else {
+            $this->setState($request, $source);
+        }
+
+        return $this->getInfo($request, $source);
+    }
+
+
+    /**
+     * @throws ConnectionException
+     */
+    public function setState(
+        Request $request,
+        string $source,
+    ): void {
         $login = $request->input('account.login');
+        $state = $request->input('state') ?? $request->input('account.step', false) === null;
 
         $data = [
             'token' => $this->token,
@@ -286,7 +399,42 @@ class SourceService
 
         $stateAction = $state ? 'on' : 'off';
         $this->actions[] = "set-state-$stateAction";
+
         $this->http->post($this->endpoint.'setState', $data)->json();
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function setTelegramState(
+        Request $request,
+        string $source,
+    ): void {
+        $login = $request->input('account.login');
+        $state = $request->input('state') ?? $request->input('action', false) === 'get-qr-code';
+        $data = [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+            'setState' => $state,
+            'qrLogin' => true,
+        ];
+        // dd($data, $request->input('state'), $request->input('account.step', false));
+        $stateAction = $state ? 'on' : 'off';
+        $this->actions[] = "set-telegram-state-$stateAction";
+
+        $result = $this->http->post($this->endpoint.'setState', $data)->json();
+
+        if (\Arr::get($result, 'status') === 'error') {
+            $this->messages[] = \Arr::get($result, 'error.message');
+            if (\Arr::get($result, 'error.message') === 'Such account is already exist') {
+                $this->forceStop($request, 'telegram');
+                $this->setTelegramState($request, 'telegram');
+            }
+            if (\Arr::get($result, 'error.message') === "'MyTelegramClient' object has no attribute 'task'") {
+                $this->forceStop($request, 'telegram');
+            }
+        }
     }
 
     public function destroy(Request $request, string $source)
