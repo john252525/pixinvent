@@ -30,6 +30,7 @@ jobs:
           ssh -i key.pem -o StrictHostKeyChecking=no root@188.120.236.47 << 'EOF'
             echo "Current user: $(whoami)"
             echo "Current directory: $(pwd)"
+            chown -R vue_apitter__usr7:www-data /var/www/vue_apitter__usr7/data/www/vue.apitter.com
             cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
             su vue_apitter__usr7
             echo "Current user: $(whoami)"
@@ -49,6 +50,7 @@ jobs:
            #chown -R vue_apitter__usr:vue_apitter__usr /var/www/vue_apitter__usr7/data/www/vue.apitter.com
            #/root/.bun/bin/bun init
            #sudo /root/.bun/bin/bun install --legacy-peer-deps
+            rm -rf node_modules
             /var/www/vue_apitter__usr7/data/.bun/bin/bun i
             export NODE_OPTIONS=--max-old-space-size=4096
             /var/www/vue_apitter__usr7/data/.bun/bin/bun run build
