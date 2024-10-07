@@ -31,7 +31,9 @@ jobs:
             echo "Current user: $(whoami)"
             echo "Current directory: $(pwd)"
             cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
-            su vue_apitter__usr7 -c
+            su vue_apitter__usr7
+            echo "Current user: $(whoami)"
+            echo "Current directory: $(pwd)"
             git config --global --add safe.directory /var/www/vue_apitter__usr7/data/www/vue.apitter.com
             git pull
             chown -R vue_apitter__usr7:www-data storage bootstrap/cache
