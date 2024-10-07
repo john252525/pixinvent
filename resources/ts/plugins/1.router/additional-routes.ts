@@ -18,10 +18,16 @@ export const redirects: RouteRecordRaw[] = [
         return { name: 'admin-users-list' }
 
       if (userRole === 'admin')
-        return { name: 'access-control' }
+        return { name: 'admin-users-list' }
 
       if (userRole === 'user')
         return { name: 'accounts' }
+
+      if (userRole === 'domain2')
+        return { name: 'accounts' }
+
+      if (userRole === 'domain1')
+        return { name: 'settings' }
 
       return { name: 'login', query: to.query }
     },

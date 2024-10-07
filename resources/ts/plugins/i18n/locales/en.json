@@ -324,6 +324,7 @@
         "send_code": "Send code in telegram",
         "subtitle": "You can also confirm authorization using a code"
       },
+      "login": "Account",
       "method": {
         "confirm": "Confirm",
         "refresh": "Refresh",
@@ -419,7 +420,7 @@
   "balance": "Balance",
   "basics": {
     "back-to-home": "Back to Home",
-    "title": "Toucj API"
+    "title": "Serve"
   },
   "checkout": "checkout",
   "dark": "dark",

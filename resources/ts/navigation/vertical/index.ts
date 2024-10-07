@@ -5,5 +5,5 @@ import admin from './admin'
 import payments from './payments'
 import auto_page from './autopage'
 export default [
-  ...admin, ...user, ...payments, ...auto_page,
+  ...admin, ...user, ...payments,
 ] as VerticalNavItems

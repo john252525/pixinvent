@@ -33,9 +33,9 @@ const apiStates = {
 
 const sortBy = ref<SortItem[]>([{ key: 'login', order: 'asc' }])
 const headers = [
-  { title: t('accLogin'), key: 'login', align: 'start' },
+  { title: t('accounts.telegram.login'), key: 'login', align: 'start' },
   { title: t('Step'), key: 'step', align: 'start' },
-  { title: t('Action'), key:'action', align:'start', sortable: false, width: '100%' },
+  { title: '', key:'action', align:'start', sortable: false, width: '100%' },
   { title: t('Actions'), key: 'actions', align: 'end', sortable: false },
 ] as any[]
 
