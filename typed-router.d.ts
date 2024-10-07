@@ -33,7 +33,7 @@ declare module 'vue-router/auto-routes' {
     'payments-pricing': RouteRecordInfo<'payments-pricing', '/payments/pricing', Record<never, never>, Record<never, never>>,
     'payments-yoo-kassa': RouteRecordInfo<'payments-yoo-kassa', '/payments/yoo-kassa', Record<never, never>, Record<never, never>>,
     'register': RouteRecordInfo<'register', '/register', Record<never, never>, Record<never, never>>,
-    'reset-password-v1': RouteRecordInfo<'reset-password-v1', '/reset-password-v1', Record<never, never>, Record<never, never>>,
+    'reset-password': RouteRecordInfo<'reset-password', '/reset-password', Record<never, never>, Record<never, never>>,
     'send-password-email': RouteRecordInfo<'send-password-email', '/send-password-email', Record<never, never>, Record<never, never>>,
     'settings': RouteRecordInfo<'settings', '/settings', Record<never, never>, Record<never, never>>,
     'verify-email': RouteRecordInfo<'verify-email', '/verify-email', Record<never, never>, Record<never, never>>,

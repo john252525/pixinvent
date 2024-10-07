@@ -134,10 +134,10 @@ const onSubmit = () => {
 
         <VCardText>
           <h4 class="text-h4 mb-1">
-            {{ $t('Adventure starts here 🚀') }}
+            {{ $t('auth.register.title') }}
           </h4>
           <p class="mb-0">
-            {{ $t('Make your app management easy and fun!') }}
+            {{ $t('auth.register.message') }}
           </p>
         </VCardText>
 
@@ -154,7 +154,7 @@ const onSubmit = () => {
                   :rules="[requiredValidator]"
                   :error-messages="errors.name"
                   autofocus
-                  :label="$t('login.name')"
+                  :label="$t('auth.name')"
                   @update:model-value="errors.name = undefined"
                 />
               </VCol>
@@ -164,7 +164,7 @@ const onSubmit = () => {
                   v-model="form.email"
                   :rules="[requiredValidator, emailValidator]"
                   :error-messages="errors.email"
-                  :label="$t('login.email')"
+                  :label="$t('auth.email')"
                   type="email"
                   @update:model-value="errors.email = undefined"
                 />
@@ -176,7 +176,7 @@ const onSubmit = () => {
                   v-model="form.password"
                   :rules="[requiredValidator]"
                   :error-messages="errors.password"
-                  :label="$t('login.password')"
+                  :label="$t('auth.password')"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
@@ -189,7 +189,7 @@ const onSubmit = () => {
                   <VTextField
                     v-model="form.password_confirmation"
                     :rules="[requiredValidator]"
-                    :label="$t('login.confirmPassword')"
+                    :label="$t('auth.confirm-password')"
                     :type="isCPasswordVisible ? 'text' : 'password'"
                     :append-inner-icon="isCPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                     @click:append-inner="isCPasswordVisible = !isCPasswordVisible"
@@ -205,11 +205,11 @@ const onSubmit = () => {
                     for="privacy-policy"
                     style="opacity: 1;"
                   >
-                    <span class="me-1 text-high-emphasis">{{ $t('I agree to') }}</span>
+                    <span class="me-1 text-high-emphasis">{{ $t('auth.agree-to') }}</span>
                     <a
                       href="javascript:void(0)"
                       class="text-primary"
-                    >{{ $t('privacy policy & terms') }}</a>
+                    >{{ $t('auth.privacy-policy') }}</a>
                   </VLabel>
                 </div>
 
@@ -217,7 +217,7 @@ const onSubmit = () => {
                   block
                   type="submit"
                 >
-                  {{ $t('Sign up') }}
+                  {{ $t('auth.sign-up') }}
                 </VBtn>
               </VCol>
 
@@ -226,12 +226,12 @@ const onSubmit = () => {
                 cols="12"
                 class="text-center text-base"
               >
-                <span>{{ $t('Already have an account?') }}</span>
+                <span>{{ $t('auth.already-have-account') }}</span>
                 <RouterLink
                   class="text-primary ms-1"
                   :to="{ name: 'login' }"
                 >
-                  {{ $t('Sign in instead') }}
+                  {{ $t('auth.sign-in') }}
                 </RouterLink>
               </VCol>
             </VRow>

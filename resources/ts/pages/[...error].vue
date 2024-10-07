@@ -19,15 +19,15 @@ definePage({
   <div class="misc-wrapper">
     <ErrorHeader
       status-code="404"
-      :title="$t('Page Not Found ⚠️')"
-      :description="$t(`We couldn't find the page you are looking for.`)"
+      :title="$t('errors.page-not-found')"
+      :description="$t('errors.404.not-found')"
     />
 
     <VBtn
       to="/"
       class="mb-11"
     >
-      {{ $t('Back to Home') }}
+      {{ $t('basics.back-to-home') }}
     </VBtn>
 
     <!-- 👉 Image -->

@@ -20,8 +20,8 @@ const authThemeMask = useGenerateImageVariant(miscMaskLight, miscMaskDark)
   <div class="misc-wrapper">
     <ErrorHeader
       status-code="401"
-      title="You are not authorized! 🔐"
-      description="You don’t have permission to access this page. Go Home!."
+      :title="$t('errors.401.title')"
+      :description="$t('errors.404.message')"
     />
 
     <VBtn

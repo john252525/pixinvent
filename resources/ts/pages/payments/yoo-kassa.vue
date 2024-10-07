@@ -68,7 +68,7 @@ const onSubmit = () => {
         <VTextField
           v-model="amount"
           :rules="[requiredValidator, positiveIntegerValidator]"
-          :label="$t('Amount')"
+          :label="$t('payments.transactions.amount')"
           class="py-3"
         />
         <VBtn type="submit">

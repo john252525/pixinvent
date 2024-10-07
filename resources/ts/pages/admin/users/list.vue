@@ -59,12 +59,12 @@ const total = computed(() => usersData.value.meta.total)
 
 // Headers
 const headers = [
-  { title: t('id'), key: 'id', width: '20px', align: 'center' },
-  { title: t('name'), key: 'name' },
-  { title: t('balance'), key: 'balance', sortable: false },
-  { title: t('roles'), key: 'roles', sortable: false },
-  { title: t('created_at'), key: 'created_at' },
-  { title: t('actions'), key: 'actions', sortable: false, align: 'end' },
+  { title: t('admin.users.id'), key: 'id', width: '20px', align: 'center' },
+  { title: t('admin.users.name'), key: 'name' },
+  { title: t('admin.users.balance'), key: 'balance', sortable: false },
+  { title: t('admin.users.roles'), key: 'roles', sortable: false },
+  { title: t('admin.users.created_at'), key: 'created_at' },
+  { title: t('admin.users.actions'), key: 'actions', sortable: false, align: 'end' },
 ]
 
 const user = ref<UserProperties>({
@@ -93,14 +93,14 @@ const deleteUser = async (deletedUser: any) => {
 </script>
 
 <template>
-  <VCard title="Управление пользователями">
+  <VCard :title="$t('admin.users.title')">
     <VCardItem class="py-0">
       <VRow>
         <VCol cols="12" sm="3">
           <VSelect
             v-model="roleId"
             :items="roles"
-            label="Выберите роль"
+            :label="$t('admin.users.select-role')"
             class="my-2"
             clearable
           />
@@ -113,7 +113,7 @@ const deleteUser = async (deletedUser: any) => {
           <VTextField
             v-model="search"
             prepend-inner-icon="tabler-search"
-            label="Поиск"
+            :label="$t('admin.users.search')"
             class="my-2"
             clearable
           />
@@ -180,7 +180,7 @@ const deleteUser = async (deletedUser: any) => {
                   {{ role.name }}
                 </VChip>
               </VChipGroup>
-              <VCardText v-else>Не назначено</VCardText>
+              <VCardText v-else>{{ $t('admin.users.not-assignet') }}</VCardText>
             </template>
 
             <template #item.created_at="{ item }">
@@ -188,13 +188,13 @@ const deleteUser = async (deletedUser: any) => {
                 class="pa-0"
                 density="default"
               >
-                создан: {{ $dayjs(item.created_at).fromNow() }}
+                {{ $t('admin.users.created') }}: {{ $dayjs(item.created_at).fromNow() }}
               </VListItem>
               <VListItem
                 class="pa-0"
                 density="default"
               >
-                обновлен: {{ $dayjs(item.updated_at).fromNow() }}
+                {{ $t('admin.users.updated') }}: {{ $dayjs(item.updated_at).fromNow() }}
               </VListItem>
             </template>
 

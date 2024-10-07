@@ -81,12 +81,12 @@ onMounted(() => console.log(email.value))
 
         <VCardText>
           <h4 class="text-h4 mb-1">
-            {{ $t('Verify your email') }} ✉️
+            {{ $t('auth.verify-email-title') }}
           </h4>
           <p class="text-body-1 mb-0">
-            {{ $t('Password reset link sent by email:') }}
+            {{ $t('auth.password-reset-link') }}
             <span class="font-weight-medium text-high-emphasis">{{ email }}</span>
-            {{ $t('Please follow the link inside to continue.') }}
+            {{ $t('auth.password-reset-follow') }}
           </p>
 
           <VBtn
@@ -94,13 +94,13 @@ onMounted(() => console.log(email.value))
             to="/"
             class="my-5"
           >
-            {{ $t('Return to login page') }}
+            {{ $t('auth.back-to-login') }}
           </VBtn>
 
           <div class="d-flex align-center justify-center">
-            <span class="me-1">{{ $t("Didn't get the mail?") }} </span>
+            <span class="me-1">{{ $t("auth.didnt-get-email") }} </span>
             <RouterLink :to="{ name: 'forgot-password' }">
-              {{ $t('Resend') }}
+              {{ $t('auth.resend') }}
             </RouterLink>
           </div>
         </VCardText>

@@ -20,11 +20,11 @@ const userId = ref()
 
 // TODO: get statuses from API
 const statuses = [
-  { title: t('succeeded'), value: 'succeeded' },
-  { title: t('created'), value: 'created' },
-  { title: t('pending'), value: 'pending' },
-  { title: t('waiting for capture'), value: 'waiting_for_capture' },
-  { title: t('canceled'), value: 'canceled' },
+  { title: t('payments.transactions.succeeded'), value: 'succeeded' },
+  { title: t('payments.transactions.created'), value: 'created' },
+  { title: t('payments.transactions.pending'), value: 'pending' },
+  { title: t('payments.transactions.waiting'), value: 'waiting_for_capture' },
+  { title: t('payments.transactions.canceled'), value: 'canceled' },
 ]
 
 // Pagination & Sorting
@@ -34,16 +34,16 @@ const sortBy = ref()
 const orderBy = ref()
 
 const headers = ref([
-  { title: t('id'), align: 'start', key: 'id' },
-  { title: t('service'), align: 'start', key: 'service' },
-  { title: t('status'), key: 'status', align: 'center' },
-  { title: t('amount'), key: 'amount', align: 'center' },
-  { title: t('income_amount'), key: 'income_amount', align: 'center' },
-  { title: t('payment_method'), key: 'payment_method', align: 'center' },
-  { title: t('refunded_amount'), key: 'refunded_amount', align: 'center' },
-  { title: t('user'), key: 'user', align: 'center' },
-  { title: t('created_at'), key: 'created_at', align: 'center' },
-  { title: t('updated_at'), key: 'updated_at', align: 'end' },
+  { title: t('payments.transactions.id'), align: 'start', key: 'id' },
+  { title: t('payments.transactions.service'), align: 'start', key: 'service' },
+  { title: t('payments.transactions.status'), key: 'status', align: 'center' },
+  { title: t('payments.transactions.amount'), key: 'amount', align: 'center' },
+  { title: t('payments.transactions.income_amount'), key: 'income_amount', align: 'center' },
+  { title: t('payments.transactions.payment_method'), key: 'payment_method', align: 'center' },
+  { title: t('payments.transactions.refunded_amount'), key: 'refunded_amount', align: 'center' },
+  { title: t('payments.transactions.user'), key: 'user', align: 'center' },
+  { title: t('payments.transactions.created_at'), key: 'created_at', align: 'center' },
+  { title: t('payments.transactions.updated_at'), key: 'updated_at', align: 'end' },
 ])
 // Update data table options
 const updateOptions = (options: any) => {
@@ -94,12 +94,12 @@ watch(page, (pageValue: number) => {
 </script>
 
 <template>
-  <VCard :title="$t('Payments List')">
+  <VCard :title="$t('payments.transactions.payments-list')">
     <VRow class="mx-2 mb-2">
       <VCol cols="12" sm="4">
         <VSelect
           v-model="paymentStatus"
-          :label="$t('Payment Status')"
+          :label="$t('payments.transactions.payment-status')"
           :items="statuses"
           clearable
         />
@@ -110,7 +110,7 @@ watch(page, (pageValue: number) => {
       <VCol cols="12" sm="4">
         <VAutocomplete
           v-model="userId"
-          :label="$t('user')"
+          :label="$t('payments.transactions.user')"
           :items="users"
           item-title="name"
           item-value="id"

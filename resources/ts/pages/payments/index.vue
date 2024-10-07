@@ -18,11 +18,11 @@ const paymentDate = ref()
 
 // TODO: get statuses from API
 const statuses = [
-  { title: t('succeeded'), value: 'succeeded' },
-  { title: t('created'), value: 'created' },
-  { title: t('pending'), value: 'pending' },
-  { title: t('waiting for capture'), value: 'waiting_for_capture' },
-  { title: t('canceled'), value: 'canceled' },
+  { title: t('payments.transactions.succeeded'), value: 'succeeded' },
+  { title: t('payments.transactions.created'), value: 'created' },
+  { title: t('payments.transactions.pending'), value: 'pending' },
+  { title: t('payments.transactions.waiting'), value: 'waiting_for_capture' },
+  { title: t('payments.transactions.canceled'), value: 'canceled' },
 ]
 
 // Pagination & Sorting
@@ -36,10 +36,10 @@ const headers = ref([
     align: 'start',
     key: 'service',
   },
-  { title: t('status'), key: 'status', align: 'center' },
-  { title: t('amount'), key: 'amount', align: 'start' },
-  { title: t('created_at'), key: 'created_at', align: 'end' },
-  { title: t('updated_at'), key: 'updated_at', align: 'end' },
+  { title: t('payments.transactions.status'), key: 'status', align: 'center' },
+  { title: t('payments.transactions.amount'), key: 'amount', align: 'start' },
+  { title: t('payments.transactions.created_at'), key: 'created_at', align: 'end' },
+  { title: t('payments.transactions.updated_at'), key: 'updated_at', align: 'end' },
 ])
 // Update data table options
 const updateOptions = (options: any) => {
@@ -74,12 +74,12 @@ watch(page, (pageValue: number) => {
 </script>
 
 <template>
-  <VCard :title="$t('Payments List')">
+  <VCard :title="$t('payments.transactions.payments-list')">
     <VRow class="mx-2 mb-2">
       <VCol cols="12" sm="4">
         <VSelect
           v-model="paymentStatus"
-          :label="$t('Payment Status')"
+          :label="$t('payments.transactions.payment-status')"
           :items="statuses"
           clearable
         />
@@ -111,5 +111,5 @@ watch(page, (pageValue: number) => {
 </template>
 
 <style scoped lang="scss">
-
+  //
 </style>

@@ -80,7 +80,7 @@ const checkQr = async () => {
 
 const sendCode = async () => {
   if(account.value)
-    await accountsStore.solveChallenge(account.value, code.value)
+    await accountsStore.sendTelegramCode(account.value)
 }
 
 const sendTwoFactorAuth = async () => {

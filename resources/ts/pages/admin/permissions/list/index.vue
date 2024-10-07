@@ -8,6 +8,7 @@ definePage({
   },
 })
 
+const { t } = useI18n()
 const dialog = ref(false)
 const dialogColor = ref(false)
 const dialogDelete = ref(false)
@@ -19,14 +20,14 @@ const orderBy = ref('desc')
 
 const headers = ref([
   {
-    title: 'Название',
+    title: t('permissions.list.name'),
     align: 'start',
     sortable: false,
     key: 'name',
   },
-  { title: 'Guard', key: 'guard_name', align: 'center' },
-  { title: 'Время', key: 'timestamps', align: 'start', sortable: false },
-  { title: 'Действия', key: 'actions', align: 'end', sortable: false },
+  { title: t('permissions.list.guard'), key: 'guard_name', align: 'center' },
+  { title: t('permissions.list.time'), key: 'timestamps', align: 'start', sortable: false },
+  { title: t('permissions.list.actions'), key: 'actions', align: 'end', sortable: false },
 ])
 
 const dayjs = inject<Dayjs | any>('dayjs')
@@ -76,7 +77,7 @@ function formatDate(date: Dayjs) {
 }
 
 const formTitle = computed(() => {
-  return editedIndex.value === -1 ? 'Создание новых прав' : 'Редактирование прав'
+  return editedIndex.value === -1 ? 'permissions.list.create-permission' : 'permissions.list.edit-permission'
 })
 
 const {
@@ -185,7 +186,7 @@ watch(dialogDelete, val => {
           color="transparent"
           flat
         >
-          <VCardTitle>Список прав</VCardTitle>
+          <VCardTitle>{{ $t('permissions.list.list-permissions') }}</VCardTitle>
           <VSpacer />
           <VDialog
             v-model="dialog"
@@ -199,7 +200,7 @@ watch(dialogDelete, val => {
                 prepend-icon="mdi-refresh"
                 @click="fetchPermissions"
               >
-                Обновить
+                {{ $t('permissions.list.refresh') }}
               </VBtn>
               <VBtn
                 variant="flat"
@@ -224,7 +225,7 @@ watch(dialogDelete, val => {
                       <VCol cols="12">
                         <VTextField
                           v-model="editedItem.name"
-                          label="Название прав"
+                          :label="$t('permissions.list.permission-name')"
                           :rules="[requiredValidator]"
                           :error-messages="errors.name"
                         />
@@ -240,14 +241,14 @@ watch(dialogDelete, val => {
                   variant="text"
                   @click="close"
                 >
-                  Отмена
+                  {{ $t('permissions.list.cancel') }}
                 </VBtn>
                 <VBtn
                   color="success"
                   variant="text"
                   @click="save"
                 >
-                  Сохранить
+                  {{ $t('permissions.list.save') }}
                 </VBtn>
               </VCardActions>
             </VCard>
@@ -260,10 +261,10 @@ watch(dialogDelete, val => {
           >
             <VCard>
               <VCardTitle class="text-h5">
-                Вы уверены, что хотите удалить права?
+                {{ $t('permissions.list.delete') }}
               </VCardTitle>
               <VCardSubtitle>
-                Данное действие необратимо
+                {{ $t('permissions.list.action-irreversible') }}
               </VCardSubtitle>
               <VCardActions>
                 <VSpacer />
@@ -272,14 +273,14 @@ watch(dialogDelete, val => {
                   variant="text"
                   @click="closeDelete"
                 >
-                  Отменить
+                  {{ $t('permissions.list.cancel') }}
                 </VBtn>
                 <VBtn
                   color="error"
                   variant="text"
                   @click="deleteItem"
                 >
-                  Удалить
+                  {{ $t('permissions.list.delete') }}
                 </VBtn>
                 <VSpacer />
               </VCardActions>
@@ -292,9 +293,9 @@ watch(dialogDelete, val => {
       </template>
       <template #item.timestamps="{ item }">
         <div class="d-flex flex-column ms-3">
-          <small class="d-block font-weight-medium text--primary text-truncate">создано:
+          <small class="d-block font-weight-medium text--primary text-truncate">{{ $t('permissions.list.created') }}:
             {{ formatDate(item.created_at) }}</small>
-          <small class="d-block font-weight-medium text--primary text-truncate">обновлено:
+          <small class="d-block font-weight-medium text--primary text-truncate">{{ $t('permissions.list.updated') }}:
             {{ formatDate(item.updated_at) }}</small>
         </div>
       </template>
@@ -318,7 +319,7 @@ watch(dialogDelete, val => {
           color="primary"
           @click="fetchPermissions"
         >
-          Обновить данные с сервера
+          {{ $t('permissions.list.refresh') }}
         </VBtn>
       </template>
     </VDataTableServer>

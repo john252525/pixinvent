@@ -29,12 +29,12 @@ const headers = ref([
   { title: t('name'), key: 'name', align: 'start', sortable: false },
   // { title: 'name', key: 'name', align: 'start', sortable: false },
   // { title: 'meta.subject', key: 'meta.subject', align: 'center' },
-  { title: t('permissions'), key: 'permissions', align: 'start', sortable: false },
-  { title: t('timestamps'), key: 'timestamps', align: 'start', sortable: false },
-  { title: t('actions'), key: 'actions', align: 'end', sortable: false },
+  { title: t('admin.roles.list.permissions'), key: 'permissions', align: 'start', sortable: false },
+  { title: t('admin.roles.list.timestamps'), key: 'timestamps', align: 'start', sortable: false },
+  { title: t('admin.roles.list.actions'), key: 'actions', align: 'end', sortable: false },
 ])
 
-const objects = ref<Subjects[]>(['all', 'admin', 'user', 'premium'])
+const objects = ref<Subjects[]>(['all', 'admin', 'user', 'domain1', 'domain2', 'domain3'])
 
 const editedIndex = ref(-1)
 
@@ -67,7 +67,7 @@ function formatDate(date: Dayjs) {
 }
 
 const formTitle = computed(() => {
-  return editedIndex.value === -1 ? t('Создание новой роли') : t('Редактирование роли')
+  return editedIndex.value === -1 ? t('admin.roles.list.create') : t('admin.roles.list.edit')
 })
 
 const updateOptions = (options: any) => {
@@ -195,7 +195,7 @@ watch(dialogDelete, val => {
           color="transparent"
           flat
         >
-          <VCardTitle>Список ролей</VCardTitle>
+          <VCardTitle>{{ $t('admin.roles.list.title') }}</VCardTitle>
           <VSpacer />
           <VDialog
             v-model="dialog"
@@ -209,7 +209,7 @@ watch(dialogDelete, val => {
                 prepend-icon="mdi-refresh"
                 @click="fetchRoles"
               >
-                Обновить
+                {{ ('admin.roles.list.refresh') }}
               </VBtn>
               <VBtn
                 variant="flat"
@@ -220,7 +220,7 @@ watch(dialogDelete, val => {
                   start
                   icon="tabler-pencil-plus"
                 />
-                Создать
+                {{ $t('admin.roles.list.create') }}
               </VBtn>
             </template>
             <VCard>
@@ -234,7 +234,7 @@ watch(dialogDelete, val => {
                       <VCol cols="12">
                         <VTextField
                           v-model="editedItem.name"
-                          :label="t('Название роли')"
+                          :label="t('admin.roles.list.name')"
                           :rules="[requiredValidator]"
                           :error-messages="errors?.name"
                         />
@@ -243,7 +243,7 @@ watch(dialogDelete, val => {
                         <VSelect
                           v-model="editedItem.permissions"
                           :items="permissions"
-                          label="Права роли"
+                          :label="$t('admin.roles.list.permission-name')"
                           :rules="[requiredValidator]"
                           :error-messages="errors.permissions"
                           return-object
@@ -262,14 +262,14 @@ watch(dialogDelete, val => {
                   variant="text"
                   @click="close"
                 >
-                  Отмена
+                  {{ $t('admin.roles.list.cancel') }}
                 </VBtn>
                 <VBtn
                   color="success"
                   variant="text"
                   @click="save"
                 >
-                  Сохранить
+                  {{ $t('admin.roles.list.save') }}
                 </VBtn>
               </VCardActions>
             </VCard>
@@ -298,8 +298,8 @@ watch(dialogDelete, val => {
 
       <template #item.timestamps="{ item }">
         <div class="d-flex flex-column ms-3">
-          <small class="d-block font-weight-medium text--primary text-truncate">создано: {{ formatDate(item.created_at) }}</small>
-          <small class="d-block font-weight-medium text--primary text-truncate">обновлено: {{ formatDate(item.updated_at) }}</small>
+          <small class="d-block font-weight-medium text--primary text-truncate">{{ $t('admin.roles.list.created') }}: {{ formatDate(item.created_at) }}</small>
+          <small class="d-block font-weight-medium text--primary text-truncate">{{ $t('admin.roles.list.updated') }}: {{ formatDate(item.updated_at) }}</small>
         </div>
       </template>
 
@@ -324,7 +324,7 @@ watch(dialogDelete, val => {
           color="primary"
           @click="fetchRoles"
         >
-          Обновить данные с сервера
+          {{ $t('admin.roles.list.update-data-server') }}
         </VBtn>
       </template>
     </VDataTableServer>

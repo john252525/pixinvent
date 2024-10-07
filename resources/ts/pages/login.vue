@@ -135,7 +135,7 @@ const onSubmit = () => {
             {{ $t('Welcome to') }} <span class="text-capitalize">{{ $t(themeConfig.app.title) }}</span>! 👋🏻
           </h4>
           <p class="mb-0">
-            {{ $t('Please sign - in to your account and start the adventure') }}
+            {{ $t('auth.login.welcome-message') }}
           </p>
         </VCardText>
 
@@ -149,7 +149,7 @@ const onSubmit = () => {
               <VCol cols="12">
                 <VTextField
                   v-model="credentials.email"
-                  :label="$t('login.email')"
+                  :label="$t('auth.email')"
                   type="email"
                   autofocus
                   :rules="[requiredValidator, emailValidator]"
@@ -180,7 +180,7 @@ const onSubmit = () => {
                     class="text-primary"
                     :to="{ name: 'forgot-password' }"
                   >
-                    {{ $t('Forgot Password?') }}
+                    {{ $t('auth.forgot-password') }}
                   </RouterLink>
                 </div>
 
@@ -189,7 +189,7 @@ const onSubmit = () => {
                   block
                   type="submit"
                 >
-                  {{ $t('Login') }}
+                  {{ $t('auth.login') }}
                 </VBtn>
               </VCol>
 
@@ -199,13 +199,13 @@ const onSubmit = () => {
                 class="text-body-1 text-center"
               >
                 <span class="d-inline-block">
-                  {{ $t('New on our platform?') }}
+                  {{ $t('auth.register-message') }}
                 </span>
                 <RouterLink
                   class="text-primary ms-1 d-inline-block text-body-1"
                   :to="{ name: 'register' }"
                 >
-                  {{ $t('Create an account') }}
+                  {{ $t('auth.create-account') }}
                 </RouterLink>
               </VCol>
             </VRow>

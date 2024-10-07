@@ -16,7 +16,7 @@ export default function (app) {
   dayjs.extend(isLeapYear)
   dayjs.extend(duration)
   dayjs.extend(utc)
-  dayjs.locale('ru')
+  dayjs.locale(localStorage.getItem('locale', 'en'))
 
   app.config.globalProperties.$dayjs = dayjs
   app.provide('dayjs', dayjs)

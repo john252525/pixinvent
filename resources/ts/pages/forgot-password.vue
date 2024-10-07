@@ -111,10 +111,10 @@ const onSubmit = () => {
 
         <VCardText>
           <h4 class="text-h4 mb-1">
-            {{ $t('Forgot Password?') }} 🔒
+            {{ $t('auth.forgot-password') }} 🔒
           </h4>
           <p class="mb-0">
-            {{ $t("Enter your email and we'll send you instructions to reset your password") }}
+            {{ $t('auth.enter-email') }}
           </p>
         </VCardText>
 
@@ -142,7 +142,7 @@ const onSubmit = () => {
                   block
                   type="submit"
                 >
-                  {{ $t('Send Reset Link') }}
+                  {{ $t('auth.send-reset-link') }}
                 </VBtn>
               </VCol>
 
@@ -157,7 +157,7 @@ const onSubmit = () => {
                     size="20"
                     class="me-1 flip-in-rtl"
                   />
-                  <span>{{ $t('Back to login') }}</span>
+                  <span>{{ $t('auth.back-to-login') }}</span>
                 </RouterLink>
               </VCol>
             </VRow>

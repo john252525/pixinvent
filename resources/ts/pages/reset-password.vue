@@ -56,10 +56,10 @@ const isConfirmPasswordVisible = ref(false)
 
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Reset Password 🔒
+            {{ $t('auth.reset-password-title') }}
           </h4>
           <p class="mb-0">
-            Your new password must be different from previously used passwords
+            {{ $t('auth.reset-password-message') }}
           </p>
         </VCardText>
 
@@ -71,7 +71,7 @@ const isConfirmPasswordVisible = ref(false)
                 <VTextField
                   v-model="form.newPassword"
                   autofocus
-                  label="New Password"
+                  :label="$t('auth.new-password')"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
@@ -82,7 +82,7 @@ const isConfirmPasswordVisible = ref(false)
               <VCol cols="12">
                 <VTextField
                   v-model="form.confirmPassword"
-                  label="Confirm Password"
+                  :label="$t('auth.confirm-password')"
                   :type="isConfirmPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
                   @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
@@ -95,7 +95,7 @@ const isConfirmPasswordVisible = ref(false)
                   block
                   type="submit"
                 >
-                  Set New Password
+                  {{ $t('auth.set-new-password') }}
                 </VBtn>
               </VCol>
 
@@ -110,7 +110,7 @@ const isConfirmPasswordVisible = ref(false)
                     size="20"
                     class="me-1 flip-in-rtl"
                   />
-                  <span>Back to login</span>
+                  <span>{{ $t('auth.back-to-login') }}</span>
                 </RouterLink>
               </VCol>
             </VRow>

@@ -221,33 +221,33 @@ class SourceService
 
         $this->actions[] = 'send-telegram-code';
 
-        $result['forceStop1'] = $this->http->post($this->endpoint.'forceStop', [
+        $results['forceStop1'] = $this->http->post($this->endpoint.'forceStop', [
             'token' => $this->token,
             'source' => $source,
             'login' => $login,
             'setState' => false,
         ])->json();
 
-        $result['getNewProxy2'] = $this->http->post($this->endpoint.'getNewProxy', [
+        /*$results['getNewProxy2'] = $this->http->post($this->endpoint.'getNewProxy', [
             'token' => $this->token,
             'source' => $source,
             'login' => $login,
         ])->json();
 
 
-        /*$result['clearSession3'] = $this->http->post($this->endpoint.'clearSession', [
-            'token' => $this->token,
-            'source' => $source,
-            'login' => $login,
-        ])->json();*/
-
-        $result['enablePhoneAuth4'] = $this->http->post($this->endpoint.'enablePhoneAuth', [
+        $results['clearSession3'] = $this->http->post($this->endpoint.'clearSession', [
             'token' => $this->token,
             'source' => $source,
             'login' => $login,
         ])->json();
 
-        /*$result['forceStop5'] = $this->http->post($this->endpoint.'forceStop', [
+        $results['enablePhoneAuth4'] = $this->http->post($this->endpoint.'enablePhoneAuth', [
+            'token' => $this->token,
+            'source' => $source,
+            'login' => $login,
+        ])->json();
+
+        $results['forceStop5'] = $this->http->post($this->endpoint.'forceStop', [
             'token' => $this->token,
             'source' => $source,
             'login' => $login,
@@ -255,7 +255,7 @@ class SourceService
         ])->json();*/
 
 
-        $result['setState6'] = $this->http->post($this->endpoint.'setState', [
+        $results['setState6'] = $this->http->post($this->endpoint.'setState', [
             'token' => $this->token,
             'source' => $source,
             'login' => $login,
@@ -268,7 +268,7 @@ class SourceService
             'source' => $source,
             'login' => $login,
         ])->json(),
-            'qr_code' => $this->getQR($request, $source),
+            'results' => $results,
         ];
     }
 
