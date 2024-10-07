@@ -41,7 +41,7 @@ jobs:
             chgrp -R www-data storage bootstrap/cache
             chmod -R ug+rwx storage bootstrap/cache
             if [ ! -f .env ]; then
-              cp .env.example .env
+              cp ../.env .env
             fi
             #export COMPOSER_ALLOW_SUPERUSER=1
             composer update --ignore-platform-req=ext-bcmath
