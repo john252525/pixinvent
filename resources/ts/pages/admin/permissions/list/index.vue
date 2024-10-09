@@ -293,10 +293,14 @@ watch(dialogDelete, val => {
       </template>
       <template #item.timestamps="{ item }">
         <div class="d-flex flex-column ms-3">
-          <small class="d-block font-weight-medium text--primary text-truncate">{{ $t('permissions.list.created') }}:
-            {{ formatDate(item.created_at) }}</small>
-          <small class="d-block font-weight-medium text--primary text-truncate">{{ $t('permissions.list.updated') }}:
-            {{ formatDate(item.updated_at) }}</small>
+          <small class="d-block font-weight-medium text--primary text-truncate">
+            {{ $t('permissions.list.created') }}:
+            {{ formatDate(item.created_at) }}
+          </small>
+          <small class="d-block font-weight-medium text--primary text-truncate">
+            {{ $t('permissions.list.updated') }}:
+            {{ formatDate(item.updated_at) }}
+          </small>
         </div>
       </template>
       <template #item.actions="{ item }">

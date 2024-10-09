@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Dayjs } from 'dayjs'
-import { abilitySubjects, type Subjects } from '@/plugins/casl/ability'
 
 definePage({
   meta: {
@@ -24,15 +23,13 @@ const page = ref(1)
 const sortBy = ref()
 const orderBy = ref()
 
-const headers = ref([
+const headers = [
   { title: '#', align: 'start', key: 'id', width: 20 },
   { title: t('name'), key: 'name', align: 'start', sortable: false },
-  // { title: 'name', key: 'name', align: 'start', sortable: false },
-  // { title: 'meta.subject', key: 'meta.subject', align: 'center' },
   { title: t('admin.roles.list.permissions'), key: 'permissions', align: 'start', sortable: false },
   { title: t('admin.roles.list.timestamps'), key: 'timestamps', align: 'start', sortable: false },
   { title: t('admin.roles.list.actions'), key: 'actions', align: 'end', sortable: false },
-])
+] as const
 
 const editedIndex = ref(-1)
 
@@ -41,12 +38,12 @@ const errors = ref({
   permissions: undefined,
 })
 
-const itemsPerPageOptions = ref([
+const itemsPerPageOptions = [
   { value: 3, title: '3' },
   { value: 5, title: '5' },
   { value: 10, title: '10' },
   { value: 50, title: '50' },
-])
+]
 
 const editedItem = ref({
   name: '',

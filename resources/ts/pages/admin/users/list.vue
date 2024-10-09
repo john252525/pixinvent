@@ -65,7 +65,7 @@ const headers = [
   { title: t('admin.users.roles'), key: 'roles', sortable: false },
   { title: t('admin.users.created_at'), key: 'created_at' },
   { title: t('admin.users.actions'), key: 'actions', sortable: false, align: 'end' },
-]
+] as const
 
 const user = ref<UserProperties>({
   name: '',

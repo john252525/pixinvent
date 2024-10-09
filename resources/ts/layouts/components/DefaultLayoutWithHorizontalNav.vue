@@ -39,8 +39,8 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
       />
 
       <NavbarThemeSwitcher />
-      <NavbarShortcuts />
-      <NavBarNotifications class="me-2" />
+      <!-- NavbarShortcuts /-->
+      <!--NavBarNotifications class="me-2" /-->
       <UserProfile />
     </template>
 

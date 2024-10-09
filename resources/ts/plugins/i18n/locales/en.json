@@ -62,6 +62,7 @@
   "Access Control": "Access Control",
   "Access management": "Access management",
   "Account Settings": "Account Settings",
+  "Account added successfully": "Account added successfully.",
   "Account just started to start": "Account just started to start",
   "Account started successfully": "Account started successfully",
   "Account started successfully & realtime init done": "Account started successfully & realtime init done",
@@ -272,6 +273,42 @@
     }
   },
   "accounts": {
+    "add": {
+      "button": {
+        "add": "Add account",
+        "close-dialog": "Close Dialog",
+        "title": "Add accounts"
+      },
+      "categories": {
+        "label": "Select category"
+      },
+      "login": {
+        "label": "Login"
+      },
+      "source": {
+        "crm": "Crm",
+        "helpdesk": "Helpdesk",
+        "label": "Select messenger",
+        "messenger": "Messenger",
+        "sms": "Sms",
+        "telegram": "Telegram",
+        "whatsapp": "Whatsapp"
+      },
+      "title": "Create a new account",
+      "token": {
+        "label": "Token"
+      },
+      "type": {
+        "chat-api": "Chat-API",
+        "label": "Type",
+        "sms-ru": "sms.ru",
+        "touch-api": "Touch-API",
+        "twilio": "Twilio"
+      },
+      "url": {
+        "label": "Url"
+      }
+    },
     "settings": {
       "add_webhook_url": {
         "button": {
@@ -352,6 +389,7 @@
   "admin": {
     "logs": {
       "actions": "Actions",
+      "created_at": "Created At",
       "errors": "Errors",
       "page": {
         "title": "List of errors"
@@ -409,6 +447,7 @@
     "enter-email": "Enter your email and we'll send you instructions to reset your password",
     "forgot-password": "Forgot Password?",
     "login": "Login",
+    "logout": "Logout",
     "name": "Login name",
     "new-password": "New Password",
     "password": "Password",
@@ -474,7 +513,7 @@
       "payments-list": "Payments List",
       "pending": "Pending",
       "refunded_amount": "Refunded Amount",
-      "service": "Service",
+      "service": "service",
       "status": "Status",
       "succeeded": "Succeeded",
       "updated_at": "Updated At",

@@ -14,7 +14,7 @@ class LogErrorsController extends Controller
         $itemsPerPage = $request->input('itemsPerPage', 5);
         $search = $request->input('search');
         $sortBy = $request->input('sortBy', 'id');
-        $orderBy = $request->input('orderBy', 'asc');
+        $orderBy = $request->input('orderBy', 'desc');
 
         $logs = LogErrors::with('user')->when($search, fn ($query) => $query->whereJsonContains('errors', 'like', "%$search%"));
 

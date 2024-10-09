@@ -138,7 +138,7 @@ const userProfileList = [
                 append-icon="tabler-logout"
                 @click="logout"
               >
-                Logout
+                {{ $t('auth.logout') }}
               </VBtn>
             </div>
           </PerfectScrollbar>

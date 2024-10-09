@@ -30,9 +30,8 @@ const updateOptions = (options: any) => {
 
 const headers = [
   { title: '#', align: 'start', key: 'id', width: 20 },
+  { title: t('admin.logs.created_at'), key: 'created_at', align: 'center', sortable: false },
   { title: t('admin.logs.type'), key: 'type', align: 'start', sortable: false },
-  // { title: 'name', key: 'name', align: 'start', sortable: false },
-  // { title: 'meta.subject', key: 'meta.subject', align: 'center' },
   { title: t('admin.logs.user'), key: 'user', align: 'start', sortable: false },
   { title: t('admin.logs.errors'), key: 'errors', align: 'start', sortable: false },
   { title: t('admin.logs.actions'), key: 'actions', align: 'end', sortable: false },
@@ -90,8 +89,11 @@ const deleteItem = (item: any) => {
     <template #item.type="{ item }">
       {{ $t(item.type) }}
     </template>
+    <template #item.created_at="{ item }">
+      {{ $dayjs(item.created_at).format('LLL') }}
+    </template>
     <template #item.user="{ item }">
-      {{ item.user.email }}
+      {{ item.user?.email }}
     </template>
     <template #item.actions="{ item }">
       <IconBtn @click="deleteItem(item)">

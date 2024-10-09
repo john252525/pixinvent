@@ -1,5 +1,5 @@
 import type { App } from 'vue'
-import { createI18n } from 'vue-i18n'
+import { createI18n, useI18n } from 'vue-i18n'
 import { cookieRef } from '@layouts/stores/config'
 import { themeConfig } from '@themeConfig'
 
@@ -20,8 +20,13 @@ export const getI18n = () => {
       messages,
     })
   }
-
   return _i18n
+}
+
+export const globalI18n = () => {
+  const { global } = getI18n()
+
+  return global
 }
 
 export default function (app: App) {

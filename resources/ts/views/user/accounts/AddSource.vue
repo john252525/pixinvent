@@ -92,7 +92,7 @@ defineExpose({ isActive })
       >
         <VCardItem>
           <VCardTitle>
-            Создание нового аккаунта
+            {{ $t('accounts.add.title') }}
           </VCardTitle>
           <template #append>
             <IconBtn @click="isActive.value = false">

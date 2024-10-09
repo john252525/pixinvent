@@ -31,8 +31,8 @@ const itemsPerPage = ref(10)
 const sortBy = ref()
 const orderBy = ref()
 
-const headers = ref([
-  { title: t('service'),
+const headers = [
+  { title: t('payments.transactions.service'),
     align: 'start',
     key: 'service',
   },
@@ -40,7 +40,8 @@ const headers = ref([
   { title: t('payments.transactions.amount'), key: 'amount', align: 'start' },
   { title: t('payments.transactions.created_at'), key: 'created_at', align: 'end' },
   { title: t('payments.transactions.updated_at'), key: 'updated_at', align: 'end' },
-])
+] as const
+
 // Update data table options
 const updateOptions = (options: any) => {
   page.value = options.page

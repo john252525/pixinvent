@@ -23,6 +23,7 @@ Route::group(['prefix' => 'transactions', 'middleware' => 'auth:sanctum'], funct
 });
 
 Route::group(['prefix' => 'sources', 'middleware' => 'auth:sanctum'], function () {
+    Route::post('add', [SourcesController::class, 'addAccount']);
     Route::get('{source}', [SourcesController::class, 'index']);
     Route::put('{source}', [SourcesController::class, 'store']);
     Route::post('{source}', [SourcesController::class, 'update']);

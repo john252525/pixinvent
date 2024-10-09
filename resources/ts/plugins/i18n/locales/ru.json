@@ -62,6 +62,7 @@
   "Access Control": "Контроль доступа",
   "Access management": "Управление доступом",
   "Account Settings": "Настройки учетной записи",
+  "Account added successfully": "Аккаунт успешно добавлен.",
   "Account just started to start": "Инициализация аккаунта",
   "Account started successfully": "Аккаунт успешно запущен",
   "Account started successfully & realtime init done": "Аккаунт успешно запущен",
@@ -272,6 +273,42 @@
     }
   },
   "accounts": {
+    "add": {
+      "button": {
+        "add": "Добавить",
+        "close-dialog": "Закрыть",
+        "title": "Добавить аккаунты"
+      },
+      "categories": {
+        "label": "Выберите категорию"
+      },
+      "login": {
+        "label": "Логин"
+      },
+      "source": {
+        "crm": "Crm",
+        "helpdesk": "Helpdesk",
+        "label": "Выберите мессенжер",
+        "messenger": "Мессенджер",
+        "sms": "Смс",
+        "telegram": "Телеграм",
+        "whatsapp": "Whatsapp"
+      },
+      "title": "Создание нового аккаунта",
+      "token": {
+        "label": "Токен"
+      },
+      "type": {
+        "chat-api": "Chat-API",
+        "label": "Тип",
+        "sms-ru": "sms.ru",
+        "touch-api": "Touch-API",
+        "twilio": "Twilio"
+      },
+      "url": {
+        "label": "Url"
+      }
+    },
     "settings": {
       "add_webhook_url": {
         "button": {
@@ -352,6 +389,7 @@
   "admin": {
     "logs": {
       "actions": "Действия",
+      "created_at": "Создано",
       "errors": "Ошибки",
       "page": {
         "title": "Список ошибок"
@@ -409,6 +447,7 @@
     "enter-email": "Введите вашу почту и мы отправим инструкции для сброса пароля",
     "forgot-password": "Забыли пароль?",
     "login": "Вход",
+    "logout": "Выход",
     "name": "Имя пользователя",
     "new-password": "Новый пароль",
     "password": "Пароль",

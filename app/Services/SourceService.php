@@ -45,6 +45,18 @@ class SourceService
         return $this->getInfoByToken($request, $source);
     }
 
+    public function addAccount(Request $request)
+    {
+        $this->endpoint = 'https://b2288.apitter.com/';
+
+        $result = $this->http->post($this->endpoint.'addAccount', [
+            'key' => $this->token,
+            'data' => $request->all(),
+        ]);
+
+        return $result->json();
+    }
+
     /**
      * @throws ConnectionException
      */

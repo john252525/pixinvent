@@ -2,14 +2,14 @@
 import "@vuepic/vue-datepicker/dist/main.css";
 import VueDatePicker from '@vuepic/vue-datepicker'
 import { ru, enGB } from 'date-fns/locale'
-import { getI18n } from '@/plugins/i18n'
+import { globalI18n } from '@/plugins/i18n'
 import { cookieRef } from '@layouts/stores/config'
 import { themeConfig } from '@themeConfig'
 
 const paymentDate = defineModel()
 const paymentDates = ref()
 
-const { t } = getI18n().global
+const { t } = globalI18n()
 const locale = cookieRef("language", themeConfig.app.i18n.defaultLocale).value
 
 const stringifyDates = (date: any) => {

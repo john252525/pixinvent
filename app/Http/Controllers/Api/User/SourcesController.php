@@ -40,6 +40,22 @@ class SourcesController extends Controller
     }
 
     /**
+     * Store a newly created source.
+     *
+     * @return mixed
+     */
+    public function addAccount(Request $request)
+    {
+        $result = $this->sourceService->addAccount($request);
+
+        return response()->json([
+            ...$result,
+            'success' => true,
+            'message' => $result['message'] ?? 'Account added successfully.',
+        ], 201);
+    }
+
+    /**
      * Force stop the specified source action.
      *
      * @return mixed
@@ -53,6 +69,7 @@ class SourcesController extends Controller
      * Set the state of the specified source action.
      *
      * @return mixed
+     *
      * @throws ConnectionException
      */
     public function setStateAction(Request $request, string $source)
@@ -74,6 +91,7 @@ class SourcesController extends Controller
      * Switch the state of the specified source.
      *
      * @return mixed
+     *
      * @throws ConnectionException
      */
     public function switchState(Request $request, string $source)
@@ -105,6 +123,7 @@ class SourcesController extends Controller
      * Solve a challenge for the specified source.
      *
      * @return PromiseInterface|Response|JsonResponse
+     *
      * @throws ConnectionException
      */
     public function solveChallenge(Request $request, string $source)
@@ -132,6 +151,7 @@ class SourcesController extends Controller
      * Clear the session for the specified source.
      *
      * @return mixed
+     *
      * @throws ConnectionException
      */
     public function clearSessionAction(Request $request, string $source)
@@ -143,6 +163,7 @@ class SourcesController extends Controller
      * Get information for the specified source.
      *
      * @return mixed
+     *
      * @throws ConnectionException
      */
     public function getInfo(Request $request, string $source)
@@ -158,6 +179,7 @@ class SourcesController extends Controller
     public function update(Request $request, string $source)
     {
         $type = $request->get('type');
+
         return match ($type) {
             'update-webhook-urls' => $this->sourceService->updateWebhookUrls($request, $source),
             default => $this->sourceService->getInfo($request, $source)
