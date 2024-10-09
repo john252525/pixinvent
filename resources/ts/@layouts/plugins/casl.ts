@@ -30,7 +30,7 @@ export const can = (action: string | undefined, subject: string | undefined) => 
  * @param {object} item navigation object item
  */
 export const canViewNavMenuGroup = (item: NavGroup) => {
-  const hasAnyVisibleChild = item.children.some(i => i.action && i.subject ? can(i.action, i.subject) : true)
+  const hasAnyVisibleChild = item.children.some(i => can(i.action, i.subject))
 
   // If subject and action is defined in item => Return based on children visibility (Hide group if no child is visible)
   // Else check for ability using provided subject and action along with checking if has any visible child
@@ -43,5 +43,6 @@ export const canViewNavMenuGroup = (item: NavGroup) => {
 export const canNavigate = (to: RouteLocationNormalized) => {
   const ability = useAbility()
 
-  return to.matched.some(route => route.meta.action && route.meta.subject ? ability.can(route.meta.action, route.meta.subject) : true)
+  // @ts-expect-error We should allow passing string | undefined to can because for admin ability we omit defining action & subject
+  return to.matched.some(route => ability.can(route.meta.action, route.meta.subject))
 }

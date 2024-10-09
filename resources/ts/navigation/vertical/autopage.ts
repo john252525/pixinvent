@@ -1,7 +1,7 @@
 export default [
   {
     heading: '',
-    subject: 'domain1',
+    subject: 'settings',
     action: 'read',
   },
 ]

@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Http\Integrations\ExternalTokenGate\ExternalTokenConnector;
 use App\Http\Integrations\ExternalTokenGate\Requests\ExternalTokenGate;
+use App\Models\LogErrors;
 
 trait UseVuexyHelper
 {
@@ -13,20 +14,42 @@ trait UseVuexyHelper
             $connector = new ExternalTokenConnector;
             $request = new ExternalTokenGate;
 
-            $response = $connector->send($request);
+            try {
+                $response = $connector->send($request);
 
-            if ($response->ok()) {
-                $external_token = $response->json('value');
-                $this->update([
-                    'external_token' => $external_token,
+                if ($response->ok()) {
+                    $external_token = $response->json('value');
+                    $this->update([
+                        'external_token' => $external_token,
+                    ]);
+                } else {
+                    $this->logErrors()->create([
+                        'type' => 'get_external_token_response',
+                        'errors' => $response->json('message'),
+                    ]);
+                }
+            } catch (\Exception $e) {
+                $this->logErrors()->create([
+                    'type' => 'get_external_token_error',
+                    'errors' => $e->getMessage(),
                 ]);
-            } else {
-                \Log::alert('External token gate failed');
             }
         }
 
+        $userAbilityRules = $this->getAbilities();
+
+        $subjects = array_column($userAbilityRules, 'subject');
+
+        $role = match (true) {
+            in_array('all', $subjects) => 'sadmin',
+            in_array('admin', $subjects) => 'admin',
+            in_array('accounts', $subjects) => 'accounts',
+            in_array('settings', $subjects) => 'settings',
+            default => 'user',
+        };
+
         return [
-            'userAbilityRules' => $this->getAbilities(),
+            'userAbilityRules' => $userAbilityRules,
             'accessToken' => $token ?? request()->bearerToken(),
             'userData' => [
                 'id' => $this->id,
@@ -34,7 +57,7 @@ trait UseVuexyHelper
                 'name' => $this->name,
                 'avatar' => '/images/avatars/avatar-1.png',
                 'email' => $this->email,
-                'role' => $this->roles[0]->name === 'all' ? 'sadmin' : $this->roles[0]->name,
+                'role' => $role,
                 'balance' => $this->balance,
             ],
         ];
@@ -45,10 +68,12 @@ trait UseVuexyHelper
         $roles = $this->roles;
         $abilities = [];
 
-        $role = match (request()->getHost()) {
-            env('DOMAIN_APP1') => 'domain1',
-            env('DOMAIN_APP2') => 'domain2',
-            env('DOMAIN_APP3') => 'domain3',
+        $host = request()->getHost();
+
+        $role = match ($host) {
+            config('app.domains.settings') => 'settings',
+            config('app.domains.accounts') => 'accounts',
+            config('app.domains.reserved') => 'reserved',
         };
 
         $abilities[] = [

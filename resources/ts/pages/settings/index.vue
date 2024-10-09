@@ -5,7 +5,7 @@ import AutoPage from '@/views/autopage/AutoPage.vue'
 definePage({
   meta: {
     action: 'read',
-    subject: 'domain1',
+    subject: 'settings',
   },
 })
 

@@ -26,6 +26,9 @@ const configStore = useConfigStore()
       <RouterView />
       <ScrollToTop />
     </VApp>
-    <Toaster />
+    <Toaster
+      richColors
+      :theme="$vuetify.theme.current.dark ? 'dark' : 'light'"
+    />
   </VLocaleProvider>
 </template>

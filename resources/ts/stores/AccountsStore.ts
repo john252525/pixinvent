@@ -32,7 +32,14 @@ export const useAccountsStore = defineStore('accounts-store', () => {
     qrCode: false,
   })
 
-  const total = computed(() => accounts.value[source.value].length ?? 0)
+  const total = computed(() => accounts.value[source.value]?.length || 0)
+
+  const clearData = () => {
+    source.value = 'telegram'
+    accounts.value['telegram'] = []
+    accounts.value['whatsapp'] = []
+    qrCode.value = ''
+  }
 
   const getStep = computed(() => {
     return (account: AccountClient): Step | null => getAccount(account)?.step || { value: null, message: 'disconnected' }
@@ -325,7 +332,7 @@ export const useAccountsStore = defineStore('accounts-store', () => {
   }
 
   onBeforeMount(async () => {
-    await getAccounts()
+    // await getAccounts()
   })
 
   onUnmounted(() => {
@@ -368,5 +375,6 @@ export const useAccountsStore = defineStore('accounts-store', () => {
     sendTwoFactorAuth,
     getQr,
     setAccountStateMessage,
+    clearData,
   }
 })

@@ -1,54 +1,78 @@
+import { useAccountsStore } from './AccountsStore'
+import { router } from '@/plugins/1.router'
+
 export const useUserStore = defineStore('user-store', () => {
   const userData = ref({
+    id: undefined,
     role: 'guest',
     balance: 0,
   })
 
   const toast = ref()
   const ability = useAbility()
-  const accessToken = useCookie('accessToken').value
+  const accessToken = useCookie('accessToken')
 
   const userSettings = ref({})
   const userAbilityRules = ref([])
+
+  const accountsStore = useAccountsStore()
 
   const setAbilities = (abilities: any) => {
     ability.update(abilities)
   }
 
-  async function fetchUserData(updateAbilities = false) {
-    await $api('/user', {
-      onResponseError({ error }){
-        console.info(error?.message)
+  function fetchUserData(updateAbilities = false) {
+    $api('/user', {
+      onResponseError({ response }) {
+        if(response.status === 401) {
+          clearAllData()
+        }
       },
       onResponse({ response }) {
         userData.value = response._data.userData
         userAbilityRules.value = response._data.userAbilityRules
-        if (updateAbilities)
+        if(updateAbilities)
           setAbilities(userAbilityRules.value)
+      }
+    })
+   }
+
+  const clearAllData = () => {
+    accountsStore.clearData()
+    userData.value = ({
+      id: undefined,
+      role: 'guest',
+      balance: 0,
+    })
+    userAbilityRules.value = []
+    userSettings.value = {}
+    useCookie('userData').value = null
+    useCookie('userAbilityRules').value = null
+    useCookie('accessToken').value = null
+
+    nextTick().then(() => router.push('/login'))
+
+    setAbilities(userAbilityRules.value)
+  }
+  const logout = () => {
+    return $api('/user/auth/logout', {
+      method: 'POST',
+      async onResponse({ response }) {
+        toast.value.success('Вы успешно вышли из системы')
+        clearAllData()
+      },
+      onResponseError({ response }) {
+        toast.value.error('Произошла ошибка')
       }
     })
   }
 
-  const logout = async () => {
-    useCookie('accessToken').value = null
-
-    localStorage.removeItem('accessToken')
-    userAbilityRules.value = []
-
-    setAbilities(userAbilityRules.value)
-    userData.value = Object({})
-
-    return true
-  }
-
-  onBeforeMount(async () => {
-    if (userData.value.id === undefined && accessToken !== undefined) {
-
-      await fetchUserData()
-        .then(() => {
-          setAbilities(userAbilityRules.value)
-        })
-    }
+  onMounted( () => {
+    /*if(accessToken.value) {
+      fetchUserData().then(() => {
+        setAbilities(userAbilityRules.value)
+      })
+    }*/
   })
 
   return {
@@ -64,5 +88,6 @@ export const useUserStore = defineStore('user-store', () => {
     setAbilities,
     fetchUserData,
     logout,
+    clearAllData,
   }
 })

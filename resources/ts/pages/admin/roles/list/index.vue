@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Dayjs } from 'dayjs'
-import type { Subjects } from '@/plugins/casl/ability'
+import { abilitySubjects, type Subjects } from '@/plugins/casl/ability'
 
 definePage({
   meta: {
@@ -33,8 +33,6 @@ const headers = ref([
   { title: t('admin.roles.list.timestamps'), key: 'timestamps', align: 'start', sortable: false },
   { title: t('admin.roles.list.actions'), key: 'actions', align: 'end', sortable: false },
 ])
-
-const objects = ref<Subjects[]>(['all', 'admin', 'user', 'domain1', 'domain2', 'domain3'])
 
 const editedIndex = ref(-1)
 
@@ -209,7 +207,7 @@ watch(dialogDelete, val => {
                 prepend-icon="mdi-refresh"
                 @click="fetchRoles"
               >
-                {{ ('admin.roles.list.refresh') }}
+                {{ $t('admin.roles.list.refresh') }}
               </VBtn>
               <VBtn
                 variant="flat"

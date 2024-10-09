@@ -6,6 +6,7 @@ import { isEmpty } from '@core/utils/helpers'
 
 const props = defineProps(['source'])
 const accountsStore = useAccountsStore()
+const userStore = useUserStore()
 
 const { t } = getI18n().global
 
@@ -44,22 +45,26 @@ const saveAccount = async () => {
       isActive.value = false
       console.log(response)
     },
-    onResponse({ response }) {
+    async onResponse({ response }) {
       loading.value = false
-      accountsStore.addAccount(response._data)
+      if (response._data.status === 'error')
+        userStore.toast.error(t(response._data.error.message))
+      else
+        accountsStore.addAccount(response._data)
       isActive.value = false
     },
   })
 }
 
 const notInValidator = () => {
-  if (isEmpty(phone.value))
-    return true;
+  if (isEmpty(phone.value)) return true;
+  if (accountsStore.total === 0) return true;
 
-  if (phone.value.length < 10)
-    return t('phone.format')
+  const account = accountsStore.accounts[accountsStore.source].find(account =>
+    account.login === phone.value
+  );
 
-  return accountsStore.accounts[accountsStore.source].filter(account => account.login === phone.value).length === 0 || 'Такой аккаунт уже существует'
+  return !account || account.login !== phone.value;
 }
 
 const clearSession = () => {

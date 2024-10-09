@@ -29,13 +29,7 @@ class AuthController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        $role = match ($request->getHost()) {
-            env('DOMAIN_APP1') => RolesEnum::DOMAIN1,
-            env('DOMAIN_APP2') => RolesEnum::DOMAIN2,
-            env('DOMAIN_APP3') => RolesEnum::DOMAIN3,
-        };
-
-        $user->assignRole(RolesEnum::USER, $role);
+        $user->assignRole(RolesEnum::USER);
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -69,7 +63,7 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => __('auth.success')]);
+        return response()->json(['message' => __('auth.logout')]);
     }
 
     public function forgotPassword(Request $request)

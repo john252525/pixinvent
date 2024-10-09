@@ -31,4 +31,10 @@ Route::group(['prefix' => '/', 'middleware' => 'auth:sanctum'], function () {
         Route::post('/{permission}', [PermissionsController::class, 'update']);
         Route::delete('/{permission}', [PermissionsController::class, 'destroy']);
     });
+    Route::group(['prefix' => 'logs', 'controller' => LogErrorsController::class], function () {
+        Route::any('/', 'index');
+        Route::put('/', 'store');
+        Route::post('/{logErrors}', 'update');
+        Route::delete('/{logErrors}', 'destroy');
+    });
 });

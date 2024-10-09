@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\LogErrors;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Request;
@@ -426,7 +427,13 @@ class SourceService
         $result = $this->http->post($this->endpoint.'setState', $data)->json();
 
         if (\Arr::get($result, 'status') === 'error') {
-            $this->messages[] = \Arr::get($result, 'error.message');
+            $message = \Arr::get($result, 'error.message');
+            LogErrors::create([
+                'errors' => $message,
+                'type' => 'set-telegram-state',
+                'user_id' => $request->user()?->id,
+            ]);
+            $this->messages[] = $message;
             if (\Arr::get($result, 'error.message') === 'Such account is already exist') {
                 $this->forceStop($request, 'telegram');
                 $this->setTelegramState($request, 'telegram');

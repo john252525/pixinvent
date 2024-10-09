@@ -123,4 +123,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'domains' => [
+        'settings' => env('APP_DOMAIN_SETTINGS'),
+        'accounts' => env('APP_DOMAIN_ACCOUNTS'),
+        'reserved' => env('APP_DOMAIN_RESERVED'),
+    ],
 ];

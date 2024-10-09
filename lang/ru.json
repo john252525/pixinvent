@@ -3,6 +3,7 @@
     "(and :count more errors)": "(и ещё :count ошибка)|(и ещё :count ошибки)|(и ещё :count ошибок)",
     "A decryption key is required.": "Ключ дешифровки обязателен.",
     "A Timeout Occurred": "Истекло время ожидания",
+    "Log deleted successfully": "Запись успешно удалена",
     "Accept": "Принять",
     "Accepted": "Принято",
     "Action": "Действие",

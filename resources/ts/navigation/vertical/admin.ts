@@ -52,4 +52,11 @@ export default [
       },
     ],
   },
+  {
+    title: 'navigation.admin.logs',
+    icon: { icon: 'icon-park-outline:upload-logs' },
+    to: { name: 'admin-logs' },
+    subject: 'admin',
+    action: 'read',
+  },
 ]

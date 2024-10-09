@@ -15,7 +15,7 @@ const shallRenderIcon = configStore.isVerticalNavMini()
 
 <template>
   <li
-    v-if="item.action && item.subject ? can(item.action, item.subject) : true"
+    v-if="can(item.action, item.subject)"
     class="nav-section-title"
   >
     <div class="title-wrapper">

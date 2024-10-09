@@ -129,6 +129,7 @@
   "Expansion Panel": "Панель расширения",
   "Extensions": "Права",
   "FAQ": "Часто задаваемые вопросы",
+  "False type with token - null instead string": "Неверный тип токена. Обратитесь в тех. поддержку",
   "Field must contain at least one uppercase, lowercase, special character and digit with min 8 chars": "Поле должно содержать хотя бы одну заглавную букву, маленькую букву, специальный символ и цифру c 8 символов",
   "File Input": "Ввод файла",
   "Fleet": "Fleet",
@@ -349,6 +350,18 @@
     }
   },
   "admin": {
+    "logs": {
+      "actions": "Действия",
+      "errors": "Ошибки",
+      "page": {
+        "title": "Список ошибок"
+      },
+      "table": {
+        "title": "Список ошибок"
+      },
+      "type": "Тип ошибки",
+      "user": "Пользователь"
+    },
     "roles": {
       "list": {
         "actions": "действия",
@@ -436,12 +449,18 @@
       "page-not-found": "Страница не найдена ⚠️"
     }
   },
+  "get_external_token_error": "Ошибка получения токена",
   "light": "Светлая",
   "login.confirmPassword": "Повторите пароль",
   "login.email": "Электронная почта",
   "login.name": "Ваше имя",
   "login.password": "Пароль",
   "month": "в месяц",
+  "navigation": {
+    "admin": {
+      "logs": "Логи/Ошибки"
+    }
+  },
   "payments": {
     "transactions": {
       "amount": "Сумма",
@@ -486,7 +505,8 @@
   "stateOffline": "Выключен или не в сети",
   "system": "Системная",
   "text": {
-    "copied-to-clipboard": "Копировано в буфер обмена"
+    "copied-to-clipboard": "Копировано в буфер обмена",
+    "title-not-defined": "Заголовок страницы не установлен"
   },
   "vuexy": "Имя проекта",
   "Код авторизации получен": "Код авторизации получен"

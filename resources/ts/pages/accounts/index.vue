@@ -6,6 +6,12 @@ import type { Source } from '@/stores/types/accounts'
 import { useAccountsStore } from '@/stores/AccountsStore'
 import TelegramAccounts from '@/views/user/accounts/telegram/TelegramAccounts.vue'
 
+definePage({
+  meta: {
+    action: 'read',
+    subject: 'accounts',
+  },
+})
 const { t } = getI18n()
 
 const accountsStore = useAccountsStore()
@@ -33,6 +39,10 @@ const onAdded = (login: any) => {
       addSourceRef.value.isActive = false
   }
 }
+
+onMounted(() => {
+  accountsStore.getAccounts()
+})
 </script>
 
 <template>

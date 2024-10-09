@@ -1,5 +1,7 @@
 import type { RouteNamedMap, _RouterTyped } from 'unplugin-vue-router'
 import { canNavigate } from '@layouts/plugins/casl'
+import { useHead } from '@unhead/vue'
+import { getI18n } from '@/plugins/i18n'
 
 export const setupGuards = (router: _RouterTyped<RouteNamedMap & { [key: string]: any }>) => {
   // 👉 router.beforeEach
@@ -29,7 +31,6 @@ export const setupGuards = (router: _RouterTyped<RouteNamedMap & { [key: string]
       else
         return undefined
     }
-
     if (!canNavigate(to) && to.matched.length) {
       /* eslint-disable indent */
       return isLoggedIn
@@ -43,5 +44,14 @@ export const setupGuards = (router: _RouterTyped<RouteNamedMap & { [key: string]
           }
       /* eslint-enable indent */
     }
+  })
+
+  router.afterEach((to) => {
+
+    const { t } = getI18n().global
+
+    useHead({
+      title: () => t(to.meta?.title ?? 'text.title-not-defined'),
+    })
   })
 }

@@ -129,6 +129,7 @@
   "Expansion Panel": "Expansion Panel",
   "Extensions": "Extensions",
   "FAQ": "FAQ",
+  "False type with token - null instead string": "False type with token - null instead string",
   "Field must contain at least one uppercase, lowercase, special character and digit with min 8 chars": "Field must contain at least one uppercase, lowercase, special character and digit with min 8 chars",
   "File Input": "File Input",
   "Fleet": "Fleet",
@@ -349,6 +350,18 @@
     }
   },
   "admin": {
+    "logs": {
+      "actions": "Actions",
+      "errors": "Errors",
+      "page": {
+        "title": "List of errors"
+      },
+      "table": {
+        "title": "List of errors"
+      },
+      "type": "Error type",
+      "user": "User"
+    },
     "roles": {
       "list": {
         "actions": "actions",
@@ -436,12 +449,18 @@
       "page-not-found": "Page Not Found ⚠️"
     }
   },
+  "get_external_token_error": "Error receiving token",
   "light": "light",
   "login.confirmPassword": "Password confirmation",
   "login.email": "Email",
   "login.name": "Name",
   "login.password": "Password",
   "month": "month",
+  "navigation": {
+    "admin": {
+      "logs": "Logs/Errors"
+    }
+  },
   "payments": {
     "transactions": {
       "amount": "Amount",
@@ -486,7 +505,8 @@
   "stateOffline": "Offline",
   "system": "system",
   "text": {
-    "copied-to-clipboard": "Copied to clipboard"
+    "copied-to-clipboard": "Copied to clipboard",
+    "title-not-defined": "Page title not set"
   },
   "vuexy": "Vuexy",
   "Код авторизации получен": "Authorization code received"

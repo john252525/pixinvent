@@ -1,15 +1,17 @@
-import { ofetch } from 'ofetch'
+import { FetchContext, ofetch } from 'ofetch'
+import { types } from 'sass'
+import Error = types.Error
 
 export const $api = ofetch.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
-  async onRequest({ options }) {
+  baseURL: /* import.meta.env.VITE_API_BASE_URL || */'/api',
+  onRequest({ options }) {
     const accessToken = useCookie('accessToken').value
     if (accessToken) {
       options.headers = {
         ...options.headers,
         'Accept-Language': localStorage.getItem('locale') || 'en',
         Authorization: `Bearer ${accessToken}`,
-        // Accept: 'application/json',
+        Accept: 'application/json',
       }
     }
     else {
@@ -20,4 +22,7 @@ export const $api = ofetch.create({
       }
     }
   },
+  onRequestError({ response}){
+    console.error(response)
+  }
 })

@@ -12,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, UseVuexyHelper;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, UseVuexyHelper;
 
     /**
      * The attributes that are mass assignable.
@@ -53,8 +53,14 @@ class User extends Authenticatable
     {
         return $this->transactions()->where('status', '=', 'succeeded')->sum('amount');
     }
-    public function transactions()
+
+    public function transactions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function logErrors(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LogErrors::class);
     }
 }

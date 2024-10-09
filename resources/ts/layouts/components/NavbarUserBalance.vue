@@ -10,5 +10,5 @@ const userStore = useUserStore()
     variant="outlined"
     size="small"
     @click="() => userStore.fetchUserData()"
-  >{{ toMoney(userStore.userData.balance) }}</VBtn>
+  >{{ toMoney(userStore.userData?.balance || 0) }}</VBtn>
 </template>

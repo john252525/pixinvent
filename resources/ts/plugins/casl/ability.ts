@@ -1,9 +1,10 @@
 import { createMongoAbility } from '@casl/ability'
 
-export type Actions = 'create' | 'read' | 'update' | 'delete' | 'manage'
+export const abilityActions = ['create','read', 'update', 'delete','manage'] as const
+export type Actions = typeof abilityActions[number]
 
-// ex: Post, Comment, User, etc. We haven't used any of these in our demo though.
-export type Subjects = 'admin' | 'user' | 'domain1' | 'domain2' | 'domain3' | 'all'
+export const abilitySubjects = ['admin', 'user', 'accounts', 'settings', 'reserved', 'all'] as const
+export type Subjects = typeof abilitySubjects[number]
 
 export interface Rule { action: Actions; subject: Subjects }
 
