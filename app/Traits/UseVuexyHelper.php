@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Http\Integrations\ExternalTokenGate\ExternalTokenConnector;
 use App\Http\Integrations\ExternalTokenGate\Requests\ExternalTokenGate;
+use App\Models\LogErrors;
 
 trait UseVuexyHelper
 {
@@ -74,7 +75,15 @@ trait UseVuexyHelper
             config('app.domains.accounts') => ['accounts'],
             config('app.domains.binder') => ['accounts', 'binder'],
             config('app.domains.reserved') => ['reserved'],
+            default => [],
         };
+        if (! count($dynamicRoles)) {
+            LogErrors::create([
+                'type' => 'host_not_found',
+                'user_id' => $this->id,
+                'errors' => [request()->getHost(), request()->host()],
+            ]);
+        }
 
         foreach ($dynamicRoles as $dynamicRole) {
             $abilities[] = [
