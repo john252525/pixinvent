@@ -126,6 +126,7 @@ return [
     'domains' => [
         'settings' => env('APP_DOMAIN_SETTINGS'),
         'accounts' => env('APP_DOMAIN_ACCOUNTS'),
+        'binder' => env('APP_DOMAIN_BINDER'),
         'reserved' => env('APP_DOMAIN_RESERVED'),
     ],
 ];
