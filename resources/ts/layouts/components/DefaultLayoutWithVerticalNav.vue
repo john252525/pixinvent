@@ -34,7 +34,10 @@ import AddAccounts from '@/views/user/accounts/AddAccounts.vue'
 
         <VSpacer />
 
-        <AddAccounts class="mr-2" />
+        <AddAccounts
+          v-if="$can('read', 'binder')"
+          class="mr-2"
+        />
 
         <NavbarUserBalance />
 

@@ -83,11 +83,6 @@ trait UseVuexyHelper
             ];
         }
 
-        $abilities[] = [
-            'subject' => $role,
-            'action' => 'read',
-        ];
-
         foreach ($roles as $role) {
             $permissions = $role->permissions;
             foreach ($permissions as $permission) {

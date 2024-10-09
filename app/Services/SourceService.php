@@ -31,11 +31,14 @@ class SourceService
     private PendingRequest $http;
 
     public array $actions = [];
+
     public array $messages = [];
 
     public function __construct()
     {
-        $this->endpoint = config('services.api_gate.sources_data_url');
+        $this->endpoint = request()->host() === config('app.domains.binder')
+            ? config('services.api_gate.binder_data_url')
+            : config('services.api_gate.sources_data_url');
         $this->token = request()->user()->external_token;
         $this->http = \Http::timeout($this->timeout)->retry($this->retryTimes, $this->retryDelay);
     }
@@ -153,6 +156,7 @@ class SourceService
         ];
 
         $this->actions[] = 'get-qr';
+
         return $this->http->post($this->endpoint.'getQr', $data)->json('value');
     }
 
@@ -267,14 +271,12 @@ class SourceService
             'setState' => false,
         ])->json();*/
 
-
         $results['setState6'] = $this->http->post($this->endpoint.'setState', [
             'token' => $this->token,
             'source' => $source,
             'login' => $login,
             'setState' => true,
         ])->json();
-
 
         return [...$this->http->post($this->endpoint.'getInfo', [
             'token' => $this->token,
@@ -391,7 +393,6 @@ class SourceService
 
         return $this->getInfo($request, $source);
     }
-
 
     /**
      * @throws ConnectionException
