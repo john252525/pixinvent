@@ -301,6 +301,7 @@
         "telegram": "Telegram",
         "whatsapp": "Whatsapp"
       },
+      "text": "Instructions for adding an account, details",
       "title": "Create a new account",
       "token": {
         "label": "Token"

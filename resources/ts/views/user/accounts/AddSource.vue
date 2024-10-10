@@ -119,7 +119,7 @@ defineExpose({ isActive })
           </VCardItem>
 
           <VCardText>
-            Инструкция по добавлению аккаунта, подробно
+            {{ $t('accounts.add.text') }}
           </VCardText>
         </VCard>
 
