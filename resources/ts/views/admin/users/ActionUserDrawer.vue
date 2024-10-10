@@ -103,7 +103,7 @@ watch(isDrawerOpens, (isOpen: boolean) => {
   >
     <!-- 👉 Title -->
     <AppDrawerHeaderSection
-      title="Cоздание пользователя"
+      :title="$t('accounts.action.user.drawer.title')"
       icon="mdi-account-edit"
       @cancel="closeNavigationDrawer"
     />

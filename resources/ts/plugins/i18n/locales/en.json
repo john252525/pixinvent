@@ -273,6 +273,13 @@
     }
   },
   "accounts": {
+    "action": {
+      "user": {
+        "drawer": {
+          "title": "Creating a user"
+        }
+      }
+    },
     "add": {
       "button": {
         "add": "Add account",
