@@ -40,9 +40,7 @@ jobs:
             chown -R vue_apitter__usr7:www-data storage bootstrap/cache
             chgrp -R www-data storage bootstrap/cache
             chmod -R ug+rwx storage bootstrap/cache
-            if [ ! -f .env ]; then
-              cp ../.env .env
-            fi
+            cp ../.env .env
             #export COMPOSER_ALLOW_SUPERUSER=1
             composer update --ignore-platform-req=ext-bcmath
            #curl -fsSL https://bun.sh/install | bash
