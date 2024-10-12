@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 Route::any('webhooks/{service}/{type?}', function (Request $request, string $service, ?string $type = null) {
     try {
@@ -20,7 +20,12 @@ Route::any('webhooks/{service}/{type?}', function (Request $request, string $ser
     }
 });
 
-Route::get('auth/password/reset', [\App\Http\Controllers\Api\User\AuthController::class, 'passwordReset'])->name('password.reset');
+Route::get('auth/password/reset', function () {
+    return redirect('/reset-password')->with([
+        'email' => request()->email,
+        'token' => request()->token,
+    ]);
+})->name('password.reset');
 
 Route::get('{any?}', function () {
     return view('application');

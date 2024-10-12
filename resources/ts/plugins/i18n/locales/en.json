@@ -265,6 +265,7 @@
   "Year": "Year",
   "You need to accept the rules": "You need to accept the rules",
   "account": {
+    "clear-session": "Clear session",
     "telegram": {
       "delete": {
         "button": "Delete telegram",
@@ -387,6 +388,7 @@
         }
       },
       "auth-code-column-text": "Auth code column text",
+      "force-stop": "Force Stop",
       "method": {
         "confirm": "Confirm",
         "refresh": "Refresh"

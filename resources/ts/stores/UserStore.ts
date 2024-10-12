@@ -50,9 +50,9 @@ export const useUserStore = defineStore('user-store', () => {
     useCookie('userAbilityRules').value = null
     useCookie('accessToken').value = null
 
-    nextTick().then(() => router.push('/login'))
-
     setAbilities(userAbilityRules.value)
+
+    nextTick().then(() => window.location.reload()) // router.push('/login'))
   }
   const logout = () => {
     return $api('/user/auth/logout', {

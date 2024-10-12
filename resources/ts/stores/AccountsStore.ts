@@ -23,6 +23,9 @@ export const useAccountsStore = defineStore('accounts-store', () => {
   const accounts = ref<Record<Source, AccountClient[]>>({
     whatsapp: [],
     telegram: [],
+    crm: [],
+    sms: [],
+    helpdesk: [],
   })
 
   const qrCode = ref('')

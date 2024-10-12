@@ -55,7 +55,7 @@ const doClearSession = async () => {
         </VCardText>
         <VCardActions>
           <VBtn color="primary" variant="outlined" @click="isActive.value = false">
-            Отмена
+            {{ $t('accounts.settings.button.cancel') }}
           </VBtn>
           <VDialog
             v-model="showClearSessionDialog2"
@@ -64,7 +64,7 @@ const doClearSession = async () => {
           >
             <template #activator="{ props: activator2Props }">
               <VBtn color="error" variant="flat" v-bind="activator2Props">
-                CLEAR SESSION
+                {{ $t('account.clear-session') }}
               </VBtn>
             </template>
             <template #default="{ isActive: isActive2 }">

@@ -17,25 +17,7 @@ const account = ref<AccountClient | null>()
 
 const accountsStore = useAccountsStore()
 
-// Определяем тип для значений value
-const apiStates = {
-  null: 'stateOffline',
-  0: 'Account just started to start',
-  2.2: 'QR code received',
-  2.3: 'Can not update QR',
-  2.22: 'Код авторизации получен',
-  5: 'Account started successfully & realtime init done',
-  'telegram': {
-    '0': 'Account just started to start',
-    '2.1': 'This account needs 2FA solving',
-    '2.2': 'QR code received',
-    '2.25': 'This account needs challenge solving',
-    '2.3': 'Can not update QR',
-    '2.22': 'Код авторизации получен',
-    '2.5': 'Another error during account launch',
-    '5': 'Account started successfully & realtime init done',
-  }
-}
+const whatsappMenu = ref(false)
 
 const sortBy = ref<SortItem[]>([{ key: 'login', order: 'asc' }])
 const headers = ref([
@@ -85,8 +67,6 @@ const updateIsDrawerOpen = (isDrawerOpen: boolean) => {
       <template #item.actions="{ item }">
         <div class="d-flex float-end gap-2">
 
-          <ForceStopComponent :account="item" />
-
           <StateSwitch
             source="whatsapp"
             :account="item"
@@ -98,7 +78,7 @@ const updateIsDrawerOpen = (isDrawerOpen: boolean) => {
             <VIcon icon="mdi-settings" />
           </IconBtn>
 
-          <VMenu>
+          <VMenu transition="fade-transition">
             <template v-slot:activator="{ props: menu }">
               <VTooltip location="top left">
                 <template v-slot:activator="{ props: tooltip }">
@@ -110,14 +90,17 @@ const updateIsDrawerOpen = (isDrawerOpen: boolean) => {
                 <span>{{ $t('accounts.whatsapp.menu.tooltip') }}</span>
               </VTooltip>
             </template>
-            <VList>
-              <VListItem :key="`${$dayjs()}-1`">
+            <VCard>
+              <VListItem :key="`${$dayjs()}-whatsapp-1`">
+                <ForceStopComponent :account="item" />
+              </VListItem>
+              <VListItem :key="`${$dayjs()}-whatsapp-2`">
                 <ClearSessionComponent :account="item" />
               </VListItem>
-              <VListItem :key="`${$dayjs()}-2`">
-                <DeleteAccountComponent :account="item"/>
+              <VListItem :key="`${$dayjs()}-whatsapp-3`">
+                <DeleteAccountComponent :account="item" />
               </VListItem>
-            </VList>
+            </VCard>
           </VMenu>
         </div>
       </template>

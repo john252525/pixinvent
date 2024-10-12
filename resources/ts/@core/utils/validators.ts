@@ -1,7 +1,7 @@
 import { isEmpty, isEmptyArray, isNullOrUndefined } from './helpers'
-import { getI18n } from '@/plugins/i18n'
+import { globalI18n } from '@/plugins/i18n'
 
-const { t } = getI18n().global
+const { t } = globalI18n()
 
 // 👉 Required Validator
 export const requiredValidator = (value: unknown) => {

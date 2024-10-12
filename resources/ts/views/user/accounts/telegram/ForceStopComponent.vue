@@ -22,13 +22,14 @@ const doForceStop = async () => {
 <template>
   <VDialog
     v-model="showForceStopDialog"
-    persistent
     max-width="500"
     >
-    <template #activator>
-      <IconBtn @click="showForceStopDialog = true">
-        <VIcon :size="loading?20:28" :icon="loading ? 'svg-spinners:clock' : 'openmoji:stop-sign'"/>
-      </IconBtn>
+    <template #activator="{ props: activatorProps }">
+      <VListItem
+        v-bind="activatorProps"
+        :title="$t('accounts.whatsapp.force-stop')"
+        :prepend-icon="loading ? 'svg-spinners:clock' : 'openmoji:stop-sign'"
+      />
     </template>
     <template #default="{ isActive }">
       <VCard :loading>

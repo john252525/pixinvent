@@ -79,8 +79,6 @@ const updateIsDrawerOpen = (isDrawerOpen: boolean) => {
       <template #item.actions="{ item }">
         <div class="d-flex float-end gap-2">
 
-          <ForceStopComponent :account="item" />
-
           <StateSwitch
             source="telegram"
             :account="item"
@@ -92,7 +90,7 @@ const updateIsDrawerOpen = (isDrawerOpen: boolean) => {
             <VIcon icon="mdi-settings" />
           </IconBtn>
 
-          <VMenu>
+          <VMenu transition="fade-transition">
             <template v-slot:activator="{ props: menu }">
               <VTooltip location="top left">
                 <template v-slot:activator="{ props: tooltip }">
@@ -104,14 +102,17 @@ const updateIsDrawerOpen = (isDrawerOpen: boolean) => {
                 <span>{{ $t('accounts.telegram.menu.tooltip') }}</span>
               </VTooltip>
             </template>
-            <VList>
+            <VCard>
+              <VListItem :key="`${$dayjs()}-telegram-force-stop`">
+                <ForceStopComponent :account="item" />
+              </VListItem>
               <VListItem :key="`${$dayjs()}-telegram-clear-session`">
                 <ClearSessionComponent :account="item" />
               </VListItem>
               <VListItem :key="`${$dayjs()}-telegram-delete-account`">
                 <DeleteAccountComponent :account="item"/>
               </VListItem>
-            </VList>
+            </VCard>
           </VMenu>
         </div>
       </template>

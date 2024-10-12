@@ -1,5 +1,5 @@
-export type Source = 'whatsapp' | 'telegram'
-
+export const accountSources = ['whatsapp', 'telegram', 'crm', 'sms', 'helpdesk']
+export type Source = typeof accountSources[number]
 export interface AccountClient {
   step: Step | null;
   state: boolean;

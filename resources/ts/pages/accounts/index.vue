@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { getI18n } from '@/plugins/i18n'
+import { globalI18n } from '@/plugins/i18n'
 import WhatsappAccounts from '@/views/user/accounts/whatsapp/WhatsappAccounts.vue'
 import AddSource from '@/views/user/accounts/AddSource.vue'
-import type { Source } from '@/stores/types/accounts'
+import { accountSources, type Source } from '@/stores/types/accounts'
 import { useAccountsStore } from '@/stores/AccountsStore'
 import TelegramAccounts from '@/views/user/accounts/telegram/TelegramAccounts.vue'
 
@@ -12,7 +12,7 @@ definePage({
     subject: 'accounts',
   },
 })
-const { t } = getI18n()
+const { t } = globalI18n()
 
 const accountsStore = useAccountsStore()
 
@@ -51,16 +51,6 @@ onMounted(() => {
       <VCardTitle class="d-flex align-center flex-row gap-1">
         {{ $t('Accounts List') }}
 
-        <VSelect
-          v-model="accountsStore.source"
-          :items="['telegram', 'whatsapp']"
-          variant="solo"
-          max-width="120"
-          class="mt-0 selects-accounts"
-          :disabled="accountsStore.loading.accounts"
-          flat
-          @update:model-value="accountsStore.setSource($event as Source)"
-        />
       </VCardTitle>
 
       <template #append>
@@ -81,6 +71,23 @@ onMounted(() => {
           />
         </IconBtn>
       </template>
+    </VCardItem>
+    <VCardItem>
+      <VSelect
+        v-model="accountsStore.source"
+        :items="accountSources.map(source => ({ value: source, title: $t(source) }))"
+        variant="outlined"
+        max-width="120"
+        clearable
+        prepend-inner-icon="mdi-account-group-outline"
+        min-width="200"
+        :disabled="accountsStore.loading.accounts"
+        @update:model-value="accountsStore.setSource($event as Source)"
+      >
+        <template #item="{ item, props }">
+          <VListItem v-bind="props" :disabled="item.value === 'crm' || item.value === 'sms' || item.value === 'helpdesk'" />
+        </template>
+      </VSelect>
     </VCardItem>
 
     <WhatsappAccounts

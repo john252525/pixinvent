@@ -11,13 +11,34 @@ definePage({
   },
 })
 
+const route = useRoute()
+
 const form = ref({
   newPassword: '',
   confirmPassword: '',
 })
 
+const refRestPassword = ref()
 const isPasswordVisible = ref(false)
 const isConfirmPasswordVisible = ref(false)
+const loading = ref(false)
+
+const resetPassword = () => {
+  refRestPassword.value.validate().then(async ({ valid: isValid }) => {
+    if(isValid) {
+      const result = await $api('/set-new-password', {
+        method: 'POST',
+        query: {
+          email: route.params?.email,
+          token: route.params?.token,
+          password: form.value.newPassword,
+          password_confirmation: form.value.confirmPassword,
+        },
+      })
+      console.log(result)
+    }
+  })
+}
 </script>
 
 <template>
@@ -64,7 +85,10 @@ const isConfirmPasswordVisible = ref(false)
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm
+            ref="refRestPassword"
+            @submit.prevent="resetPassword"
+          >
             <VRow>
               <!-- password -->
               <VCol cols="12">
@@ -74,6 +98,7 @@ const isConfirmPasswordVisible = ref(false)
                   :label="$t('auth.new-password')"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                  :rules="[requiredValidator, lengthValidator(form.newPassword, 6), confirmedValidator(form.newPassword, form.confirmPassword)]"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
               </VCol>
@@ -85,6 +110,7 @@ const isConfirmPasswordVisible = ref(false)
                   :label="$t('auth.confirm-password')"
                   :type="isConfirmPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                  :rules="[requiredValidator, confirmedValidator(form.newPassword, form.confirmPassword)]"
                   @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
                 />
               </VCol>
