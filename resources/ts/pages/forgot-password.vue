@@ -14,6 +14,7 @@ definePage({
   },
 })
 
+const userStore = useUserStore()
 const themes: ThemeSwitcherTheme[] = [
   {
     name: 'light',
@@ -30,7 +31,7 @@ const themes: ThemeSwitcherTheme[] = [
 ]
 
 const refVForm = ref<VForm>()
-const email = ref('')
+const email = ref('admin@example.com')
 const router = useRouter()
 
 const errors = ref({
@@ -38,25 +39,22 @@ const errors = ref({
 })
 
 const sendLink = async () => {
-  try {
-    const res = await $api('/user/auth/forgot-password', {
-      method: 'POST',
-      body: {
-        email: email.value,
-      },
-      onResponseError({ response }) {
-        errors.value = response._data.errors
-      },
-    })
+  const res = await $api('/user/auth/forgot-password', {
+    method: 'POST',
+    body: {
+      email: email.value,
+    },
+    onResponseError({ response }) {
+      errors.value = response._data.errors || {}
+      console.log(response._data)
+    },
+  })
 
-    console.log(res)
-    await nextTick(() => {
-      router.push({ name: 'send-password-email', query: { email: email.value } })
-    })
-  }
-  catch (err) {
-    console.error(err)
-  }
+  userStore.toast.success(res.message)
+
+  await nextTick(() => {
+    router.push({ name: 'send-password-email', query: { email: email.value } })
+  })
 }
 
 const onSubmit = () => {
@@ -133,6 +131,7 @@ const onSubmit = () => {
                   type="email"
                   :rules="[requiredValidator, emailValidator]"
                   :error-messages="errors.email"
+                  @update:model-value="errors.email = undefined"
                 />
               </VCol>
 

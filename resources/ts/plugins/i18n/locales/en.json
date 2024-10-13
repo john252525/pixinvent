@@ -456,7 +456,9 @@
     "email": "Email",
     "enter-email": "Enter your email and we'll send you instructions to reset your password",
     "forgot-password": "Forgot Password?",
-    "login": "Login",
+    "login": {
+      "welcome-message": "Enter your details"
+    },
     "logout": "Logout",
     "name": "Login name",
     "new-password": "New Password",

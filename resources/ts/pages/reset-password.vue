@@ -3,6 +3,7 @@ import authV1BottomShape from '@images/svg/auth-v1-bottom-shape.svg?raw'
 import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+import { router } from '@/plugins/1.router'
 
 definePage({
   meta: {
@@ -14,28 +15,45 @@ definePage({
 const route = useRoute()
 
 const form = ref({
-  newPassword: '',
-  confirmPassword: '',
+  password: '',
+  password_confirmation: '',
 })
 
+const userStore = useUserStore()
 const refRestPassword = ref()
 const isPasswordVisible = ref(false)
 const isConfirmPasswordVisible = ref(false)
 const loading = ref(false)
+const errors = ref({
+  password: undefined,
+  password_confirmation: undefined,
+})
 
 const resetPassword = () => {
-  refRestPassword.value.validate().then(async ({ valid: isValid }) => {
+  refRestPassword.value.validate().then(async ({ valid: isValid }: { valid: boolean }) => {
     if(isValid) {
-      const result = await $api('/set-new-password', {
+      await $api('/user/auth/set-new-password', {
         method: 'POST',
-        query: {
-          email: route.params?.email,
-          token: route.params?.token,
-          password: form.value.newPassword,
-          password_confirmation: form.value.confirmPassword,
+        body: {
+          email: route.query.email,
+          token: route.query.token,
+          password: form.value.password,
+          password_confirmation: form.value.password_confirmation,
         },
+        onResponseError({ response }) {
+          errors.value = response?._data.password ?? response?._data.message
+        },
+        onResponse({ response}) {
+          console.log(router)
+          if(response.status === 200) {
+            errors.value = response?._data.errors
+            userStore.toast.success(response?._data.message)
+            router.push({ name: 'login' })
+          } else {
+            userStore.toast.error(response?._data.message)
+          }
+        }
       })
-      console.log(result)
     }
   })
 }
@@ -93,12 +111,14 @@ const resetPassword = () => {
               <!-- password -->
               <VCol cols="12">
                 <VTextField
-                  v-model="form.newPassword"
+                  v-model="form.password"
                   autofocus
                   :label="$t('auth.new-password')"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
-                  :rules="[requiredValidator, lengthValidator(form.newPassword, 6), confirmedValidator(form.newPassword, form.confirmPassword)]"
+                  :rules="[requiredValidator, lengthValidator(form.password, 8), confirmedValidator(form.password, form.password_confirmation)]"
+                  :error-messages="errors.password"
+                  @update:model-value="errors.password = errors.password_confirmation = undefined"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
               </VCol>
@@ -106,11 +126,12 @@ const resetPassword = () => {
               <!-- Confirm Password -->
               <VCol cols="12">
                 <VTextField
-                  v-model="form.confirmPassword"
+                  v-model="form.password_confirmation"
                   :label="$t('auth.confirm-password')"
                   :type="isConfirmPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isConfirmPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
-                  :rules="[requiredValidator, confirmedValidator(form.newPassword, form.confirmPassword)]"
+                  :rules="[requiredValidator, confirmedValidator(form.password, form.password_confirmation)]"
+                  :error-messages="errors.password_confirmation"
                   @click:append-inner="isConfirmPasswordVisible = !isConfirmPasswordVisible"
                 />
               </VCol>

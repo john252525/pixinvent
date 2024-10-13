@@ -10,11 +10,13 @@ Route::middleware('auth:sanctum')->get('/', function (Request $request) {
 });
 
 /** Authentication Routes... */
-Route::prefix('auth')->group(function () {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
-    Route::post('reset-password', [AuthController::class, 'resetPassword']);
+Route::prefix('auth')->controller(AuthController::class)->group(function () {
+    Route::post('login', 'login');
+    Route::post('register', 'register');
+    Route::post('forgot-password', 'forgotPassword');
+    Route::post('reset-password', 'resetPassword');
+    Route::post('set-new-password', 'resetPassword')->name('password.update');
+
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 

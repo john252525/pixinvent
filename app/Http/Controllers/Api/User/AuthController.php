@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 
 class AuthController extends Controller
@@ -68,14 +69,14 @@ class AuthController extends Controller
 
     public function forgotPassword(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $request->validate(['email' => 'required|email|exists:users']);
 
         $status = Password::sendResetLink(
             $request->only('email')
         );
 
         if ($status === Password::INVALID_USER) {
-            return response()->json(['message' => 'Пользователь не найден'], 404);
+            return response()->json(['errors' => ['email' => 'Пользователь не найден']], 403);
         }
 
         return response()->json(['message' => 'Ссылка на восстановление пароля отправлена на вашу почту'], 201);
@@ -85,8 +86,8 @@ class AuthController extends Controller
     {
         $request->validate([
             'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed|min:8',
+            'email' => 'required|email|exists:users',
+            'password' => 'required|confirmed|min:6',
             'password_confirmation' => 'required',
         ]);
 
@@ -95,7 +96,7 @@ class AuthController extends Controller
             function ($user, $password) {
                 $user->forceFill([
                     'password' => Hash::make($password),
-                ])->setRememberToken(\Str::random(60));
+                ])->setRememberToken(Str::random(60));
 
                 $user->save();
 
@@ -106,7 +107,7 @@ class AuthController extends Controller
         if ($status === Password::INVALID_USER) {
             return response()->json(['message' => 'Пользователь не найден'], 404);
         } elseif ($status === Password::INVALID_TOKEN) {
-            return response()->json(['message' => 'Неправильный токен'], 400);
+            return response()->json(['message' => 'Неправильный токен'], 402);
         }
 
         return response()->json(['message' => 'Пароль успешно изменен']);
