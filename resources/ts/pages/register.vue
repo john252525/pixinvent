@@ -6,6 +6,7 @@ import { themeConfig } from '@themeConfig'
 import LangSwitcherI18n from '@core/components/I18n.vue'
 import type { ThemeSwitcherTheme } from '@layouts/types'
 import { VForm } from 'vuetify/components/VForm'
+import {useUserStore} from "@/stores/UserStore";
 
 definePage({
   meta: {
@@ -64,13 +65,16 @@ const register = async () => {
       },
     })
 
-    const { accessToken, userData, userAbilityRules } = res
+    const userStore = useUserStore()
+    const { accessToken, userData, userAbilityRules, notifications, settings } = res
 
     ability.update(userAbilityRules)
 
     useCookie('userAbilityRules').value = userAbilityRules
     useCookie('userData').value = userData
     useCookie('accessToken').value = accessToken
+
+    userStore.$patch({ accessToken, userData, userAbilityRules, notifications, settings })
 
     // Redirect to `to` query if exist or redirect to index route
     // ❗ nextTick is required to wait for DOM updates and later redirect

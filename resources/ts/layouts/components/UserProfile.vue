@@ -14,7 +14,7 @@ const logout = () => {
 const userProfileList = [
   { type: 'divider' },
 
-  // { type: 'navItem', icon: 'tabler-user', title: 'Profile', to: { name: 'apps-user-view-id', params: { id: 21 } } },
+  // { type: 'navItem', icon: 'mdi-email-arrow-right-outline', title: 'Send activation email', to: { name: 'verification-email' } },
   // { type: 'navItem', icon: 'tabler-settings', title: 'Settings', to: { name: 'pages-account-settings-tab', params: { tab: 'account' } } },
   // { type: 'navItem', icon: 'tabler-file-dollar', title: 'Billing Plan', to: { name: 'pages-account-settings-tab', params: { tab: 'billing-plans' } }, badgeProps: { color: 'error', content: '4' } },
   // { type: 'divider' },
@@ -88,7 +88,7 @@ const userProfileList = [
                   {{ userData.fullName || userData.username }}
                 </h6>
                 <VListItemSubtitle class="text-capitalize text-disabled">
-                  {{ userData.role }}
+                  {{ $t(`role.${userData.role}`) }}
                 </VListItemSubtitle>
               </div>
             </div>

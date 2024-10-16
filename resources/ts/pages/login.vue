@@ -60,9 +60,9 @@ const login = async () => {
       },
     })
 
-    const { accessToken, userData, userAbilityRules } = res
+    const { accessToken, userData, userAbilityRules, notifications, settings } = res
 
-    userStore.$patch({ accessToken, userData, userAbilityRules })
+    userStore.$patch({ accessToken, userData, userAbilityRules, notifications, settings })
 
     useCookie('userAbilityRules').value = userAbilityRules
     ability.update(userAbilityRules)
@@ -189,7 +189,7 @@ const onSubmit = () => {
                   block
                   type="submit"
                 >
-                  {{ $t('auth.login') }}
+                  {{ $t('auth.login.btn') }}
                 </VBtn>
               </VCol>
 

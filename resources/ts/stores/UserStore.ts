@@ -1,5 +1,4 @@
-import { useAccountsStore } from './AccountsStore'
-import { router } from '@/plugins/1.router'
+import {useAccountsStore} from './AccountsStore'
 
 export const useUserStore = defineStore('user-store', () => {
   const userData = ref({
@@ -11,6 +10,8 @@ export const useUserStore = defineStore('user-store', () => {
   const toast = ref()
   const ability = useAbility()
   const accessToken = useCookie('accessToken')
+  const notifications = ref([])
+  const settings = ref([])
 
   const userSettings = ref({})
   const userAbilityRules = ref([])
@@ -22,16 +23,19 @@ export const useUserStore = defineStore('user-store', () => {
   }
 
   function fetchUserData(updateAbilities = false) {
-    $api('/user', {
-      onResponseError({ response }) {
-        if(response.status === 401) {
+    return $api('/user', {
+      onResponseError({response}) {
+        if (response.status === 401) {
           clearAllData()
         }
       },
-      onResponse({ response }) {
+      onResponse({response}) {
         userData.value = response._data.userData
         userAbilityRules.value = response._data.userAbilityRules
-        if(updateAbilities)
+        notifications.value = response._data.notifications
+        settings.value = response._data.settings
+
+        if (updateAbilities)
           setAbilities(userAbilityRules.value)
       }
     })
@@ -67,12 +71,12 @@ export const useUserStore = defineStore('user-store', () => {
     })
   }
 
-  onMounted( () => {
-    /*if(accessToken.value) {
-      fetchUserData().then(() => {
+  onMounted( async () => {
+    if(accessToken.value) {
+      await fetchUserData().then(() => {
         setAbilities(userAbilityRules.value)
       })
-    }*/
+    }
   })
 
   return {
@@ -81,6 +85,8 @@ export const useUserStore = defineStore('user-store', () => {
     userAbilityRules,
     ability,
     toast,
+    notifications,
+    settings,
 
     // 👉 getters
 

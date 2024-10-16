@@ -453,12 +453,17 @@
     "confirm-password": "Confirm password",
     "create-account": "Create an account",
     "didnt-get-email": "Didn't get the mail?",
-    "email": "Email",
+    "email": {
+      "not-verified": "Email not confirmed",
+      "verified": "Email successfully confirmed"
+    },
     "enter-email": "Enter your email and we'll send you instructions to reset your password",
     "forgot-password": "Forgot Password?",
     "login": {
-      "welcome-message": "Enter your details"
+      "btn": "Logging in",
+      "welcome-message": "Enter your details to continue"
     },
+    "login-btn": "Authorization",
     "logout": "Logout",
     "name": "Login name",
     "new-password": "New Password",
@@ -512,6 +517,16 @@
       "logs": "Logs/Errors"
     }
   },
+  "norifications": {
+    "mark-all-read": "Mark all as read",
+    "mark-all-unread": "Mark all as unread",
+    "new": "New"
+  },
+  "notifications": {
+    "no-notifications": "No Notifications Found!",
+    "title": "Notifications",
+    "view-all": "Delete all"
+  },
   "payments": {
     "transactions": {
       "amount": "Amount",
@@ -552,12 +567,16 @@
       "updated": "updated"
     }
   },
+  "role": {
+    "admin": "Administrator"
+  },
   "roles": "Roles",
   "stateOffline": "Offline",
   "system": "system",
   "text": {
     "copied-to-clipboard": "Copied to clipboard",
-    "title-not-defined": "Page title not set"
+    "title-not-defined": "Page title not set",
+    "to-home": "Go to home"
   },
   "vuexy": "Vuexy",
   "Код авторизации получен": "Authorization code received"

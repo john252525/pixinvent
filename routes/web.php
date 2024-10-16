@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\User\VerifyEmailController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -26,6 +28,16 @@ Route::get('auth/password/reset', function () {
         'token' => request()->token,
     ]);
 })->name('password.reset');
+
+Route::post('verify-email/{id}/{hash}', VerifyEmailController::class)
+    ->middleware(['auth:sanctum', 'signed'/*, 'throttle:6,1'*/])
+    ->name('verification.verify');
+
+Route::get('/verify-email', function () {
+    return view('application');
+})->name('verification.notice');
+
+Route::get('verify-email/{id}/{hash}', fn () => view('application'))->name('verification.verify');
 
 Route::get('{any?}', function () {
     return view('application');

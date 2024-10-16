@@ -12,7 +12,7 @@ trait UseVuexyHelper
     {
         if (! $this->external_token) {
             $connector = new ExternalTokenConnector;
-            $request = new ExternalTokenGate;
+            $request = new ExternalTokenGate(user_id: $this->id);
 
             try {
                 $response = $connector->send($request);
@@ -40,6 +40,20 @@ trait UseVuexyHelper
 
         $subjects = array_column($userAbilityRules, 'subject');
 
+        $notifications = [];
+
+        if (! $this->email_verified_at) {
+            $notifications[] = [
+                'id' => 1,
+                'icon' => 'mdi:email-check-outline',
+                'title' => 'Требуется подтверждение почты',
+                'subtitle' => 'Нажмите на это сообщение что бы подтвердить почту',
+                'time' => $this->created_at->calendar(),
+                'isSeen' => false,
+                'to' => ['name' => 'verification-email'],
+            ];
+        }
+
         $role = match (true) {
             in_array('all', $subjects) => 'sadmin',
             in_array('admin', $subjects) => 'admin',
@@ -60,6 +74,10 @@ trait UseVuexyHelper
                 'role' => $role,
                 'balance' => $this->balance,
             ],
+            'settings' => [
+                'email_verified_at' => $this->email_verified_at,
+            ],
+            'notifications' => $notifications,
         ];
     }
 

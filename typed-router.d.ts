@@ -37,6 +37,7 @@ declare module 'vue-router/auto-routes' {
     'reset-password': RouteRecordInfo<'reset-password', '/reset-password', Record<never, never>, Record<never, never>>,
     'send-password-email': RouteRecordInfo<'send-password-email', '/send-password-email', Record<never, never>, Record<never, never>>,
     'settings': RouteRecordInfo<'settings', '/settings', Record<never, never>, Record<never, never>>,
-    'verify-email': RouteRecordInfo<'verify-email', '/verify-email', Record<never, never>, Record<never, never>>,
+    'verification-email': RouteRecordInfo<'verification-email', '/verification-email', Record<never, never>, Record<never, never>>,
+    'verify-email-id-hash': RouteRecordInfo<'verify-email-id-hash', '/verify-email/:id/:hash', { id: ParamValue<true>, hash: ParamValue<true> }, { id: ParamValue<false>, hash: ParamValue<false> }>,
   }
 }

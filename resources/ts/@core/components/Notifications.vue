@@ -11,6 +11,7 @@ interface Emit {
   (e: 'read', value: number[]): void
   (e: 'unread', value: number[]): void
   (e: 'remove', value: number): void
+  (e: 'remove-all', value: number): void
   (e: 'click:notification', value: Notification): void
 }
 
@@ -70,7 +71,7 @@ const toggleReadUnread = (isSeen: boolean, Id: number) => {
         <!-- 👉 Header -->
         <VCardItem class="notification-section">
           <VCardTitle class="text-h6">
-            Notifications
+            {{ $t('notifications.title') }}
           </VCardTitle>
 
           <template #append>
@@ -80,7 +81,7 @@ const toggleReadUnread = (isSeen: boolean, Id: number) => {
               color="primary"
               class="me-2"
             >
-              {{ totalUnseenNotifications }} New
+              {{ $t('norifications.new', totalUnseenNotifications) }}
             </VChip>
             <IconBtn
               v-show="props.notifications.length"
@@ -97,7 +98,7 @@ const toggleReadUnread = (isSeen: boolean, Id: number) => {
                 activator="parent"
                 location="start"
               >
-                {{ !isAllMarkRead ? 'Mark all as unread' : 'Mark all as read' }}
+                {{ !isAllMarkRead ? $t('norifications.mark-all-unread') : $t('norifications.mark-all-read') }}
               </VTooltip>
             </IconBtn>
           </template>
@@ -121,7 +122,6 @@ const toggleReadUnread = (isSeen: boolean, Id: number) => {
                 lines="one"
                 min-height="66px"
                 class="list-item-hover-class"
-                @click="$emit('click:notification', notification)"
               >
                 <!-- Slot: Prepend -->
                 <!-- Handles Avatar: Image, Icon, Text -->
@@ -141,7 +141,7 @@ const toggleReadUnread = (isSeen: boolean, Id: number) => {
                     />
                   </VAvatar>
 
-                  <div>
+                  <div @click="$emit('click:notification', notification)">
                     <p class="text-sm font-weight-medium mb-1">
                       {{ notification.title }}
                     </p>
@@ -186,7 +186,7 @@ const toggleReadUnread = (isSeen: boolean, Id: number) => {
               class="text-center text-medium-emphasis"
               style="block-size: 56px;"
             >
-              <VListItemTitle>No Notification Found!</VListItemTitle>
+              <VListItemTitle>{{ $t('notifications.no-notifications') }}</VListItemTitle>
             </VListItem>
           </VList>
         </PerfectScrollbar>
@@ -201,8 +201,9 @@ const toggleReadUnread = (isSeen: boolean, Id: number) => {
           <VBtn
             block
             size="small"
+            @click="$emit('remove-all')"
           >
-            View All Notifications
+            {{ $t('notifications.view-all') }}
           </VBtn>
         </VCardText>
       </VCard>

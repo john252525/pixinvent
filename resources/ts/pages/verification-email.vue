@@ -9,11 +9,13 @@ import LangSwitcherI18n from '@core/components/I18n.vue'
 definePage({
   meta: {
     layout: 'blank',
-    unauthenticatedOnly: true,
+    subject: 'user',
+    action: 'read'
   },
 })
 
 const route = useRoute('verify-email')
+const userStore = useUserStore()
 
 const themes: ThemeSwitcherTheme[] = [
   {
@@ -31,10 +33,18 @@ const themes: ThemeSwitcherTheme[] = [
 ]
 
 const email = computed(() => {
-  return route.query.email as string || 'No email provided';
+  return userStore.userData.email as string || 'No email provided';
 });
 
-onMounted(() => console.log(email.value))
+const sendVerificationEmail = async () => {
+  const result = await $api('/user/auth/verify-email', { method: 'POST' })
+  userStore.toast.success(result.message)
+}
+
+onMounted(async () => {
+  await sendVerificationEmail()
+})
+
 </script>
 
 <template>
@@ -56,6 +66,7 @@ onMounted(() => console.log(email.value))
       <VCard
         class="auth-card"
         max-width="460"
+        height="500"
         :class="$vuetify.display.smAndUp ? 'pa-6' : 'pa-2'"
       >
 
@@ -79,29 +90,31 @@ onMounted(() => console.log(email.value))
           </VCardTitle>
         </VCardItem>
 
-        <VCardText>
-          <h4 class="text-h4 mb-1">
+        <VCardText style="height: 120px;">
+          <h4 class="text-h4 mb-10">
             {{ $t('auth.verify-email-title') }}️
           </h4>
-          <p class="text-body-1 mb-0">
+          <p class="text-body-1">
             {{ $t('auth.account-activation-link') }}
             <span class="font-weight-medium text-high-emphasis">{{ email }}</span>
             {{ $t('auth.password-reset-follow') }}
           </p>
+
+          <VSpacer class="h-100" />
 
           <VBtn
             block
             to="/"
             class="my-5"
           >
-            {{ $t('Skip for now') }}
+            {{ $t('auth.skip-for-now') }}
           </VBtn>
 
           <div class="d-flex align-center justify-center">
             <span class="me-1">{{ $t("auth.didnt-get-email") }} </span>
-            <RouterLink :to="{ name: 'forgot-password' }">
+            <VBtn variant="text" @click="sendVerificationEmail">
               {{ $t('auth.resend') }}
-            </RouterLink>
+            </VBtn>
           </div>
         </VCardText>
       </VCard>

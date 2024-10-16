@@ -17,6 +17,12 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('reset-password', 'resetPassword');
     Route::post('set-new-password', 'resetPassword')->name('password.update');
 
+    Route::post('verify-email', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+
+        return response()->json(['message' => __('Verification link sent!')]);
+    })->middleware('auth:sanctum', 'throttle:6,1')->name('verification.send');
+
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 

@@ -12,6 +12,7 @@ import NavbarUserBalance from '@/layouts/components/NavbarUserBalance.vue'
 // @layouts plugin
 import { VerticalNavLayout } from '@layouts'
 import AddAccounts from '@/views/user/accounts/AddAccounts.vue'
+import NavBarNotifications from "@/layouts/components/NavBarNotifications.vue";
 </script>
 
 <template>
@@ -47,7 +48,7 @@ import AddAccounts from '@/views/user/accounts/AddAccounts.vue'
         />
         <NavbarThemeSwitcher />
         <!--NavbarShortcuts /-->
-        <!-- NavBarNotifications class="me-1" /-->
+        <NavBarNotifications class="me-1" />
         <UserProfile />
       </div>
     </template>
