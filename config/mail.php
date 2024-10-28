@@ -95,6 +95,9 @@ return [
             ],
         ],
 
+        'webhook' => [
+            'transport' => 'webhook',
+        ],
     ],
 
     /*
