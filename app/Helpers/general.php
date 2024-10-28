@@ -63,3 +63,17 @@ if (! function_exists('put_money')) {
         return $amount * 100;
     }
 }
+
+if (! function_exists('mail_from_domain')) {
+
+    function mail_from_domain(): string {
+        $data = config('email_by_domain');
+        $domain = request()->host();
+
+        if (array_key_exists($domain, $data)) {
+            return $data[$domain];
+        }
+
+        throw new Exception('Domain doesnt exist');
+    }
+}
