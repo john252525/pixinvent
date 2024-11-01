@@ -379,6 +379,9 @@
         "show_code": "Show authorization code",
         "show_qr_code": "Show QR code",
         "solve_challenge": "Enter password"
+      },
+      "menu": {
+        "tooltip": "Actions"
       }
     },
     "whatsapp": {
@@ -387,6 +390,9 @@
           "title": "Code confirmation"
         }
       },
+      "menu": {
+        "tooltip": "Actions"
+      }, 
       "auth-code-column-text": "Auth code column text",
       "force-stop": "Force Stop",
       "method": {
@@ -454,6 +460,7 @@
     "create-account": "Create an account",
     "didnt-get-email": "Didn't get the mail?",
     "email": {
+      "default": "Email",
       "not-verified": "Email not confirmed",
       "verified": "Email successfully confirmed"
     },
@@ -568,7 +575,8 @@
     }
   },
   "role": {
-    "admin": "Administrator"
+    "admin": "Administrator",
+    "accounts": "Client"
   },
   "roles": "Roles",
   "stateOffline": "Offline",
