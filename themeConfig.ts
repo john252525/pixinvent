@@ -8,9 +8,28 @@ import logo from '@images/logo.svg?raw'
 
 import { AppContentLayoutNav, ContentWidth, FooterType, NavbarType } from '@layouts/enums'
 
+const hostname = window.location.hostname;
+let title = '';
+
+if (hostname === import.meta.env.VITE_DOMAIN_SETTINGS) {
+  title = import.meta.env.VITE_SETTINGS_NAME;
+}
+
+if (hostname === import.meta.env.VITE_DOMAIN_ACCOUNTS) {
+  title = import.meta.env.VITE_ACCOUNTS_NAME;
+}
+
+if (hostname === import.meta.env.VITE_DOMAIN_BINDER) {
+  title = import.meta.env.VITE_BINDER_NAME;
+}
+
+if (hostname === import.meta.env.VITE_DOMAIN_RESERVED) {
+  title = import.meta.env.VITE_RESERVED_NAME;
+}
+
 export const { themeConfig, layoutConfig } = defineThemeConfig({
   app: {
-    title: window.location.hostname.toLowerCase() as Lowercase<string>,
+    title: title as Lowercase<string>,
     logo: h('div', { innerHTML: logo, style: 'line-height:0; color: rgb(var(--v-global-theme-primary))' }),
     contentWidth: ContentWidth.Boxed,
     contentLayoutNav: AppContentLayoutNav.Vertical,
