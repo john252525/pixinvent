@@ -68,13 +68,17 @@ class SourceService
         $login = $request->input('account.login');
         $this->actions[] = 'add-account';
 
-        $this->http->post($this->endpoint.'addAccount', [
+        $account = $this->http->post($this->endpoint.'addAccount', [
             'token' => $this->token,
             'source' => $source,
             'login' => $login,
-        ]);
+        ])->json();
 
         $this->setState($request, $source);
+
+        if (isset($account['error'])) {
+            return $account;
+        }
 
         return $this->getInfo($request, $source);
     }

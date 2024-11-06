@@ -118,9 +118,9 @@ defineExpose({ isActive })
             />
           </VCardItem>
 
-          <VCardText>
+          <!-- <VCardText>
             {{ $t('accounts.add.text') }}
-          </VCardText>
+          </VCardText> -->
         </VCard>
 
         <VDivider></VDivider>
