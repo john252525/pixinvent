@@ -9,6 +9,7 @@ const userStore = useUserStore()
   <VBtn
     variant="outlined"
     size="small"
+    class="userBalance"
     @click="() => userStore.fetchUserData()"
   >{{ toMoney(userStore.userData?.balance || 0) }}</VBtn>
 </template>

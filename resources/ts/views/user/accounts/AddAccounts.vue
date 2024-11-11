@@ -113,6 +113,7 @@ const addAccount = async (isDialogActive) => {
         variant="flat"
         color="primary"
         density="compact"
+        class="addAccountsBtn"
       >
         {{ $t('accounts.add.button.title') }}
       </VBtn>

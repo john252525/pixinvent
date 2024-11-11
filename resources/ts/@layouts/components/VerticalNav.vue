@@ -7,6 +7,7 @@ import { VerticalNavGroup, VerticalNavLink, VerticalNavSectionTitle } from '@lay
 import { useLayoutConfigStore } from '@layouts/stores/config'
 import { injectionKeyIsVerticalNavHovered } from '@layouts/symbols'
 import type { NavGroup, NavLink, NavSectionTitle, VerticalNavItems } from '@layouts/types'
+import AddAccounts from "@/views/user/accounts/AddAccounts.vue";
 
 interface Props {
   tag?: string | Component
@@ -123,6 +124,9 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
       name="nav-items"
       :update-is-vertical-nav-scrolled="updateIsVerticalNavScrolled"
     >
+      <div class="accountsBtnWrapper" style="margin: 10px 0; padding: 0 12px; display: none;">
+        <AddAccounts></AddAccounts>
+      </div>
       <PerfectScrollbar
         :key="configStore.isAppRTL"
         tag="ul"
@@ -234,6 +238,22 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
     }
 
     transition: transform 0.25s ease-in-out;
+  }
+}
+
+@media(max-width: 550px) {
+  .accountsBtnWrapper {
+    display: flex !important;
+    flex-direction: column;
+  }
+  .navbar-content-container .addAccountsBtn {
+    display: none;
+  }
+}
+
+@media (max-width: 370px) {
+  .navbar-content-container .userBalance {
+    padding: 0 !important;
   }
 }
 </style>
