@@ -96,7 +96,7 @@ const resetState = () => {
       temporary
       width="350"
       location="right"
-      absolute
+      fixed
       class="account-settings-drawer"
     >
       <VCardItem class="px-3">
