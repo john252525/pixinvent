@@ -51,3 +51,13 @@ Route::group(['prefix' => 'sources', 'middleware' => 'auth:sanctum'], function (
     Route::post('{source}/clear-session', [\App\Http\Controllers\Api\User\SourcesController::class, 'clearSessionAction']);
 });
 
+Route::group(['prefix' => 'mailing', 'middleware' => 'auth:sanctum', 'controller' => MailingController::class], function () {
+    Route::get('get', 'index')->name('get');
+    Route::get('get-messages/{id}', 'getMessages');
+    Route::get('edit-status/{id}/{state_id}', 'editStatus');
+    Route::get('get-user/{user}', 'getUser');
+    Route::delete('delete/{id}', 'destroy')->name('delete');
+
+    Route::post('create', 'store');
+    Route::post('edit', 'edit');
+});

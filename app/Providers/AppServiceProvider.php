@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Mail\Driver\WebhookDriver;
 use App\Models\User;
+use App\Services\WhatsApiService;
+use GuzzleHttp\Client;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Mail\MailManager;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +17,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind('whatsapi', function () {
+            return new WhatsApiService(
+                client: new Client(),
+                endpoint: config('services.api_gate.whatsapi_data_url'),
+                token: config('services.whatsapi.token')
+            );
+        });
     }
 
     /**
@@ -30,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app[MailManager::class]->extend('webhook', function () {
-            return new WebhookDriver(env('MAIL_WEBHOOK', 'https://webhook.site/ae784e48-6776-4436-a712-9371f05e4493'));
+            return new WebhookDriver(env('MAIL_WEBHOOK'));
         });
     }
 }

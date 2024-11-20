@@ -43,10 +43,16 @@ return [
     'telegram-bot-api' => [
         'token' => env('TELEGRAM_BOT_TOKEN'),
     ],
+
+    'whatsapi' => [
+        'token' => env('WHATSAPI_TOKEN'),
+    ],
+
     'api_gate' => [
         'external_token_url' => env('EXTERNAL_TOKEN_URL'),
         'external_token_key' => env('EXTERNAL_TOKEN_KEY'),
         'sources_data_url' => env('SOURCES_DATA_URL'),
         'binder_data_url' => env('BINDER_DATA_URL'),
+        'whatsapi_data_url' => env('WHATSAPI_DATA_URL'),
     ],
 ];

@@ -91,6 +91,7 @@
   "CRM": "CRM",
   "Calendar": "Calendar",
   "Can not update QR": "Can not update QR",
+  "Save": "Save",
   "Cancel": "Cancel",
   "Cards": "Cards",
   "Category": "Category",
@@ -586,6 +587,53 @@
     "title-not-defined": "Page title not set",
     "to-home": "Go to home"
   },
+  "Mailings": "Mailings",
+  "Mailing List": "Mailing List",
+  "mailings": {
+    "settings": {
+      "title": "Mailings Settings"
+    },
+    "create": {
+      "title": "Create Mailing"
+    },
+    "inputs": {
+      "name": "Enter the name of the mailing list",
+      "contact-list": "Contact List (each contact starts from a new line)",
+      "ph-col": "The column with the phone number (A-Z) (Default: A)",
+      "contact-list-by-file": "Contact list by file (xls(x), csv, txt)",
+      "text": "The text of the message",
+      "attach": "An image or other attached file (jpeg, jpg, gif, png, pdf, doc(x), xls(x))",
+      "days": "Weekdays  (1 - Monday, 7 - Sunday) (Default: 1, 2, 3, 4, 5)",
+      "min-time": "Min time for send (Default: 10:00)",
+      "max-time": "Max time for send (Default: 17:00)",
+      "timezone": "Time zone (Default: +3)",
+      "min-delay": "Min delay for send sec. (Default: 900 sec.)",
+      "max-delay": "Max delay for send sec. (Default: 2700 sec.)",
+      "delete-duplicates": "Delete duplicates (Default: true)",
+      "exist": "Sending only for existing dialogs (Default: true)",
+      "random": "Randomize the order of sending messages (Default: false)",
+      "order": "The order of sending (separated by commas: telegram,whatsapp,sms) (Default: whatsapp)",
+      "cascade": "The order of sending (separated by commas: telegram,whatsapp,sms) (Default: whatsapp)"
+    }
+  },
+  "days": {
+    "mon": "Mon.",
+    "tue": "Tue.",
+    "wed": "Wed.",
+    "thur": "Thur.",
+    "fri": "Friday",
+    "sat": "Sat.",
+    "sun": "Sun."
+  },
   "vuexy": "Vuexy",
-  "Код авторизации получен": "Authorization code received"
+  "Код авторизации получен": "Authorization code received",
+  "Weekdays": "Weekdays",
+  "Time": "Time",
+  "Delay": "Delay",
+  "Title": "Title",
+  "Date Create": "Date Create",
+  "On": "On",
+  "Off": "Off",
+  "Connecting...": "Connecting...",
+  "Disconnecting...": "Disconnecting..."
 }

@@ -17,51 +17,51 @@ import NavBarNotifications from "@/layouts/components/NavBarNotifications.vue";
 
 <template>
   <VerticalNavLayout :nav-items="navItems">
-    <!-- 👉 navbar -->
-    <template #navbar="{ toggleVerticalOverlayNavActive }">
-      <div class="d-flex h-100 align-center gap-1">
-        <IconBtn
-          id="vertical-nav-toggle-btn"
-          class="ms-n3 d-lg-none"
-          @click="toggleVerticalOverlayNavActive(true)"
-        >
-          <VIcon
-            size="26"
-            icon="tabler-menu-2"
-          />
-        </IconBtn>
-
-        <!--NavSearchBar class="ms-lg-n3" /-->
-
-        <VSpacer />
-
-        <AddAccounts
-          v-if="$can('read', 'binder')"
-          class="mr-2"
+  <!-- 👉 navbar -->
+  <template #navbar="{ toggleVerticalOverlayNavActive }">
+    <div class="d-flex h-100 align-center gap-1">
+      <IconBtn
+        id="vertical-nav-toggle-btn"
+        class="ms-n3 d-lg-none"
+        @click="toggleVerticalOverlayNavActive(true)"
+      >
+        <VIcon
+          size="26"
+          icon="tabler-menu-2"
         />
+      </IconBtn>
 
-        <NavbarUserBalance />
+      <!--NavSearchBar class="ms-lg-n3" /-->
 
-        <NavBarI18n
-          v-if="themeConfig.app.i18n.enable && themeConfig.app.i18n.langConfig?.length"
-          :languages="themeConfig.app.i18n.langConfig"
-        />
-        <NavbarThemeSwitcher />
-        <!--NavbarShortcuts /-->
-        <NavBarNotifications class="me-1" />
-        <UserProfile />
-      </div>
-    </template>
+      <VSpacer />
 
-    <!-- 👉 Pages -->
-    <slot />
+      <AddAccounts
+        v-if="$can('read', 'binder')"
+        class="mr-2"
+      />
 
-    <!-- 👉 Footer -->
-    <template #footer>
-      <Footer />
-    </template>
+      <NavbarUserBalance />
 
-    <!-- 👉 Customizer -->
-    <TheCustomizer />
-  </VerticalNavLayout>
+      <NavBarI18n
+        v-if="themeConfig.app.i18n.enable && themeConfig.app.i18n.langConfig?.length"
+        :languages="themeConfig.app.i18n.langConfig"
+      />
+      <NavbarThemeSwitcher />
+      <!--NavbarShortcuts /-->
+      <NavBarNotifications class="me-1" />
+      <UserProfile />
+    </div>
+  </template>
+
+  <!-- 👉 Pages -->
+  <slot />
+
+  <!-- 👉 Footer -->
+  <template #footer>
+    <Footer />
+  </template>
+
+  <!-- 👉 Customizer -->
+  <TheCustomizer />
+</VerticalNavLayout>
 </template>

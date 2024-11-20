@@ -12,6 +12,13 @@ export default [
     action: 'read',
   },
   {
+    title: 'Mailings',
+    icon: { icon: 'mdi:email-multiple' },
+    to: 'mailing',
+    subject: 'mailing',
+    action: 'read',
+  },
+  {
     title: 'Settings',
     icon: { icon: 'mdi:settings-outline' },
     to: { name: 'settings' },

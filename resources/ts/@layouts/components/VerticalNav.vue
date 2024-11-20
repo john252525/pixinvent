@@ -125,7 +125,7 @@ const hideTitleAndIcon = configStore.isVerticalNavMini(isHovered)
       :update-is-vertical-nav-scrolled="updateIsVerticalNavScrolled"
     >
       <div class="accountsBtnWrapper" style="margin: 10px 0; padding: 0 12px; display: none;">
-        <AddAccounts></AddAccounts>
+        <AddAccounts/>
       </div>
       <PerfectScrollbar
         :key="configStore.isAppRTL"
