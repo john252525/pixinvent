@@ -44,14 +44,8 @@ const errors = ref({
   random: undefined,
 })
 
-const items = ref({
-  text: 'Да',
-  value: true
-})
-
 const isFormValid = ref(false)
 const refForm = ref<VForm>()
-const lockPassword = ref(true)
 const isPasswordVisible = ref(false)
 
 const mailingStore = useMailingStore();

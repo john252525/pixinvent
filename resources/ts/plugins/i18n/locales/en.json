@@ -596,6 +596,10 @@
     "create": {
       "title": "Create Mailing"
     },
+    "view": {
+      "title": "Mailing Messages",
+      "to": "To"
+    },
     "inputs": {
       "name": "Enter the name of the mailing list",
       "contact-list": "Contact List (each contact starts from a new line)",
@@ -635,5 +639,10 @@
   "On": "On",
   "Off": "Off",
   "Connecting...": "Connecting...",
-  "Disconnecting...": "Disconnecting..."
+  "Disconnecting...": "Disconnecting...",
+  "Messages": "Messages",
+  "Message": "Message",
+  "Delivered": "Delivered",
+  "Yes": "Yes",
+  "No": "No"
 }

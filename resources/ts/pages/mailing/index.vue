@@ -12,7 +12,7 @@ import {useMailingStore} from "@/stores/MailingStore";
 definePage({
   meta: {
     action: 'read',
-    subject: 'mailing',
+    subject: 'user',
   },
 })
 

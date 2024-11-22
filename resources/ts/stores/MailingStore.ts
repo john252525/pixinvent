@@ -1,5 +1,6 @@
 import { getI18n } from "@/plugins/i18n";
 import { MailingClient } from "@/stores/types/mailing";
+import {FetchContext, FetchResponse} from "ofetch";
 
 const { t } = getI18n().global
 
@@ -22,19 +23,41 @@ export const useMailingStore = defineStore('mailing-store', () => {
   const weekDays = [t('days.mon'), t('days.tue'), t('days.wed'), t('days.thur'), t('days.fri'), t('days.sat'), t('days.sun')];
 
   async function getMailings() {
+    let items = [];
+
     loading.value.mailings = true
 
-    await $api(`/user/mailing/get`, {
-      method: 'GET',
-      onResponse: ({ response }) => {
-        mailings.value["items"] = response._data.result.items;
-      },
-      onResponseError({ response }) {
-        console.log(response)
-        getMailings()
-      },
-    })
-    loading.value.mailings = false
+    try {
+      const response = await $api(`/user/mailing/get`)
+
+      items = response.result.items
+
+      await getMailingMessages(items)
+    } catch (error) {
+      console.log(error)
+      await getMailings()
+    } finally {
+      loading.value.mailings = false
+    }
+  }
+
+  async function getMailingMessages(items)
+  {
+    for (const [index, item] of items.entries()) {
+      try {
+        const response = await $api(`/user/mailing/get-messages/${item.id}`)
+
+        items[index].messages = {
+          count: response.result.count,
+          items: response.result.items,
+        }
+      } catch (error) {
+        console.log(error)
+        await getMailingMessages()
+      }
+    }
+
+    mailings.value["items"] = items
   }
 
   function getMailing(mailing: MailingClient) {
@@ -130,6 +153,7 @@ export const useMailingStore = defineStore('mailing-store', () => {
     getMailings,
     getMailing,
     getMessages,
+    getMailingMessages,
     removeMailing,
     convertToWeekDays,
     getState,

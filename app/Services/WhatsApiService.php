@@ -51,6 +51,10 @@ readonly class WhatsApiService
                     'contents' => $request->base,
                 ],
                 [
+                    'name' => 'text',
+                    'contents' => $request->text,
+                ],
+                [
                     'name' => 'ph_col',
                     'contents' => $request->ph_col,
                 ],
@@ -175,9 +179,9 @@ readonly class WhatsApiService
     {
         $filesData = [];
 
-        if ($files = $request->allFiles()) {
+        if (!empty($files = $request->allFiles())) {
             foreach ($files as $paramName => $file) {
-                $fileName = Str::random() . '.' . $request->file('file_base')->getClientOriginalExtension();
+                $fileName = Str::random() . '.' . $request->file($paramName)->getClientOriginalExtension();
                 $file->storeAs('uploads/files', $fileName);
                 $filesData[$paramName] = [
                     'name' => $fileName,

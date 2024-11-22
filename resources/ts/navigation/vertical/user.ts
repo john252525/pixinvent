@@ -15,7 +15,7 @@ export default [
     title: 'Mailings',
     icon: { icon: 'mdi:email-multiple' },
     to: 'mailing',
-    subject: 'mailing',
+    subject: 'user',
     action: 'read',
   },
   {

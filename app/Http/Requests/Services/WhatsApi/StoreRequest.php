@@ -17,10 +17,10 @@ class StoreRequest extends FormRequest
         return [
             'name' => ['string', 'max:200'],
             'base' => ['required_without:file_base', 'string'],
-            'file_base' => ['required_without:base', 'file', 'mimes:xlsx,xls,csv,txt'],
+            'file_base' => ['nullable', 'file', 'mimes:xlsx,xls,csv,txt'],
             'ph_col' => ['nullable', 'string', 'max:1'],
             'text' => ['required', 'string'],
-            'file_attach' => ['file', 'mimes:jpeg,jpg,gif,png,pdf,doc,docx,xls,xlsx'],
+            'file_attach' => ['nullable', 'file', 'mimes:jpeg,jpg,gif,png,pdf,doc,docx,xls,xlsx'],
             'days' => ['string', 'regex:/^\d+(,\d+)*$/'],
             'days.*' => ['int', 'between:1,7'],
             'time_from' => ['date_format:H:i'],

@@ -1,24 +1,19 @@
 <script lang="ts" setup>
-import { mergeProps } from 'vue'
 import { getI18n } from '@/plugins/i18n'
-import ForceStopComponent from '@/views/user/accounts/telegram/ForceStopComponent.vue'
-import ClearSessionComponent from '@/views/user/accounts/telegram/ClearSessionComponent.vue'
-import ShowTelegramAuthCodeComponent from '@/views/user/accounts/telegram/ShowTelegramAuthCodeComponent.vue'
 import { useAccountsStore } from '@/stores/AccountsStore'
 import { useMailingStore } from '@/stores/MailingStore'
 import type { SortItem } from '@core/types'
 import SettingsDrawerComponent from '@/views/user/mailing/settings/SettingsDrawerComponent.vue'
 import StateSwitch from "@/views/user/mailing/MailingStateSwitch.vue";
-import { MailingClient } from "@/stores/types/mailing";
-import ActionUserDrawer from "@/views/admin/users/ActionUserDrawer.vue";
 import { MailingProperties } from "@/views/user/mailing/types";
-import MailingItems from "@/views/user/mailing/MailingItems.vue";
-import type {VForm} from "vuetify/lib/components/VForm";
+import ViewDrawerComponent from "@/views/user/mailing/settings/ViewDrawerComponent.vue";
 
 const { t } = getI18n().global
 
 const mailingSettingsDrawer = ref(false)
 const isActionMailingDrawerVisible = ref(false)
+const isActionMailingMessagesDrawerVisible = ref(false)
+
 const mailing = ref<MailingProperties>({
   days: '',
   time_from: '',
@@ -49,6 +44,14 @@ const actionMailing = (editedMailing: any = {}) => {
   isActionMailingDrawerVisible.value = true
   document.body.style = 'position: relative;'
 }
+
+const actionMailingMessages = (editedMailing: any = {}) => {
+  mailing.value = editedMailing
+
+  isActionMailingMessagesDrawerVisible.value = true
+  document.body.style = 'position: relative;'
+}
+
 const search = ref()
 
 const updateIsDrawerOpen = (isDrawerOpen: boolean) => {
@@ -73,25 +76,7 @@ const deleteMailing = async (deletedMailing: any) => {
       :headers
       class="text-no-wrap users-table"
     >
-<!--      <template #item.step="{ item }">-->
-<!--        {{ accountsStore.getStep(item) ? $t(accountsStore.getStep(item)?.message ?? 'stateOffline') : $t('stateOffline') }}-->
-<!--      </template>-->
-
-<!--      <template #item.action="{ item }">-->
-<!--        <VListItem v-if="item.step?.value === 0">-->
-<!--          <VListItemSubtitle>Если инициализация аккаунта занимает больше минуты</VListItemSubtitle>-->
-<!--          <VListItemSubtitle>Выключите и снова включите желтый переключатель справа</VListItemSubtitle>-->
-<!--        </VListItem>-->
-<!--        <VListItem>-->
-<!--          <ShowTelegramAuthCodeComponent-->
-<!--            :account="item"-->
-<!--            :key="`show-qr-code-component-${item.login}`"-->
-<!--          />-->
-<!--        </VListItem>-->
-<!--      </template>-->
-
       <template #item.actions="{ item }">
-
 
         <div class="d-flex float-end gap-2 align-center">
 
@@ -105,40 +90,21 @@ const deleteMailing = async (deletedMailing: any) => {
             <VIcon icon="mdi-settings" />
           </IconBtn>
 
+          <IconBtn v-if="item.messages.count !== 0" @click="actionMailingMessages(item)">
+            <VIcon icon="mdi-eye" />
+          </IconBtn>
+
           <VIcon
             size="small"
             @click="deleteMailing(item)"
           >
             mdi-delete
           </VIcon>
-
-<!--          <VMenu transition="fade-transition">-->
-<!--            <template v-slot:activator="{ props: menu }">-->
-<!--              <VTooltip location="top left">-->
-<!--                <template v-slot:activator="{ props: tooltip }">-->
-<!--                  <IconBtn-->
-<!--                    icon="tabler-dots-vertical"-->
-<!--                    v-bind="mergeProps(menu, tooltip)"-->
-<!--                  />-->
-<!--                </template>-->
-<!--                <span>{{ $t('accounts.telegram.menu.tooltip') }}</span>-->
-<!--              </VTooltip>-->
-<!--            </template>-->
-<!--            <VCard>-->
-<!--              <VListItem :key="`${$dayjs()}-telegram-force-stop`">-->
-<!--                <ForceStopComponent :account="item" />-->
-<!--              </VListItem>-->
-<!--              <VListItem :key="`${$dayjs()}-telegram-clear-session`">-->
-<!--                <ClearSessionComponent :account="item" />-->
-<!--              </VListItem>-->
-<!--              <VListItem :key="`${$dayjs()}-telegram-delete-account`">-->
-<!--                <DeleteAccountComponent :account="item"/>-->
-<!--              </VListItem>-->
-<!--            </VCard>-->
-<!--          </VMenu>-->
         </div>
       </template>
+
       <template #item.combined="{ item }">
+        <p class="multiline-text">{{ $t('Messages') }}: {{ item.messages.count }}</p>
         <p class="multiline-text">{{ $t('Weekdays') }}: {{ mailingStore.convertToWeekDays(item.options.days) }}</p>
         <p class="multiline-text">{{ $t('Time') }}: {{ `${item.options.hours.min} - ${item.options.hours.max}` }}</p>
         <p class="multiline-text">{{ $t('Delay') }}: {{ `${item.options.delay.min} - ${item.options.delay.max}` }}</p>
@@ -147,6 +113,10 @@ const deleteMailing = async (deletedMailing: any) => {
     </VDataTable>
     <SettingsDrawerComponent
       v-model:isDrawerOpen="isActionMailingDrawerVisible"
+      v-model:mailing-data="mailing"
+    />
+    <ViewDrawerComponent
+      v-model:isDrawerOpen="isActionMailingMessagesDrawerVisible"
       v-model:mailing-data="mailing"
     />
   </div>

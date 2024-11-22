@@ -34,7 +34,7 @@ const resolveNavItemComponent = (item: NavLink | NavSectionTitle | NavGroup): un
   if ('children' in item)
     return VerticalNavGroup
 
-  return VerticalNavLink
+  return VerticalNavLink 
 }
 
 /*

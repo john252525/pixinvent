@@ -84,9 +84,11 @@ const saveMailing = async () => {
         body: formData,
         onResponse({ response }) {
           loading.value = false
+          console.log(response)
         },
         onResponseError({ response }): Promise<void> | void {
           errors.value = response._data.errors
+          console.log(response)
         },
       })
 
