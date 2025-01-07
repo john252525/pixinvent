@@ -1,0 +1,63 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH key
+        run: |
+          echo -e "${{ secrets.PIXINVENT_KEY }}" > key.pem
+          chmod 600 key.pem
+
+      - name: Deploy code to server
+        run: |
+          rsync -avz --delete -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./ root@188.120.236.47:/var/www/vue_apitter__usr7/data/www/vue.apitter.com
+
+      - name: Execute remote commands
+        run: |
+          ssh -i key.pem -o StrictHostKeyChecking=no root@188.120.236.47 << 'EOF'
+            echo "Current user: $(whoami)"
+            echo "Current directory: $(pwd)"
+            chown -R vue_apitter__usr7:www-data /var/www/vue_apitter__usr7/data/www/vue.apitter.com
+            cd /var/www/vue_apitter__usr7/data/www/vue.apitter.com || exit 1
+            su vue_apitter__usr7
+            echo "Current user: $(whoami)"
+            echo "Current directory: $(pwd)"
+            git config --global --add safe.directory /var/www/vue_apitter__usr7/data/www/vue.apitter.com
+            git pull
+            chown -R vue_apitter__usr7:www-data storage bootstrap/cache
+            chgrp -R www-data storage bootstrap/cache
+            chmod -R ug+rwx storage bootstrap/cache
+            cp ../.env .env
+            #export COMPOSER_ALLOW_SUPERUSER=1
+            composer update --ignore-platform-req=ext-bcmath
+           #curl -fsSL https://bun.sh/install | bash
+            echo $(which bun)
+            export BUN_INSTALL="$HOME/.bun"
+            export PATH="$BUN_INSTALL/bin:$PATH" 
+           #chown -R vue_apitter__usr:vue_apitter__usr /var/www/vue_apitter__usr7/data/www/vue.apitter.com
+           #/root/.bun/bin/bun init
+           #sudo /root/.bun/bin/bun install --legacy-peer-deps
+            rm -rf node_modules
+            bun i
+            export NODE_OPTIONS=--max-old-space-size=4096
+            bun run build
+           #NODE_OPTIONS="--max-old-space-size=2048" bun run build
+           #mysql -u root -p'root' -e "CREATE DATABASE IF NOT EXISTS laravel;"
+            #php artisan key:generate
+            #php artisan migrate:fresh --seed
+            php artisan migrate
+            #chown -R vue_apitter__usr7:vue_apitter__usr7 storage
+          EOF
