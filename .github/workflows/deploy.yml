@@ -1,19 +1,56 @@
-name: Test SSH Connection
+name: Deploy
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  DEPLOY_PATH: /var/www/pixinvent
+  USER_FOLDER_OWENER: www-data
 
 jobs:
-  test_ssh:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: SSH connection check
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.PIXINVENT_KEY_DEV }}
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH key
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/key_dash
-          chmod 600 ~/.ssh/key_dash
-          ssh -i ~/.ssh/key_dash -o StrictHostKeyChecking=no root@109.172.114.179 "touch /tmp/testfile && echo 'SSL dash-dev is working' > /tmp/testfile"
+          echo -e "${{ secrets.PIXINVENT_KEY_DEV }}" > key
+          chmod 600 key
+
+      - name: Deploy code to server
+        run: |
+          rsync -avz --delete -e "ssh -i key -o StrictHostKeyChecking=no" ./ root@109.172.114.179:${{ env.DEPLOY_PATH }}
+
+      - name: Execute remote commands
+        run: |
+          ssh -i key -o StrictHostKeyChecking=no root@109.172.114.179 << 'EOF'
+            chown -R ${{ USER_FOLDER_OWENER }}:www-data ${{ env.DEPLOY_PATH }}
+            cd ${{ env.DEPLOY_PATH }} || exit 1
+            su ${{ USER_FOLDER_OWENER }}
+            git config --global --add safe.directory ${{ env.DEPLOY_PATH }}
+            git pull
+            chown -R ${{ USER_FOLDER_OWENER }}:www-data storage bootstrap/cache
+            chmod -R ug+rwx storage bootstrap/cache
+            cp ../.env .env
+            composer update --ignore-platform-req=ext-bcmath
+            dd if=/dev/zero of=/swapfile bs=1M count=3072
+            chmod 600 /swapfile
+            mkswap /swapfile
+            swapon /swapfile
+            bun update
+            bun run build
+            php artisan migrate
+          EOF
+
+      - name: Cleanup temporary files
+        if: always()
+        run: |
+          rm key
