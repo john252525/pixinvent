@@ -53,7 +53,7 @@ jobs:
               swapon /swapfile
             fi
             bun i
-            bun run build
+            # bun run build
             # php artisan migrate
           EOF
 
