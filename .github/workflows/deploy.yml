@@ -53,15 +53,9 @@ jobs:
               swapon /swapfile
             fi
             bun i
-            bun run build > log.txt 2>&1
+            bun run build > ~/bun_log 2>&1
             # php artisan migrate
           EOF
-
-      - name: Upload logs as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: dash-logs
-          path: dash-logs.txt
 
       - name: Cleanup temporary files
         if: always()
