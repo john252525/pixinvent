@@ -53,8 +53,9 @@ jobs:
               swapon /swapfile
             fi
             bun i
+            bun run resources/ts/plugins/iconify/build-icons.ts
             bun run build > ~/bun_log 2>&1
-            # php artisan migrate
+            php artisan migrate
           EOF
 
       - name: Cleanup temporary files
