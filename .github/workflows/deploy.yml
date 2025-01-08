@@ -16,4 +16,4 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/key_dash
           chmod 600 ~/.ssh/key_dash
-          ssh -i ~/.ssh/key_dash -o StrictHostKeyChecking=no root@109.172.114.179 "touch /tmp/testfile && echo 'SSL is working'"
+          ssh -i ~/.ssh/key_dash -o StrictHostKeyChecking=no root@109.172.114.179 "touch /tmp/testfile && echo 'SSL dash-dev is working' > /tmp/testfile"
