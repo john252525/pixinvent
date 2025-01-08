@@ -42,7 +42,7 @@ jobs:
             chown -R ${{ env.USER_FOLDER_OWNER }}:www-data storage bootstrap/cache
             chgrp -R www-data storage bootstrap/cache
             chmod -R ug+rwx storage bootstrap/cache
-            cp ../.env .env
+            cp  ~/.env .env
             composer update --ignore-platform-req=ext-bcmath
             export BUN_INSTALL="$HOME/.bun"
             export PATH="$BUN_INSTALL/bin:$PATH"
