@@ -53,7 +53,7 @@ jobs:
               swapon /swapfile
             fi
             bun i
-            BUN_JSC_forceRAMSize=1800000000 bun run build
+            bun run build
             # php artisan migrate
           EOF
 
