@@ -10,7 +10,7 @@ on:
 
 env:
   DEPLOY_PATH: /var/www/pixinvent
-  USER_FOLDER_OWENER: www-data
+  USER_FOLDER_OWNER: www-data
 
 jobs:
   deploy:
@@ -32,12 +32,12 @@ jobs:
       - name: Execute remote commands
         run: |
           ssh -i key -o StrictHostKeyChecking=no root@109.172.114.179 << 'EOF'
-            chown -R ${{ USER_FOLDER_OWENER }}:www-data ${{ env.DEPLOY_PATH }}
+            chown -R ${{ env.USER_FOLDER_OWNER }}:www-data ${{ env.DEPLOY_PATH }}
             cd ${{ env.DEPLOY_PATH }} || exit 1
-            su ${{ USER_FOLDER_OWENER }}
+            su ${{ env.USER_FOLDER_OWNER }}
             git config --global --add safe.directory ${{ env.DEPLOY_PATH }}
             git pull
-            chown -R ${{ USER_FOLDER_OWENER }}:www-data storage bootstrap/cache
+            chown -R ${{ env.USER_FOLDER_OWNER }}:www-data storage bootstrap/cache
             chmod -R ug+rwx storage bootstrap/cache
             cp ../.env .env
             composer update --ignore-platform-req=ext-bcmath
