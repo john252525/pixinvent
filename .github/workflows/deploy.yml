@@ -44,17 +44,13 @@ jobs:
             git config --global --add safe.directory ${{ env.DEPLOY_PATH }}
             git pull
             chown -R ${{ env.USER_FOLDER_OWNER }}:www-data storage bootstrap/cache
+            chgrp -R www-data storage bootstrap/cache
             chmod -R ug+rwx storage bootstrap/cache
             cp ../.env .env
             composer update --ignore-platform-req=ext-bcmath
-            dd if=/dev/zero of=/swapfile bs=1M count=3072
-            chmod 600 /swapfile
-            mkswap /swapfile
-            swapon /swapfile
             echo $(which bun)
-            bun update
-            bun run build
-            php artisan migrate
+            export BUN_INSTALL="$HOME/.bun"
+            export PATH="$BUN_INSTALL/bin:$PATH"
           EOF
 
       - name: Cleanup temporary files
