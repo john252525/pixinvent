@@ -52,10 +52,13 @@ jobs:
               mkswap /swapfile
               swapon /swapfile
             fi
-            bun i
+            bun update
             bun run resources/ts/plugins/iconify/build-icons.ts
             bun run build > ~/bun_log 2>&1
+            php artisan down
             php artisan migrate > ~/laravel_log 2>&1
+            php artisan config:cache
+            php artisan up
           EOF
 
       - name: Cleanup temporary files
