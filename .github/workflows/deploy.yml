@@ -32,9 +32,13 @@ jobs:
       - name: Execute remote commands
         run: |
           ssh -i key -o StrictHostKeyChecking=no root@109.172.114.179 << 'EOF'
+            echo "Current user: $(whoami)"
+            echo "Current directory: $(pwd)"
             chown -R ${{ env.USER_FOLDER_OWNER }}:www-data ${{ env.DEPLOY_PATH }}
             cd ${{ env.DEPLOY_PATH }} || exit 1
             su ${{ env.USER_FOLDER_OWNER }}
+            echo "Current user: $(whoami)"
+            echo "Current directory: $(pwd)"
             git config --global --add safe.directory ${{ env.DEPLOY_PATH }}
             git pull
             chown -R ${{ env.USER_FOLDER_OWNER }}:www-data storage bootstrap/cache
@@ -45,6 +49,7 @@ jobs:
             chmod 600 /swapfile
             mkswap /swapfile
             swapon /swapfile
+            echo $(which bun)
             bun update
             bun run build
             php artisan migrate
