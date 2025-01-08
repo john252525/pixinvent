@@ -11,6 +11,8 @@ on:
       - main
 
 env:
+  DEPLOY_USER: root
+  DEPLOY_SERVER_IP: 109.172.114.179
   DEPLOY_PATH: /var/www/pixinvent
   USER_FOLDER_OWNER: www-data
   ENV_LOCATION: ~/.env
@@ -30,11 +32,11 @@ jobs:
 
       - name: Deploy code to server
         run: |
-         rsync -avz --delete -e "ssh -i key -o StrictHostKeyChecking=no" ./ root@109.172.114.179:${{ env.DEPLOY_PATH }}
+         rsync -avz --delete -e "ssh -i key -o StrictHostKeyChecking=no" ./  ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_SERVER_IP }}:${{ env.DEPLOY_PATH }}
 
       - name: Execute remote commands
         run: |
-          ssh -i key -o StrictHostKeyChecking=no root@109.172.114.179 << 'EOF'
+          ssh -i key -o StrictHostKeyChecking=no ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_SERVER_IP }} << 'EOF'
             chown -R ${{ env.USER_FOLDER_OWNER }}:www-data ${{ env.DEPLOY_PATH }}
             cd ${{ env.DEPLOY_PATH }} || exit 1
             su ${{ env.USER_FOLDER_OWNER }}
