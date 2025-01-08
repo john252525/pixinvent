@@ -36,7 +36,7 @@ jobs:
           ssh -i key -o StrictHostKeyChecking=no root@109.172.114.179 << 'EOF'
             chown -R ${{ env.USER_FOLDER_OWNER }}:www-data ${{ env.DEPLOY_PATH }}
             cd ${{ env.DEPLOY_PATH }} || exit 1
-            su ${{ env.USER_FOLDER_OWNER }
+            su ${{ env.USER_FOLDER_OWNER }}
             git config --global --add safe.directory ${{ env.DEPLOY_PATH }}
             git pull
             chown -R ${{ env.USER_FOLDER_OWNER }}:www-data storage bootstrap/cache
