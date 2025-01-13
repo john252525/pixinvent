@@ -10,7 +10,8 @@ definePage({
 })
 
 // const url = '/auto-page'
-const url = 'https://api25.apitter.com/frontpage.php?id=1'
+const user_id = useCookie('userData').value.id
+const url = `https://indiparser.apitter.com/indiparser.php?user_id=${user_id}`
 const pageData = await $api(url)
 
 // const components = computed(() => pageData.components)
