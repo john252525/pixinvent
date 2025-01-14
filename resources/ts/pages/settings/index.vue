@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useHead } from '@unhead/vue'
-import AutoPage from '@/views/autopage/AutoPage.vue'
 
 definePage({
   meta: {
@@ -9,6 +8,7 @@ definePage({
   },
 })
 
+/* Old variant with request from the front
 const url = 'https://indiparser.apitter.com/?user_id=6'
 const pageData = await $api(url)
 
@@ -49,8 +49,8 @@ const submitForm = () => {
     }
   })
 }
+*/
 
-/*
 const userID = useCookie('userData').value.id
 
 const pageData = await $api(`/user/settings/get-settings`, {
@@ -98,7 +98,7 @@ const submitForm = () => {
     }
   })
 }
-*/
+
 </script>
 
 <template>

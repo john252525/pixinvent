@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Config;
 
 
 class IndiparserController extends Controller
@@ -19,13 +20,21 @@ class IndiparserController extends Controller
         $userID = $request->user_id;
         $data = $request->all();
 
+        $accessToken = Config::get('auth.tokens.indiparser');
+
         $client = new Client();
         try {
-            $response = $client->post("https://indiparser.apitter.com/?user_id={$userID}", [
+            $response = $client->post("https://indiparser.apitter.com/?user_id={$userID}&token={$accessToken}", [
                 'json' => $data,
                 'verify' => false,  // TODO Без проверки SSL сертификата. Настроить.
             ]);
+
+
             return (string) $response->getBody();
+            // $body = (string) $response->getBody();
+            // $payload = json_decode($body, true);
+            // return response()->json($payload);
+
             //return response()->json(json_decode($response->getBody()->getContents(), true, 20, JSON_UNESCAPED_UNICODE));
         } catch (RequestException $e) {
             return response()->json([
@@ -45,13 +54,19 @@ class IndiparserController extends Controller
         $userID = $request->user_id;
         $data = $request->all();
 
+        $accessToken = Config::get('auth.tokens.indiparser');
+
         $client = new Client();
         try {
-            $response = $client->post("https://indiparser.apitter.com/?user_id={$userID}", [
+            $response = $client->post("https://indiparser.apitter.com/?user_id={$userID}&token={$accessToken}", [
                 'json' => $data,
                 'verify' => false // TODO Без проверки SSL сертификата. Настроить.
             ]);
+
             return (string) $response->getBody();
+            // $body = (string) $response->getBody();
+            // $payload = json_decode($body, true);
+            // return response()->json($payload);
             //return response()->json(json_decode($response->getBody()->getContents(), true, 20, JSON_UNESCAPED_UNICODE));
         } catch (RequestException $e) {
             return response()->json([
