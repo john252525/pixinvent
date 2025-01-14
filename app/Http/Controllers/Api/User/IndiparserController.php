@@ -29,13 +29,7 @@ class IndiparserController extends Controller
                 'verify' => false,  // TODO Без проверки SSL сертификата. Настроить.
             ]);
 
-
-            return (string) $response->getBody();
-            // $body = (string) $response->getBody();
-            // $payload = json_decode($body, true);
-            // return response()->json($payload);
-
-            //return response()->json(json_decode($response->getBody()->getContents(), true, 20, JSON_UNESCAPED_UNICODE));
+            return response()->json(json_decode($response->getBody()->getContents(), true, 20, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         } catch (RequestException $e) {
             return response()->json([
                 'error' => 'Error during request for fetching settings',
@@ -63,11 +57,7 @@ class IndiparserController extends Controller
                 'verify' => false // TODO Без проверки SSL сертификата. Настроить.
             ]);
 
-            return (string) $response->getBody();
-            // $body = (string) $response->getBody();
-            // $payload = json_decode($body, true);
-            // return response()->json($payload);
-            //return response()->json(json_decode($response->getBody()->getContents(), true, 20, JSON_UNESCAPED_UNICODE));
+            return response()->json(json_decode($response->getBody()->getContents(), true, 20, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         } catch (RequestException $e) {
             return response()->json([
                 'error' => 'Error during request for saving settings',
