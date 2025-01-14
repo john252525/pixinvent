@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\User\IndiparserController;
 
 Route::middleware('auth:sanctum')->get('/', function (Request $request) {
     return $request->user()->getUserData();
@@ -60,4 +61,9 @@ Route::group(['prefix' => 'mailing', 'middleware' => 'auth:sanctum', 'controller
 
     Route::post('create', 'store');
     Route::post('edit', 'edit');
+});
+
+Route::group(['prefix' => 'settings', 'middleware' => 'auth:sanctum'], function () {
+    Route::post('/get-settings', [IndiparserController::class, 'getSettings']);
+    Route::post('/save-settings', [IndiparserController::class, 'saveSettings']);
 });

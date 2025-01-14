@@ -9,12 +9,13 @@ definePage({
   },
 })
 
-// const url = '/auto-page'
-const user_id = useCookie('userData').value.id
-const url = `https://indiparser.apitter.com/indiparser.php?user_id=${user_id}`
-const pageData = await $api(url)
+const userID = useCookie('userData').value.id
 
-// const components = computed(() => pageData.components)
+const pageData = await $api(`/user/settings/get-settings`, {
+  method: 'POST',
+  body: { user_id: userID }
+})
+
 const components = ref(pageData.components)
 const submit = ref(pageData.submit)
 const title = ref(pageData.title)
@@ -26,12 +27,13 @@ useHead({
 })
 
 const submitForm = () => {
+
   refVForm.value.validate().then(async ({ valid: isValid }: any) => {
     if (isValid) {
       let formData = new FormData()
       components.value.forEach((item: any) => {
         if (item.name) {
-          formData[item.name] = item.value || null // Если value нет, то присваиваем null
+          formData[item.name] = item.value || null
         }
       })
 
@@ -39,12 +41,15 @@ const submitForm = () => {
       formData.user_id = useCookie('userData').value.id
 
 
-      const resp = await $api(url, {
+      const resp = await $api(`/user/settings/save-settings`, {
         method: 'POST',
         body: { ...formData },
       })
 
+     
+
       components.value = resp.components
+   
       submit.value = resp.submit
       title.value = resp.title
       label.value = resp.label
