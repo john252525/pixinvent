@@ -29,7 +29,7 @@ class IndiparserController extends Controller
                 'verify' => false,  // TODO Без проверки SSL сертификата. Настроить.
             ]);
 
-            return response()->json(json_decode($response->getBody()->getContents(), true, 20, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            return response($response->getBody()->getContents(), 200)->header('Content-Type', 'application/json; charset=UTF-8');
         } catch (RequestException $e) {
             return response()->json([
                 'error' => 'Error during request for fetching settings',
@@ -57,7 +57,7 @@ class IndiparserController extends Controller
                 'verify' => false // TODO Без проверки SSL сертификата. Настроить.
             ]);
 
-            return response()->json(json_decode($response->getBody()->getContents(), true, 20, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            return response($response->getBody()->getContents(), 200)->header('Content-Type', 'application/json; charset=UTF-8');
         } catch (RequestException $e) {
             return response()->json([
                 'error' => 'Error during request for saving settings',
