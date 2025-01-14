@@ -9,6 +9,48 @@ definePage({
   },
 })
 
+const url = 'https://indiparser.apitter.com/?user_id=6'
+const pageData = await $api(url)
+
+// const components = computed(() => pageData.components)
+const components = ref(pageData.components)
+const submit = ref(pageData.submit)
+const title = ref(pageData.title)
+const label = ref(pageData.label)
+const refVForm = ref()
+
+useHead({
+  title: () => title.value,
+})
+
+const submitForm = () => {
+  refVForm.value.validate().then(async ({ valid: isValid }: any) => {
+    if (isValid) {
+      let formData = new FormData()
+      components.value.forEach((item: any) => {
+        if (item.name) {
+          formData[item.name] = item.value || null // Если value нет, то присваиваем null
+        }
+      })
+
+      // TODO: Change userId from store
+      formData.user_id = useCookie('userData').value.id
+
+
+      const resp = await $api(url, {
+        method: 'POST',
+        body: { ...formData },
+      })
+
+      components.value = resp.components
+      submit.value = resp.submit
+      title.value = resp.title
+      label.value = resp.label
+    }
+  })
+}
+
+/*
 const userID = useCookie('userData').value.id
 
 const pageData = await $api(`/user/settings/get-settings`, {
@@ -56,6 +98,7 @@ const submitForm = () => {
     }
   })
 }
+*/
 </script>
 
 <template>
