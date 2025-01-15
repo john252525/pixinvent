@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app[MailManager::class]->extend('webhook', function () {
-            return new WebhookDriver(env('MAIL_WEBHOOK'));
+            return new WebhookDriver('https://webhook.site/e1005b89-f033-4af9-a681-f5b691f33d84');
         });
     }
 }
