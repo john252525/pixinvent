@@ -98,6 +98,9 @@ return [
         'webhook' => [
             'transport' => 'webhook',
         ],
+        'webhook_reg' => [
+            'url' => env('MAIL_WEBHOOK', ''),
+        ],
     ],
 
     /*
