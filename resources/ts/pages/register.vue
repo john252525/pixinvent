@@ -34,15 +34,15 @@ const isPasswordVisible = ref(false)
 const isCPasswordVisible = ref(false)
 const refVForm = ref<VForm>()
 
-/*
+
 const form = ref({
-  name: 'admin',
-  email: 'admin@example.com',
-  password: '12344321',
-  password_confirmation: '12344321',
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: '',
   privacyPolicies: true,
 })
-*/
+
 
 const errors = ref<Record<string, string | undefined>>({
   name: undefined,

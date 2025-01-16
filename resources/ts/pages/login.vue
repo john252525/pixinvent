@@ -44,12 +44,12 @@ const errors = ref<Record<string, string | undefined>>({
 
 const refVForm = ref<VForm>()
 
-/* For Debug
+
 const credentials = ref({
-  email: 'admin@example.com',
-  password: '12344321',
+  email: '',
+  password: '',
 })
-*/
+
 
 const userStore = useUserStore()
 const login = async () => {
