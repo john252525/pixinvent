@@ -32,7 +32,7 @@ class WebhookDriver extends AbstractTransport
         $client = new Client();
 
         $client->post($this->url, [
-            'json' => json_encode($data),
+            'json' => $data,
         ]);
     }
 
