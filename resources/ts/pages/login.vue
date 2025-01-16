@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { useUserStore } from '@/stores/UserStore'
+import LangSwitcherI18n from '@core/components/I18n.vue'
 import authV1BottomShape from '@images/svg/auth-v1-bottom-shape.svg?raw'
 import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
+import type { ThemeSwitcherTheme } from '@layouts/types'
 import { themeConfig } from '@themeConfig'
 import { VForm } from 'vuetify/components/VForm'
-import type { ThemeSwitcherTheme } from '@layouts/types'
-import LangSwitcherI18n from '@core/components/I18n.vue'
-import { useUserStore} from '@/stores/UserStore'
 
 definePage({
   meta: {
@@ -44,10 +44,12 @@ const errors = ref<Record<string, string | undefined>>({
 
 const refVForm = ref<VForm>()
 
+/* For Debug
 const credentials = ref({
   email: 'admin@example.com',
   password: '12344321',
 })
+*/
 
 const userStore = useUserStore()
 const login = async () => {
