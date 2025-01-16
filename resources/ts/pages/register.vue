@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { useUserStore } from "@/stores/UserStore"
+import LangSwitcherI18n from '@core/components/I18n.vue'
 import authV1BottomShape from '@images/svg/auth-v1-bottom-shape.svg?raw'
 import authV1TopShape from '@images/svg/auth-v1-top-shape.svg?raw'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
-import { themeConfig } from '@themeConfig'
-import LangSwitcherI18n from '@core/components/I18n.vue'
 import type { ThemeSwitcherTheme } from '@layouts/types'
+import { themeConfig } from '@themeConfig'
 import { VForm } from 'vuetify/components/VForm'
-import {useUserStore} from "@/stores/UserStore";
 
 definePage({
   meta: {
@@ -34,6 +34,7 @@ const isPasswordVisible = ref(false)
 const isCPasswordVisible = ref(false)
 const refVForm = ref<VForm>()
 
+/*
 const form = ref({
   name: 'admin',
   email: 'admin@example.com',
@@ -41,6 +42,7 @@ const form = ref({
   password_confirmation: '12344321',
   privacyPolicies: true,
 })
+*/
 
 const errors = ref<Record<string, string | undefined>>({
   name: undefined,
